@@ -5,16 +5,26 @@
 #include <QTextCodec>
 #include <QString>
 
-
+//#define DEBUG_FILE
+//#define DEBUG_RUN
 #define LOG
-#define DEBUG_FILE
+#define DEBUG_TCP_TRACE
+
+
+#ifdef DEBUG_TCP_TRACE
+#include <stdio.h>
+#define DEBUG_TCP(format,...) printf("[File: " __FILE__ ", Line: %d]:" format "\n", __LINE__, ##__VA_ARGS__)
+#else
+#define DEBUG_TCP(format,...)
+#endif
+
 
 
 #ifdef DEBUG_FILE
 #include <stdio.h>
-#define TRACE_DEBUG(format,...) printf("[File: " __FILE__ ", Line: %d]:" format "\n", __LINE__, ##__VA_ARGS__)
+#define TRACE_FILE(format,...) printf("[File: " __FILE__ ", Line: %d]:" format "\n", __LINE__, ##__VA_ARGS__)
 #else
-#define TRACE_DEBUG(format,...)
+#define TRACE_FILE(format,...)
 #endif
 
 #ifdef DEBUG_RUN

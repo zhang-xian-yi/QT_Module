@@ -1,6 +1,6 @@
 SOURCES += \
-        $$PWD/main.cpp \
-    $$PWD/applicationmain.cpp
+        $$PWD/main.cpp
 
-HEADERS += \
-    $$PWD/applicationmain.h
+
+include($$PWD/client/client.pri)
+include($$PWD/server/server.pri)

@@ -5,14 +5,17 @@
 * project ClassResourceManagerPro
 */
 
-#include <QCoreApplication>
+#include <QApplication>
 #include "applicationmain.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    ApplicationMain main;
-    main.start();
+    QApplication a(argc, argv);
+    ApplicationMain appmain;
+    appmain.start();
 
     return a.exec();
 }
+
+
+

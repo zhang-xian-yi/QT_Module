@@ -54,7 +54,7 @@ QStringList ResourceManage::findDirectory(const QString &splpath, const QString 
 bool ResourceManage::createFile(const QString &path, const QString &name)const
 {
     QString filename = path +"/"+name;
-    TRACE_DEBUG("create file %s\n",filename.toStdString().c_str());
+    TRACE_FILE("create file %s\n",filename.toStdString().c_str());
     static QFile file(filename);
     if( ! file.exists())
     {
@@ -68,7 +68,7 @@ bool ResourceManage::createFile(const QString &path, const QString &name)const
 bool ResourceManage::createDirecty(const QString &path, const QString &name) const
 {
     QString direct = path + "/" + name;
-    TRACE_DEBUG("create direct %s\n",direct.toStdString().c_str());
+    TRACE_FILE("create direct %s\n",direct.toStdString().c_str());
     QDir dir(direct);
     if( ! dir.exists())
     {
@@ -79,7 +79,7 @@ bool ResourceManage::createDirecty(const QString &path, const QString &name) con
 
 bool ResourceManage::deleteFileOrDirecty(const QString &path)const
 {
-    TRACE_DEBUG("delete direct or file %s\n",path.toStdString().c_str());
+    TRACE_FILE("delete direct or file %s\n",path.toStdString().c_str());
     QFileInfo fileinfo(path);
     if(fileinfo.exists())
     {
@@ -107,7 +107,7 @@ bool ResourceManage::renameFileOrDirectory(const QString &oldpath,const QString 
         {
             QDir dir(oldpath);
             QString root = StringUtil::getInstance().getParentPath(oldpath);
-            dir.rename(oldpath,root+"/"+newname);
+            return dir.rename(oldpath,root+"/"+newname);
         }
         else if(fileinfo.isFile())
         {
@@ -115,4 +115,5 @@ bool ResourceManage::renameFileOrDirectory(const QString &oldpath,const QString 
             return QFile::rename(oldpath,root+"/"+newname);
         }
     }
+    return false;
 }
