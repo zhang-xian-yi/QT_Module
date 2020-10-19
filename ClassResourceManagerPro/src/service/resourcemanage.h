@@ -7,6 +7,17 @@
 class ResourceManage:public QObject
 {
     Q_OBJECT
+signals:
+    void signal_log(const QStringList& list);
+public slots:
+    /**
+    * @brief: 用于响应搜索函数的 槽
+    * @param： splpath 指定路径
+    *          name  文件名/文件夹名
+    * @return:
+    * @date: 2020-10-19
+    */
+    bool slot_search(const QString& path,const QString& txt);
 public:
     explicit ResourceManage();
     ~ResourceManage();
@@ -17,7 +28,7 @@ public:
     * @return: void
     * @date: 2020-10-15
     */
-    void initFileList(const QString& path);
+    QStringList initFileList(const QString& path);
 
     /**
     @brief：在一个目录下查找指定文件
@@ -70,10 +81,8 @@ public:
     */
     bool renameFileOrDirectory(const QString& name,const QString &newname)const;
 private:
-    QStringList listFileByPath(const QString& path);
-private:
     AllFilePathInDir* m_file_oper;
-    QStringList m_resource;
+    QString m_curr_dir;
 
 };
 

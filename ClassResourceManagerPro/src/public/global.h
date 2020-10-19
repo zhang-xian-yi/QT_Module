@@ -7,8 +7,16 @@
 
 //#define DEBUG_FILE
 //#define DEBUG_RUN
+//#define DEBUG_TCP_TRACE
 #define LOG
-#define DEBUG_TCP_TRACE
+#define DEBUG_UI_TRACE
+
+#ifdef DEBUG_UI_TRACE
+#include <stdio.h>
+#define DEBUG_UI(format,...) printf("[File: " __FILE__ ", Line: %d]:" format "\n", __LINE__, ##__VA_ARGS__)
+#else
+#define DEBUG_UI(format,...)
+#endif
 
 
 #ifdef DEBUG_TCP_TRACE

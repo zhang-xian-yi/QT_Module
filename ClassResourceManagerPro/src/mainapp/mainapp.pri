@@ -3,4 +3,3 @@ SOURCES += \
 
 
 include($$PWD/client/client.pri)
-include($$PWD/server/server.pri)

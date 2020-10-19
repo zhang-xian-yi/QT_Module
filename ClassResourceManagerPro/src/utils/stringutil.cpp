@@ -115,3 +115,20 @@ QString StringUtil::getParentPath(const QString &path)const
     QString parentpath = path.left(first + 1); //从左边截取
     return parentpath;
 }
+
+QStringList StringUtil::getLastNameOfFileList(const QStringList &list) const
+{
+    QStringList ret;
+    foreach(QString item,list)
+    {
+        ret.append(getLastNameofFilePath(item));
+    }
+    return ret;
+}
+
+QString StringUtil::getFirstName(const QString &path)
+{
+    int first = path.indexOf("/"); //从后面查找"/"位置
+    QString parentpath = path.left(first - 1); //从左边截取
+    return parentpath;
+}

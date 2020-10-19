@@ -47,6 +47,22 @@ public:
     * @date: 2020-10-15
     */
     QString getParentPath(const QString& path)const;
+
+    /**
+    * @brief:  批量 处理 获取文件列表的最后一个名字
+    * @param： QStringList  全路径的list
+    * @return: QStringList  剩下文件名/文件夹名 的列表
+    * @date: 2020-10-19
+    */
+    QStringList getLastNameOfFileList(const QStringList& list)const;
+
+    /**
+    * @brief: 获取根路径
+    * @param： QString path  传入一个全路径/字符串
+    * @return: 返回 左边第一个  / 以前的字符串
+    * @date: 2020-10-19
+    */
+    QString getFirstName(const QString& path);
 private:
     /** Forbid external construction */
     StringUtil();

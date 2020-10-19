@@ -6,8 +6,8 @@
 * @date:  2020-10-15
 * project ClassResourceManagerPro
 */
-#include "resourcemanage.h"
 #include "tcpclient.h"
+#include "resourcemanage.h"
 class ApplicationMain:public QObject
 {
     Q_OBJECT
@@ -30,8 +30,8 @@ private:
     */
     void initConnect();
 private:
-    ResourceManage* m_res_manage;
     ManageTcpCLient* m_client;
+    ResourceManage* m_res_manage;
 };
 
 #endif // APPLICATIONMAIN_H

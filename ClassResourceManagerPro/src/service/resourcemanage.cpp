@@ -21,26 +21,42 @@ ResourceManage::~ResourceManage()
 
 }
 
-void ResourceManage::initFileList(const QString & path)
+bool ResourceManage::slot_search(const QString& path,const QString &txt)
 {
-     //获取指定目录/及其子目录 文件的全路径
-     m_resource = m_file_oper->getFilePathNameOfSplAndChildDir(path);
-     LOG_INFO("init file list:%s\n\n",m_resource.join(",").toStdString().c_str());
+
+    QStringList ret =findFile(path,txt);
+    ret.append(findDirectory(path,txt));
+    emit signal_log(ret);
+    if(ret.isEmpty())
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
-QStringList ResourceManage::listFileByPath(const QString &path)
+
+QStringList ResourceManage::initFileList(const QString & path)
 {
-    return m_file_oper->getFileAndDirPathNameOfSplDir(path);
+     m_curr_dir = path;
+     //获取指定目录/及其子目录 文件的全路径
+     QStringList curr_dir_list = m_file_oper->getFileAndDirPathNameOfSplDir(path);
+     TRACE_FILE("init file list:%s",curr_dir_list.join(",").toStdString().c_str());
+     return curr_dir_list;
 }
 
 QStringList ResourceManage::findFile(const QString& splpath,const QString &filename)const
 {
+    LOG_INFO("spa path:%s\n",splpath.toStdString().c_str());
     QStringList m_Filelist;//找到的文件存入此队列
     QStringList matchFIleList;
 
     matchFIleList << m_file_oper->getFilePathNameOfSplAndChildDir(splpath);
-    m_Filelist = StringUtil::getInstance().getMatchStr(m_resource,filename);
-    LOG_INFO("find the file %s \n",m_Filelist.join(",").toStdString().c_str());
+    TRACE_FILE("match files %s \n",matchFIleList.join(",").toStdString().c_str());
+    m_Filelist = StringUtil::getInstance().getMatchStr(matchFIleList,filename);
+    TRACE_FILE("find the file %s \n",m_Filelist.join(",").toStdString().c_str());
     return m_Filelist;
 }
 
@@ -48,7 +64,7 @@ QStringList ResourceManage::findDirectory(const QString &splpath, const QString 
 {
     QStringList t_driects = m_file_oper->getDirPathOfSplAndChildDir(splpath);
     QStringList t_ret_direct = StringUtil::getInstance().getMatchStr(t_driects,direct_str);
-    LOG_INFO("final match directies :%s\n\n",t_ret_direct.join(",").toStdString().c_str());
+    TRACE_FILE("final match directies :%s\n\n",t_ret_direct.join(",").toStdString().c_str());
     return t_ret_direct;
 }
 bool ResourceManage::createFile(const QString &path, const QString &name)const
