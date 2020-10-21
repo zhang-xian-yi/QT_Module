@@ -4,10 +4,13 @@
 #include <QMessageBox>
 #include "stringutil.h"
 #include <QDateTime>
+#include "filehandle.h"
+#include <QMessageBox>
 
 ManageTcpCLient::ManageTcpCLient(QWidget *parent) :
     QWidget(parent),
     m_file_oper(new AllFilePathInDir),
+    m_handle_file(new FileHandle),
     ui(new Ui::ManageTcpCLient)
 {
     setupUiConn();
@@ -15,11 +18,16 @@ ManageTcpCLient::ManageTcpCLient(QWidget *parent) :
     initConnect();
 
     initClientFileList();
-
+    //初始化服务接列表
+    on_btn_syn_clicked();
 }
 
 ManageTcpCLient::~ManageTcpCLient()
 {
+    if(nullptr != m_handle_file)
+    {
+        delete m_handle_file;
+    }
     if(nullptr != m_file_oper)
     {
         delete m_file_oper;
@@ -51,6 +59,16 @@ bool ManageTcpCLient::setClientListview(const QStringList &list)
     return true;
 }
 
+bool ManageTcpCLient::setServerListView(const QStringList &list)
+{
+    QItemSelectionModel *m = ui->server_listView->selectionModel();
+    delete m;
+    // set model 并不会释放内存 需要释放之前的内存
+    QStringListModel *model = new QStringListModel(list);
+    ui->server_listView->setModel(model);
+    return true;
+}
+
 void ManageTcpCLient::connectTo()
 {
     socket->connectToHost(ui->hostNameEdit->text(), ui->portBox->value());
@@ -64,7 +82,11 @@ void ManageTcpCLient::on_btn_connect()
     connected?disConnect():connectTo();
     updateEnabledState();
     //连接断开/Connect   连接建立/disconnect
-    ui->connectButton->setText(connected?"Connect to host":"DisConnected");
+    if(socket->waitForConnected(30000))
+    {
+        ui->connectButton->setText(connected?"Connect to host":"DisConnected");
+    }
+
 }
 
 void ManageTcpCLient::disConnect()
@@ -129,8 +151,9 @@ void ManageTcpCLient::updateEnabledState()
     ui->server_listView->setEnabled(connected);
     ui->sendButton->setEnabled(connected);
     ui->btn_upload->setEnabled(connected);
-    ui->btn_preview->setEnabled(connected);
+    ui->btn_syn->setEnabled(connected);
     ui->btn_download->setEnabled(connected);
+    ui->connectButton->setText(connected?"DisConnected":"Connect to host");
 }
 
 void ManageTcpCLient::sendData()
@@ -151,26 +174,56 @@ void ManageTcpCLient::appendString(const QString &line)
 void ManageTcpCLient::initConnect()
 {
     connect(ui->btn_search,SIGNAL(clicked()),this,SLOT(on_btn_search()));
+    connect(ui->client_listView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(on_clientlistview_item_clicked(const QModelIndex &) ) );
     connect(ui->btn_upload,SIGNAL(clicked()),this,SLOT(on_btn_upload()));
+
+    //server
+    connect(ui->server_listView,SIGNAL(clicked(const QModelIndex &)),this,SLOT(on_serverListview_item_clicked(const QModelIndex &)));
+    connect(ui->btn_syn,SIGNAL(clicked()),this,SLOT(on_btn_syn_clicked()));
+    connect(ui->btn_download,SIGNAL(clicked()),this,SLOT(on_btn_download()));
 }
 
 bool ManageTcpCLient::on_btn_upload()
 {
-    QFile file(m_upload_file_dir);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+
+    QFileInfo finfo(m_upload_file_dir);
+    if(! finfo.exists())
     {
-        QByteArray array = file.readAll();
-        //写入文件
-        socket->write(array);
-        return true;
+        DEBUG_TCP("error upload file is not exist");
+        return false;
     }
-    return false;
+    const QByteArray content = m_handle_file->handleFile(m_upload_file_dir);
+    socket->write(content);
+    DEBUG_TCP("client had write the content");
+    QMessageBox::information(this,"上传提示","已写入套接字 请同步SYN 查看服务器文件列表");
+    return true;
 }
 
 void ManageTcpCLient::on_clientlistview_item_clicked(const QModelIndex &index)
 {
+    m_upload_file_dir.clear();
     QString txt = ui->client_listView->model()->data(index).toString();
     m_upload_file_dir = ui->curr_dir_lab->text()+"\\"+txt;
+}
+
+void ManageTcpCLient::on_serverListview_item_clicked(const QModelIndex &index)
+{
+    m_download_file_dir.clear();
+    QString txt = ui->server_listView->model()->data(index).toString();
+    m_download_file_dir = "data/"+txt;
+}
+
+void ManageTcpCLient::on_btn_download()
+{
+    QString download_cmd = QString::number(DOWNLOAD_FILE)+'`'+m_download_file_dir;
+    socket->write(download_cmd.toStdString().c_str());
+    LOG_INFO("download cmd $s",download_cmd.toStdString().c_str());
+}
+
+void ManageTcpCLient::on_btn_syn_clicked()
+{
+    QString cmd = QString::number(SYN_FILE_LIST)+"`"+QString::number(0);
+    socket->write(cmd.toStdString().c_str());
 }
 
 void ManageTcpCLient::socketStateChanged(QAbstractSocket::SocketState state)
@@ -211,7 +264,46 @@ void ManageTcpCLient::socketError(QAbstractSocket::SocketError)
 
 void ManageTcpCLient::socketReadyRead()
 {
-    appendString("date:%s"+QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm")+QString::fromUtf8(socket->readAll()));
+    ui->sessionOutput->clear();
+    QByteArray array = socket->readAll();
+    QList<QByteArray> list = array.split('`');
+    int cmd = list[0].toInt();
+    DEBUG_NETWORK("recv cmd :%d",cmd);
+    switch (cmd)
+    {
+    default:break;
+        case SYN_FILE_LIST:
+        {
+            //SYN_FILE_LIST
+            QByteArray strs = list[1];
+            DEBUG_NETWORK("syn list:%s",strs.toStdString().c_str());
+            QStringList list;
+            QList<QByteArray> file_list = strs.split(',');
+            foreach(QByteArray item,file_list)
+            {
+                list<<item;
+            }
+            setServerListView(list);
+            break;
+        }
+        case DOWNLOAD_FILE:
+        {
+            QByteArray filename = list[1];
+            QByteArray file_content = list[2];
+            QString path = "data/"+filename;
+            QFile download_file(path);
+            if(! download_file.exists())
+            {
+                if(download_file.open(QIODevice::ReadWrite))
+                {
+                    download_file.write(file_content);
+                    QMessageBox::information(this,"下载提示","下载成功！ 进入执行目录data 下查看");
+                }
+                download_file.close();
+            }
+        }
+    }
+    //appendString("date:%s"+QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm")+QString::fromUtf8(socket->readAll()));
 }
 
 void ManageTcpCLient::doubleClickedClientListItem(const QModelIndex &index)

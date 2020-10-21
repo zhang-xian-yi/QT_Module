@@ -7,3 +7,4 @@ SOURCES += \
 INCLUDEPATH += $$PWD/
 
 include($$PWD/directInfo/directInfo.pri)
+include($$PWD/FileHandle/FileHandle.pri)

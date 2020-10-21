@@ -7,7 +7,7 @@
 #include <QAbstractSocket>
 
 #include "allfilepathindir.h"
-
+#include "filehandle.h"
 namespace Ui {
 class ManageTcpCLient;
 }
@@ -18,7 +18,14 @@ class ManageTcpCLient : public QWidget
 public:
     explicit ManageTcpCLient(QWidget *parent = nullptr);
     ~ManageTcpCLient();
-
+    enum ECmdType
+    {
+        UPLOAD_FILE = 0,
+        DOWNLOAD_FILE,
+        SYN_FILE_LIST,
+        MESSAGE ,
+        CMD_LENGTH
+    };
 signals:
     /**
     * @brief:  发送 寻找该字符串匹配的目录
@@ -34,14 +41,20 @@ public slots:
 public:
 
     /**
-    * @brief:  根据输入的根路径 set 客户端的列表项目
+    * @brief:  根据输入的路径列表 set 客户端的列表项目
     * @param： QStringList 保存有列表项的所有结构
     * @return: true succeed  false failed load
     * @date: 2020-10-19
     */
     bool setClientListview(const QStringList& list);
 
-
+    /**
+    * @brief:  根据输入 的list 初始化服务器的文件列表
+    * @param： list 文件列表
+    * @return: bool
+    * @date: 2020-10-21
+    */
+    bool setServerListView(const QStringList& list);
 
 private slots:
     /**
@@ -99,7 +112,7 @@ private slots:
     void socketError(QAbstractSocket::SocketError error);
 
     /**
-    * @brief: 套接字准备就绪 并在output 中输出
+    * @brief: 套接字读取准备就绪 并在output 中输出
     * @param：
     * @return:
     * @date: 2020-10-16
@@ -122,6 +135,47 @@ private slots:
     * @date: 2020-10-19
     */
     void on_btn_search();
+    /**
+    * @brief:  上传文件到指定的服务器
+    * @param：  QString  splpath 文件全路径
+    * @return: bool
+    * @date: 2020-10-19
+    */
+    bool on_btn_upload();
+
+    /**
+    * @brief: 响应client 单击事件
+    * @param：const QModelIndex &index
+    * @return: void
+    * @date: 2020-10-19
+    */
+    void on_clientlistview_item_clicked(const QModelIndex &index);
+
+    /**
+    * @brief: 响应server list view 的点击事件
+    * @param： const QModelIndex &index   列表的index
+    * @return: void
+    * @date: 2020-10-20
+    */
+    void on_serverListview_item_clicked(const QModelIndex &index);
+
+
+
+    /**
+    * @brief: 从服务器下载文件
+    * @param：
+    * @return:
+    * @date: 2020-10-20
+    */
+    void on_btn_download();
+
+    /**
+    * @brief: 同步服务器的文件列表
+    * @param：
+    * @return:
+    * @date: 2020-10-20
+    */
+    void on_btn_syn_clicked();
 private:
     /**
     * @brief: 初始化客户端文件列表
@@ -160,27 +214,15 @@ private:
     */
     void initConnect();
 
-    /**
-    * @brief:  上传文件到指定的服务器
-    * @param：  QString  splpath 文件全路径
-    * @return: bool
-    * @date: 2020-10-19
-    */
-    bool on_btn_upload();
 
-    /**
-    * @brief: 响应client 单击事件
-    * @param：
-    * @return:
-    * @date: 2020-10-19
-    */
-    void on_clientlistview_item_clicked(const QModelIndex &index);
 private:
     Ui::ManageTcpCLient *ui;
     QTcpSocket* socket = nullptr;
     AllFilePathInDir* m_file_oper;
+    FileHandle* m_handle_file;
     bool handlingSocketError = false;
     QString m_upload_file_dir;
+    QString m_download_file_dir;
 };
 
 #endif // TCPCLIENT_H

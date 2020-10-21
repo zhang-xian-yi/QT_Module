@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QFile>
 #include <QTextStream>
+#include "allfilepathindir.h"
 
 class NetworkCommunicate: public QObject
 {
@@ -25,5 +26,6 @@ private slots:
 private:
     QTcpServer *server;
     QList<QThread *> threadPool;
+    AllFilePathInDir* m_direct_oper;
 };
 #endif // NETWORKCOMMUNICATE_H

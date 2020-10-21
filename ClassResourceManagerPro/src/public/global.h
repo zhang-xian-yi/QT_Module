@@ -4,12 +4,25 @@
 //文件编码
 #include <QTextCodec>
 #include <QString>
-
-//#define DEBUG_FILE
-//#define DEBUG_RUN
-//#define DEBUG_TCP_TRACE
-#define LOG
+/*
+#define DEBUG_FILE
+#define DEBUG_RUN
+#define DEBUG_NETWORK_TRACE
+#define DEBUG_TCP_TRACE
 #define DEBUG_UI_TRACE
+*/
+
+#define DEBUG_NETWORK_TRACE
+
+#define LOG
+
+
+#ifdef DEBUG_NETWORK_TRACE
+#include <stdio.h>
+#define DEBUG_NETWORK(format,...) printf("[File: " __FILE__ ", Line: %d]:" format "\n", __LINE__, ##__VA_ARGS__)
+#else
+#define DEBUG_NETWORK(format,...)
+#endif
 
 #ifdef DEBUG_UI_TRACE
 #include <stdio.h>

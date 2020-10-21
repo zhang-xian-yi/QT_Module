@@ -3,12 +3,11 @@
 #include "networkcommunicate.h"
 #include "commandhandle.h"
 
-
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-
     NetworkCommunicate n;
+
 
     QThread commandHandleThread;
     CommandHandle command(&n);

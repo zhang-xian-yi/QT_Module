@@ -1,6 +1,8 @@
 #include "commandhandle.h"
 #include <QtCore>
 
+
+
 CommandHandle::CommandHandle(NetworkCommunicate *n, QObject *parent) :
     QObject(parent), network(n)
 {

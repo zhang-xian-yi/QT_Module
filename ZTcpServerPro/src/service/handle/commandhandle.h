@@ -7,6 +7,7 @@
 class CommandHandle : public QObject
 {
     Q_OBJECT
+
 public:
     explicit CommandHandle(NetworkCommunicate *n, QObject *parent = 0);
     ~CommandHandle();
