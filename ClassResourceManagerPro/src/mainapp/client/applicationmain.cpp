@@ -31,6 +31,9 @@ void ApplicationMain::initConnect()
     //连接 业务类 和 界面类信息交互
     connect(m_res_manage,SIGNAL(signal_log(const QStringList& )),m_client,SLOT(LOG_sessionOut(const QStringList&)) );
     connect(m_client,SIGNAL(signal_find_str(const QString& ,const QString& )),m_res_manage,SLOT(slot_search(const QString&,const QString&)));
+
+    connect(m_client,SIGNAL(signal_create(const QString&)),m_res_manage,SLOT(slot_create(const QString&)));
+    connect(m_client,SIGNAL(signal_del(const QString&)),m_res_manage,SLOT(slot_del(const QString&)));
 }
 void ApplicationMain::start()
 {

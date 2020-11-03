@@ -18,6 +18,24 @@ public slots:
     * @date: 2020-10-19
     */
     bool slot_search(const QString& path,const QString& txt);
+
+    /**
+    * @brief: 用于响应创建函数的槽
+    * @param： splpath 指定路径
+    *          name  文件名/文件夹名
+    * @return:
+    * @date: 2020-10-19
+    */
+    bool slot_create(const QString& path);
+    /**
+    * @brief: 用于响应删除函数的槽
+    * @param： splpath 指定路径
+    *          name  文件名/文件夹名
+    * @return:
+    * @date: 2020-10-19
+    */
+    bool slot_del(const QString& path);
+
 public:
     explicit ResourceManage();
     ~ResourceManage();

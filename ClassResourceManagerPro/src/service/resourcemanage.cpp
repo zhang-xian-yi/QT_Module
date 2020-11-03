@@ -37,6 +37,39 @@ bool ResourceManage::slot_search(const QString& path,const QString &txt)
     }
 }
 
+bool ResourceManage::slot_create(const QString &path)
+{
+    LOG_INFO("recv create path:%s ",path.toStdString().c_str());
+    QDir dir(path);
+    QString lastname = StringUtil::getInstance().getLastNameofFilePath(path);
+    if(lastname.contains('.'))
+    {
+        //文件
+        QFile file(path);
+        file.open(QIODevice::ReadWrite);
+        file.close();
+    }
+    else
+    {
+        //目录
+        if(! dir.exists())
+        {
+            dir.mkdir(path);
+        }
+    }
+}
+
+bool ResourceManage::slot_del(const QString &path)
+{
+    LOG_INFO("recv del path:%s ",path.toStdString().c_str());
+    QFileInfo file(path);
+    if(file.exists())
+    {
+        return deleteFileOrDirecty(path);
+    }
+    return false;
+}
+
 
 QStringList ResourceManage::initFileList(const QString & path)
 {

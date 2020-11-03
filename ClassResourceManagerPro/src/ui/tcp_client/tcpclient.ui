@@ -19,11 +19,11 @@
   <property name="windowTitle">
    <string>Secure Socket Client</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>10</y>
+     <x>2</x>
+     <y>11</y>
      <width>784</width>
      <height>581</height>
     </rect>
@@ -172,6 +172,38 @@ p, li { white-space: pre-wrap; }
        <widget class="QListView" name="server_listView">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="btn_create_file">
+        <property name="text">
+         <string>create file</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_create_dir">
+        <property name="text">
+         <string>create Directory</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_del_file">
+        <property name="text">
+         <string>del file</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_del_dir">
+        <property name="text">
+         <string>del Directory</string>
         </property>
        </widget>
       </item>

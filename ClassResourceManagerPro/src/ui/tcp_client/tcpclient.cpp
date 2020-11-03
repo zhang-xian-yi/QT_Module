@@ -112,6 +112,11 @@ void ManageTcpCLient::setupUiConn()
             this, SLOT(sendData()));
 
 
+    connect(ui->btn_create_file,SIGNAL(clicked()),this,SLOT(slot_btn_create_file_clicked()));
+    connect(ui->btn_create_dir,SIGNAL(clicked()),this,SLOT(slot_btn_create_dir_clicked()));
+    connect(ui->btn_del_file,SIGNAL(clicked()),this,SLOT(slot_btn_del_file_clicked()));
+    connect(ui->btn_del_dir,SIGNAL(clicked()),this,SLOT(slot_btn_del_dir_clicked()));
+
     //初始化 client list 的connect
     connect(ui->client_listView,SIGNAL(doubleClicked(const QModelIndex &)),
             this,SLOT(doubleClickedClientListItem(const QModelIndex &)));
@@ -158,9 +163,10 @@ void ManageTcpCLient::updateEnabledState()
 
 void ManageTcpCLient::sendData()
 {
-    const QString input = ui->sessionInput->text();
+    QString input = ui->sessionInput->text();
     appendString(input + '\n');
-    socket->write(input.toUtf8() + "\r\n");
+    QString content = QString::number(MESSAGE)+'`'+input;
+    socket->write(content.toLatin1());
     ui->sessionInput->clear();
 }
 
@@ -204,6 +210,7 @@ void ManageTcpCLient::on_clientlistview_item_clicked(const QModelIndex &index)
     m_upload_file_dir.clear();
     QString txt = ui->client_listView->model()->data(index).toString();
     m_upload_file_dir = ui->curr_dir_lab->text()+"\\"+txt;
+    m_client_click_dir = ui->curr_dir_lab->text()+"\\"+txt;
 }
 
 void ManageTcpCLient::on_serverListview_item_clicked(const QModelIndex &index)
@@ -211,6 +218,26 @@ void ManageTcpCLient::on_serverListview_item_clicked(const QModelIndex &index)
     m_download_file_dir.clear();
     QString txt = ui->server_listView->model()->data(index).toString();
     m_download_file_dir = "data/"+txt;
+}
+
+void ManageTcpCLient::slot_btn_create_file_clicked()
+{
+    emit signal_create(ui->curr_dir_lab->text()+"/new.txt");
+}
+
+void ManageTcpCLient::slot_btn_create_dir_clicked()
+{
+    emit signal_create(ui->curr_dir_lab->text()+"/new");
+}
+
+void ManageTcpCLient::slot_btn_del_file_clicked()
+{
+    emit signal_del(m_client_click_dir);
+}
+
+void ManageTcpCLient::slot_btn_del_dir_clicked()
+{
+    emit signal_del(m_client_click_dir);
 }
 
 void ManageTcpCLient::on_btn_download()
@@ -224,6 +251,8 @@ void ManageTcpCLient::on_btn_syn_clicked()
 {
     QString cmd = QString::number(SYN_FILE_LIST)+"`"+QString::number(0);
     socket->write(cmd.toStdString().c_str());
+    //刷新客户端的文件列表
+    on_btn_search();
 }
 
 void ManageTcpCLient::socketStateChanged(QAbstractSocket::SocketState state)

@@ -32,6 +32,17 @@ signals:
     * @date: 2020-10-19
     */
     void signal_find_str(const QString& path,const QString& txt);
+    /**
+    * @brief:  发送 寻找该字符串匹配的目录
+    * @date: 2020-10-19
+    */
+    void signal_create(const QString& path);
+    /**
+    * @brief:  发送 寻找该字符串匹配的目录
+    * @date: 2020-10-19
+    */
+    void signal_del(const QString& path);
+
 public slots:
     /**
     * @brief:  将传入的数据 写入 session output 平台
@@ -159,6 +170,36 @@ private slots:
     */
     void on_serverListview_item_clicked(const QModelIndex &index);
 
+    /**
+    * @brief: 响应btn_create file 的点击事件
+    * @param：
+    * @return: void
+    * @date: 2020-10-20
+    */
+    void slot_btn_create_file_clicked();
+    /**
+    * @brief: 响应btn_create dir 的点击事件
+    * @param：
+    * @return: void
+    * @date: 2020-10-20
+    */
+    void slot_btn_create_dir_clicked();
+
+    /**
+    * @brief: 响应btn_del file 的点击事件
+    * @param：
+    * @return: void
+    * @date: 2020-10-20
+    */
+    void slot_btn_del_file_clicked();
+    /**
+    * @brief: 响应btn_create dir 的点击事件
+    * @param：
+    * @return: void
+    * @date: 2020-10-20
+    */
+    void slot_btn_del_dir_clicked();
+
 
 
     /**
@@ -223,6 +264,7 @@ private:
     bool handlingSocketError = false;
     QString m_upload_file_dir;
     QString m_download_file_dir;
+    QString m_client_click_dir;
 };
 
 #endif // TCPCLIENT_H
