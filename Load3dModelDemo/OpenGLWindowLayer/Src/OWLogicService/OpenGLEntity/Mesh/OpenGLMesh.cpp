@@ -1,5 +1,5 @@
 #include "OpenGLMesh.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 struct ShaderModelInfo {
     float modelMat[16];   // 64          // 0
     float normalMat[16];  // 64          // 64
@@ -57,17 +57,18 @@ void OpenGLMesh::create() {
     if (m_host->indices().size())
         m_ebo->allocate(&m_host->indices()[0], int(sizeof(uint32_t) * m_host->indices().size()));
 
-    glFuncs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
-    glFuncs->glEnableVertexAttribArray(0);
-    glFuncs->glEnableVertexAttribArray(1);
-    glFuncs->glEnableVertexAttribArray(2);
-    glFuncs->glEnableVertexAttribArray(3);
-    glFuncs->glEnableVertexAttribArray(4);
-    glFuncs->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, position));
-    glFuncs->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, normal));
-    glFuncs->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, tangent));
-    glFuncs->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, bitangent));
-    glFuncs->glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, texCoords));
+
+    //pGlFuncs 为GLobalData中的全局宏定义， 保存OpenGL的方法函数
+    pGlFuncs->glEnableVertexAttribArray(0);
+    pGlFuncs->glEnableVertexAttribArray(1);
+    pGlFuncs->glEnableVertexAttribArray(2);
+    pGlFuncs->glEnableVertexAttribArray(3);
+    pGlFuncs->glEnableVertexAttribArray(4);
+    pGlFuncs->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, position));
+    pGlFuncs->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, normal));
+    pGlFuncs->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, tangent));
+    pGlFuncs->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, bitangent));
+    pGlFuncs->glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, texCoords));
 
     m_vao->release();
 }
@@ -101,23 +102,23 @@ void OpenGLMesh::render(bool pickingPass) {
     commit();
 
     if (!pickingPass && m_host->wireFrameMode())
-        glFuncs->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        pGlFuncs->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else if (m_openGLMaterial)
         m_openGLMaterial->bind();
 
     m_vao->bind();
 
     if (m_host->meshType() == Mesh::Triangle)
-        glFuncs->glDrawElements(GL_TRIANGLES, (GLsizei) m_host->indices().size(), GL_UNSIGNED_INT, 0);
+        pGlFuncs->glDrawElements(GL_TRIANGLES, (GLsizei) m_host->indices().size(), GL_UNSIGNED_INT, 0);
     else if (m_host->meshType() == Mesh::Line)
-        glFuncs->glDrawElements(GL_LINES, (GLsizei) m_host->indices().size(), GL_UNSIGNED_INT, 0);
+        pGlFuncs->glDrawElements(GL_LINES, (GLsizei) m_host->indices().size(), GL_UNSIGNED_INT, 0);
     else
-        glFuncs->glDrawElements(GL_POINTS, (GLsizei) m_host->indices().size(), GL_UNSIGNED_INT, 0);
+        pGlFuncs->glDrawElements(GL_POINTS, (GLsizei) m_host->indices().size(), GL_UNSIGNED_INT, 0);
 
     m_vao->release();
 
     if (!pickingPass && m_host->wireFrameMode())
-        glFuncs->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        pGlFuncs->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     else if (m_openGLMaterial)
         m_openGLMaterial->release();
 }

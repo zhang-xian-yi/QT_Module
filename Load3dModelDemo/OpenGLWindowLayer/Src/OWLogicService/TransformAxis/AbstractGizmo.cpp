@@ -1,5 +1,5 @@
 #include "AbstractGizmo.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 AbstractGizmo::AbstractGizmo(QObject* parent): AbstractEntity(0) {
     m_visible = false;
     m_axis = None;
@@ -41,7 +41,7 @@ void AbstractGizmo::bindTo(AbstractEntity * host) {
         m_host = host;
         connect(m_host, SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << this->objectName() << "is bound to" << host->objectName();
     }
 }

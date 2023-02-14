@@ -1,5 +1,5 @@
 #include <AbstractLight.h>
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 AbstractLight::AbstractLight(): QObject(0) {
     m_color = QVector3D(1.0f, 1.0f, 1.0f);
     m_enabled = true;
@@ -42,7 +42,7 @@ Mesh * AbstractLight::marker() const {
 void AbstractLight::setColor(QVector3D color) {
     if (!isEqual(m_color, color)) {
         m_color = color;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The color of" << this->objectName() << "is set to" << color;
         colorChanged(m_color);
     }
@@ -51,7 +51,7 @@ void AbstractLight::setColor(QVector3D color) {
 void AbstractLight::setEnabled(bool enabled) {
     if (m_enabled != enabled) {
         m_enabled = enabled;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << this->objectName() << "is" << (enabled ? "enabled" : "disabled");
         enabledChanged(m_enabled);
     }
@@ -60,7 +60,7 @@ void AbstractLight::setEnabled(bool enabled) {
 void AbstractLight::setIntensity(float intensity) {
     if (!isEqual(m_intensity, intensity)) {
         m_intensity = intensity;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The intensity of" << this->objectName() << "is set to" << intensity;
         intensityChanged(m_intensity);
     }

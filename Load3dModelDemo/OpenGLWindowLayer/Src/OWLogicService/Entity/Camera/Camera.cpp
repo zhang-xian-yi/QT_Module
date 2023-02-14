@@ -1,13 +1,13 @@
 #include "Camera.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 Camera::Camera(QObject* parent): QObject(0) {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     setObjectName("Camera");
     reset();
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     setParent(parent);
 }
@@ -36,7 +36,7 @@ Camera::Camera(const Camera & camera): QObject(0) {
 }
 
 Camera::~Camera() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Camera" << this->objectName() << "is destroyed";
 }
 
@@ -134,7 +134,7 @@ void Camera::reset() {
     setFarPlane(100000.0f);
     setPosition(QVector3D(40, 40, 40));
     setDirection(QVector3D(-1, -1, -1));
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << this->objectName() << "is reset";
 }
 

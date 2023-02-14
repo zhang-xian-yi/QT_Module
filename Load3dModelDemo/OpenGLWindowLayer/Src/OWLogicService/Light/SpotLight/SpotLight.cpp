@@ -1,6 +1,6 @@
 #include "SpotLight.h"
 #include "Model/ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 SpotLight::SpotLight(QObject * parent): AbstractLight() {
     m_position = QVector3D(0.0f, 0.0f, 0.0f);
     m_direction = QVector3D(0.0f, -1.0f, 0.0f);
@@ -46,14 +46,14 @@ SpotLight::SpotLight(const SpotLight & light): AbstractLight(light) {
 }
 
 SpotLight::~SpotLight() {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     delete m_marker;
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
-    if (log_level >= LOG_LEVEL_ERROR)
+    if (logLV >= LOG_LEVEL_ERROR)
         dout << "Spotlight" << this->objectName() << "is destroyed";
 }
 
@@ -143,7 +143,7 @@ void SpotLight::setEnabled(bool enabled) {
 void SpotLight::setPosition(QVector3D position) {
     if (!isEqual(m_position, position)) {
         m_position = position;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The position of" << this->objectName() << "is set to" << position;
         m_marker->setPosition(m_position);
         positionChanged(m_position);
@@ -153,7 +153,7 @@ void SpotLight::setPosition(QVector3D position) {
 void SpotLight::setDirection(QVector3D direction) {
     if (!isEqual(m_direction, direction)) {
         m_direction = direction;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The direction of" << this->objectName() << "is set to" << direction;
         m_marker->setRotation(QQuaternion::rotationTo(QVector3D(0, -1, 0), m_direction));
         directionChanged(m_direction);
@@ -163,7 +163,7 @@ void SpotLight::setDirection(QVector3D direction) {
 void SpotLight::setInnerCutOff(float innerCutOff) {
     if (!isEqual(m_innerCutOff, innerCutOff)) {
         m_innerCutOff = innerCutOff;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The inner cut-off of" << this->objectName() << "is set to" << innerCutOff;
         innerCutOffChanged(m_innerCutOff);
     }
@@ -172,7 +172,7 @@ void SpotLight::setInnerCutOff(float innerCutOff) {
 void SpotLight::setOuterCutOff(float outerCutOff) {
     if (!isEqual(m_outerCutOff, outerCutOff)) {
         m_outerCutOff = outerCutOff;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The outer cut-off of" << this->objectName() << "is set to" << outerCutOff;
         outerCutOffChanged(m_outerCutOff);
     }
@@ -181,7 +181,7 @@ void SpotLight::setOuterCutOff(float outerCutOff) {
 void SpotLight::setEnableAttenuation(bool enabled) {
     if (m_enableAttenuation != enabled) {
         m_enableAttenuation = enabled;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The attenuation of" << this->objectName()
                  << "is" << (enabled ? "enabled" : "disabled");
         enableAttenuationChanged(m_enableAttenuation);
@@ -197,7 +197,7 @@ void SpotLight::setAttenuationArguments(QVector3D value) {
 void SpotLight::setAttenuationQuadratic(float value) {
     if (!isEqual(m_attenuationQuadratic, value)) {
         m_attenuationQuadratic = value;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The quadratic attenuation arg of" << this->objectName()
                  << "is set to" << value;
         attenuationQuadraticChanged(m_attenuationQuadratic);
@@ -208,7 +208,7 @@ void SpotLight::setAttenuationQuadratic(float value) {
 void SpotLight::setAttenuationLinear(float value) {
     if (!isEqual(m_attenuationLinear, value)) {
         m_attenuationLinear = value;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The linear attenuation arg of" << this->objectName()
                  << "is set to" << value;
         attenuationLinearChanged(m_attenuationLinear);
@@ -219,7 +219,7 @@ void SpotLight::setAttenuationLinear(float value) {
 void SpotLight::setAttenuationConstant(float value) {
     if (!isEqual(m_attenuationConstant, value)) {
         m_attenuationConstant = value;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The constant attenuation arg of" << this->objectName()
                  << "is set to" << value;
         attenuationConstantChanged(m_attenuationConstant);
@@ -231,15 +231,15 @@ void SpotLight::setDirectionFromRotation(QVector3D rotation) {
     QVector3D direction = QQuaternion::fromEulerAngles(rotation) * QVector3D(0, -1, 0);
     if (!isEqual(m_direction, direction)) {
         m_direction = direction;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The direction of" << this->objectName() << "is set to" << direction;
         directionChanged(m_direction);
     }
 }
 
 void SpotLight::initMarker() {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     ModelLoader loader;
     m_marker = loader.loadMeshFromFile(":/resources/shapes/SpotLight.obj");
@@ -249,7 +249,7 @@ void SpotLight::initMarker() {
     m_marker->setObjectName("Spotlight Marker");
     m_marker->setParent(this);
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     connect(m_marker, SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
     connect(m_marker, SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));

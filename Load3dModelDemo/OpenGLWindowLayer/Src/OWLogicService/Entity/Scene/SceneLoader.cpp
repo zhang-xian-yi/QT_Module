@@ -1,5 +1,5 @@
 #include "SceneLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 SceneLoader::SceneLoader() {}
 
 Scene * SceneLoader::loadFromFile(QString filePath) {
@@ -9,7 +9,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     file.open(QIODevice::ReadOnly);
 
     if (!file.isOpen()) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to load file:" << file.errorString();
         m_log += file.errorString() + "\n";
         return 0;
@@ -20,7 +20,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     quint32 magicNumber;
     in >> magicNumber;
     if (magicNumber != 0xA0B0C0D0) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to load file: Invalid File Format";
         m_log += "Invalid File Format.\n";
         return 0;
@@ -29,7 +29,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     quint32 versionNumber;
     in >> versionNumber;
     if (versionNumber > 100) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to load file: Version not supported";
         m_log += "Version not supported.\n";
         return 0;
@@ -45,7 +45,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int cameraNum;
     in >> cameraNum;
     if (cameraNum != 1) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to load file: Unknown error";
         m_log += "Unknown error.\n";
         return 0;

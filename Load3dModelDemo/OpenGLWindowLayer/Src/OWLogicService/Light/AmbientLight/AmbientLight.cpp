@@ -1,5 +1,5 @@
 #include "AmbientLight.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 AmbientLight::AmbientLight(QObject * parent) : AbstractLight() {
     m_color = QVector3D(1.0f, 1.0f, 1.0f);
     setObjectName("Untitled Ambient Light");
@@ -16,7 +16,7 @@ AmbientLight::AmbientLight(const AmbientLight & light) : AbstractLight(light) {
 }
 
 AmbientLight::~AmbientLight() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Ambient light" << this->objectName() << "is destroyed";
 }
 

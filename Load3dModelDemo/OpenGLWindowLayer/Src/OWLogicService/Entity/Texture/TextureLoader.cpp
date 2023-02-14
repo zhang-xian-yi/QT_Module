@@ -1,10 +1,10 @@
 #include "TextureLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 QHash<QString, QWeakPointer<Texture>> TextureLoader::cache;
 
 QSharedPointer<Texture> TextureLoader::loadFromFile(Texture::TextureType textureType, QString filePath) {
     if (cache[filePath].isNull()) {
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "Loading" << filePath;
         QSharedPointer<Texture> texture(new Texture(textureType));
         QImageReader reader(filePath);
@@ -13,7 +13,7 @@ QSharedPointer<Texture> TextureLoader::loadFromFile(Texture::TextureType texture
 
         if (texture->image().isNull()) {
             m_log += "Failed to load texture " + filePath + ": " + reader.errorString() + '\n';
-            if (log_level >= LOG_LEVEL_ERROR)
+            if (logLV >= LOG_LEVEL_ERROR)
                 dout << "Failed to load texture:" << reader.errorString();
             return QSharedPointer<Texture>();
         }
@@ -21,7 +21,7 @@ QSharedPointer<Texture> TextureLoader::loadFromFile(Texture::TextureType texture
         cache[filePath] = texture;
         return texture;
     }
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << filePath << "found in cache";
     return cache[filePath];
 }

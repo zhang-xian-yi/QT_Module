@@ -1,9 +1,6 @@
 #include "AbstractEntity.h"
-#include "AbstractGizmo.h"
-#include "AbstractLight.h"
-#include "Model/Model.h"
 
-#include "Src/OWCommon/MacroDefine.h"
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 
 AbstractEntity* AbstractEntity::m_highlightedObject = 0;
 AbstractEntity* AbstractEntity::m_selectedObject = 0;
@@ -120,7 +117,7 @@ AbstractEntity * AbstractEntity::getSelected() {
 void AbstractEntity::setVisible(bool visible) {
     if (m_visible != visible) {
         m_visible = visible;
-        if (log_level > LOG_LEVEL_INFO)
+        if (logLV > LOG_LEVEL_INFO)
             dout << this->objectName() << "is" << (visible ? "visible" : "invisible");
         visibleChanged(m_visible);
     }
@@ -137,7 +134,7 @@ void AbstractEntity::setHighlighted(bool highlighted) {
     } else if (m_highlightedObject == this)
         m_highlightedObject = 0;
 
-    if (log_level >= LOG_LEVEL_INFO && highlighted)
+    if (logLV >= LOG_LEVEL_INFO && highlighted)
         dout << this->objectName() << "is highlighted";
 
     m_highlighted = highlighted;
@@ -155,7 +152,7 @@ void AbstractEntity::setSelected(bool selected) {
     } else if (m_selectedObject == this)
         m_selectedObject = 0;
 
-    if (log_level >= LOG_LEVEL_INFO && selected)
+    if (logLV >= LOG_LEVEL_INFO && selected)
         dout << this->objectName() << "is selected";
 
     m_selected = selected;
@@ -165,7 +162,7 @@ void AbstractEntity::setSelected(bool selected) {
 void AbstractEntity::setWireFrameMode(bool enabled) {
     if (m_wireFrameMode != enabled) {
         m_wireFrameMode = enabled;
-        if (log_level > LOG_LEVEL_INFO)
+        if (logLV > LOG_LEVEL_INFO)
             dout << "Wireframe mode of " << this->objectName() << "is" << (enabled ? "enabled" : "disabled");
         wireFrameModeChanged(m_wireFrameMode);
     }
@@ -173,14 +170,14 @@ void AbstractEntity::setWireFrameMode(bool enabled) {
 
 void AbstractEntity::setPosition(QVector3D position) {
     if (isnan(position)) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to set position: NaN detected";
         return;
     }
 
     if (!isEqual(m_position, position)) {
         m_position = position;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The position of" << this->objectName() << "is set to" << position;
         positionChanged(m_position);
     }
@@ -192,14 +189,14 @@ void AbstractEntity::setRotation(QQuaternion rotation) {
 
 void AbstractEntity::setRotation(QVector3D rotation) {
     if (isnan(rotation)) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to set rotation: NaN detected";
         return;
     }
 
     if (!isEqual(m_rotation, rotation)) {
         m_rotation = rotation;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The rotation of" << this->objectName() << "is set to" << rotation;
         rotationChanged(m_rotation);
     }
@@ -207,14 +204,14 @@ void AbstractEntity::setRotation(QVector3D rotation) {
 
 void AbstractEntity::setScaling(QVector3D scaling) {
     if (isnan(scaling)) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to set scaling: NaN detected";
         return;
     }
 
     if (!isEqual(m_scaling, scaling)) {
         m_scaling = scaling;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The scaling of" << this->objectName() << "is set to" << scaling;
         scalingChanged(m_scaling);
     }

@@ -1,5 +1,5 @@
 #include "Texture.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 Texture::Texture(TextureType textureType) : QObject(0) {
     setObjectName("Untitled Texture");
     m_enabled = true;
@@ -14,7 +14,7 @@ Texture::Texture(const Texture & texture): QObject(0) {
 }
 
 Texture::~Texture() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Texture" << objectName() << "is destroyed";
 }
 
@@ -45,7 +45,7 @@ const QImage & Texture::image() const {
 void Texture::setEnabled(bool enabled) {
     if (m_enabled != enabled) {
         m_enabled = enabled;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << this->objectName() << "is" << (enabled ? "enabled" : "disabled");
         enabledChanged(m_enabled);
     }
@@ -54,7 +54,7 @@ void Texture::setEnabled(bool enabled) {
 void Texture::setTextureType(TextureType textureType) {
     if (m_textureType != textureType) {
         m_textureType = textureType;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The type of texture" << this->objectName() << "is set to"
                  << (m_textureType == Diffuse ? "Diffuse" : (m_textureType == Specular ? "Specular" : "Height"));
         textureTypeChanged(m_textureType);

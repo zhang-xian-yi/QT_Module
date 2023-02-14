@@ -1,5 +1,5 @@
 #include "ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 // Assimp: 3D model loader
 #include <assimp/Importer.hpp>
 #include <assimp/importerdesc.h>
@@ -13,7 +13,7 @@ ModelLoader::ModelLoader() {
 Model * ModelLoader::loadModelFromFile(QString filePath) {
     if (filePath.length() == 0) {
         m_log += "Filepath is empty.";
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to load model: filepath is empty";
         return 0;
     }
@@ -27,13 +27,13 @@ Model * ModelLoader::loadModelFromFile(QString filePath) {
         aiProcess_OptimizeGraph |
         aiProcess_GenUVCoords;
 
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Loading" << filePath;
 
     if (filePath[0] == ':') { // qrc
         QFile file(filePath);
         if (!file.open(QIODevice::ReadOnly)) {
-            if (log_level >= LOG_LEVEL_ERROR)
+            if (logLV >= LOG_LEVEL_ERROR)
                 dout << "FATAL: failed to open internal file" << filePath;
             exit(-1);
         }
@@ -47,7 +47,7 @@ Model * ModelLoader::loadModelFromFile(QString filePath) {
 
     if (!m_aiScenePtr || !m_aiScenePtr->mRootNode || m_aiScenePtr->mFlags == AI_SCENE_FLAGS_INCOMPLETE) {
         m_log += importer.GetErrorString();
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << importer.GetErrorString();
         return 0;
     }

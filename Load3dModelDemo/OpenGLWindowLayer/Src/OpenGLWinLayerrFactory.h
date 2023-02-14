@@ -2,7 +2,6 @@
 #define OPENGLWINLAYER_H
 
 #include "OpenGLWindowLayer/Src/OWCommon/OpenGLWindowLayer_global.h" //向外部暴露的接口必须使用带模块名的路径
-#include "OpenGLWindowLayer/Src/OWCommon/MacroDefine.h"
 #include "IOpenGLWin.h"
 #include "ILoad3D.h"
 
@@ -14,7 +13,17 @@ namespace OWlayerNS
 {
     class OPENGLWINDOWLAYER_EXPORT OpenGLWinLayerrFactory
     {
-    SingletonSelfConstruct(OpenGLWinLayerrFactory)
+    private:
+        OpenGLWinLayerrFactory();
+        ~OpenGLWinLayerrFactory();
+        OpenGLWinLayerrFactory(OpenGLWinLayerrFactory& instance) = delete;
+        OpenGLWinLayerrFactory& operator=(const OpenGLWinLayerrFactory& instance) = delete;
+    public:
+        static OpenGLWinLayerrFactory& GetInstance()
+        {
+            static OpenGLWinLayerrFactory instance;
+            return instance;
+        }
 
     public:
         //获取opengGL窗口初始化的结果

@@ -1,12 +1,12 @@
 #include "RotateGizmo.h"
 #include "Model/ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 RotateGizmo::RotateGizmo(QObject* parent): AbstractGizmo(0) {
     setObjectName("Rotation Gizmo");
     m_markers.resize(3);
 
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     ModelLoader loader;
     m_markers[0] = loader.loadMeshFromFile(":/resources/shapes/RotX.obj");
@@ -22,7 +22,7 @@ RotateGizmo::RotateGizmo(QObject* parent): AbstractGizmo(0) {
         m_markers[i]->setParent(this);
     }
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     setParent(parent);
 }
@@ -30,7 +30,7 @@ RotateGizmo::RotateGizmo(QObject* parent): AbstractGizmo(0) {
 RotateGizmo::~RotateGizmo() {}
 
 void RotateGizmo::translate(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Translating a ROTATION ONLY gizmo is not allowed";
 }
 
@@ -45,7 +45,7 @@ void RotateGizmo::rotate(QVector3D rotation) {
 }
 
 void RotateGizmo::scale(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Scaling a ROTATION ONLY gizmo is not allowed";
 }
 
@@ -130,7 +130,7 @@ void RotateGizmo::drag(QPoint from, QPoint to, int scnWidth, int scnHeight, QMat
 }
 
 void RotateGizmo::setPosition(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the position of a ROTATION ONLY gizmo is not allowed";
 }
 
@@ -145,6 +145,6 @@ void RotateGizmo::setRotation(QVector3D rotation) {
 }
 
 void RotateGizmo::setScaling(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the scaling of a ROTATION ONLY gizmo is not allowed";
 }

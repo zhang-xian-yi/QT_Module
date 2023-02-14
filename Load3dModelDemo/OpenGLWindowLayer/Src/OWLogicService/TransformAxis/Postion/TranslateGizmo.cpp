@@ -1,12 +1,12 @@
 #include "TranslateGizmo.h"
 #include "Model/ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 TranslateGizmo::TranslateGizmo(QObject* parent): AbstractGizmo(0) {
     setObjectName("Translation Gizmo");
     m_markers.resize(3);
 
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     ModelLoader loader;
     m_markers[0] = loader.loadMeshFromFile(":/resources/shapes/TransX.obj");
@@ -22,7 +22,7 @@ TranslateGizmo::TranslateGizmo(QObject* parent): AbstractGizmo(0) {
         m_markers[i]->setParent(this);
     }
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     setParent(parent);
 }
@@ -35,17 +35,17 @@ void TranslateGizmo::translate(QVector3D delta) {
 }
 
 void TranslateGizmo::rotate(QQuaternion) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Rotating a TRANSLATION ONLY gizmo is not allowed.";
 }
 
 void TranslateGizmo::rotate(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Rotating a TRANSLATION ONLY gizmo is not allowed.";
 }
 
 void TranslateGizmo::scale(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Scaling a TRANSLATION ONLY gizmo is not allowed.";
 }
 
@@ -126,16 +126,16 @@ void TranslateGizmo::setPosition(QVector3D position) {
 }
 
 void TranslateGizmo::setRotation(QQuaternion) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the rotation of a TRANSLATION ONLY gizmo is not allowed";
 }
 
 void TranslateGizmo::setRotation(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the rotation of a TRANSLATION ONLY gizmo is not allowed";
 }
 
 void TranslateGizmo::setScaling(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the scaling of a TRANSLATION ONLY gizmo is not allowed";
 }

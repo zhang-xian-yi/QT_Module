@@ -1,5 +1,5 @@
 #include "ModelExporter.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 // Assimp: 3D model loader
 #include <assimp/Exporter.hpp>
 #include <assimp/scene.h>
@@ -37,7 +37,7 @@ void ModelExporter::saveToFile(Model* model, QString filePath) {
     if (AI_SUCCESS != exporter.Export(m_aiScenePtr,
                                       QFileInfo(filePath).suffix().toStdString(),
                                       filePath.toStdString())) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << exporter.GetErrorString();
         m_log += exporter.GetErrorString();
         return;
@@ -82,7 +82,7 @@ void ModelExporter::saveToFile(Mesh * mesh, QString filePath) {
                                       QFileInfo(filePath).suffix().toStdString(),
                                       filePath.toStdString())) {
         m_log += exporter.GetErrorString();
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << exporter.GetErrorString();
         return;
     }

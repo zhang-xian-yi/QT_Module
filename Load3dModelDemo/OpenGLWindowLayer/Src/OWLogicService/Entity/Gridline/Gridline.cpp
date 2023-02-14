@@ -1,8 +1,10 @@
 #include "Gridline.h"
 
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
+
 Gridline::Gridline(QObject* parent): QObject(0) {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     m_marker = new Mesh(Mesh::Line, this);
     m_marker->setObjectName("Gridline Marker");
@@ -11,7 +13,7 @@ Gridline::Gridline(QObject* parent): QObject(0) {
     setObjectName("Untitled Gridline");
     reset();
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     setParent(parent);
 }
@@ -19,8 +21,8 @@ Gridline::Gridline(QObject* parent): QObject(0) {
 // Dump info
 
 Gridline::Gridline(const Gridline & gridline): QObject(0) {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     m_marker = new Mesh(Mesh::Line, 0);
     m_marker->setMaterial(new Material);
@@ -35,18 +37,18 @@ Gridline::Gridline(const Gridline & gridline): QObject(0) {
     update();
     setObjectName(gridline.objectName());
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 }
 
 Gridline::~Gridline() {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     delete m_marker;
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Gridline" << this->objectName() << "is destroyed";
 }
 
@@ -108,7 +110,7 @@ void Gridline::reset() {
     m_xStride = m_yStride = m_zStride = 1;
     m_color = QVector3D(0.4f, 0.4f, 0.4f);
     update();
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << this->objectName() << "is reset";
 }
 

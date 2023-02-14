@@ -1,5 +1,7 @@
 #include "Material.h"
 
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
+
 Material::Material(QObject* parent): QObject(0) {
     m_color = QVector3D(1.0f, 1.0f, 1.0f);
     m_ambient = 0.2f;
@@ -35,7 +37,7 @@ Material::Material(const Material & material): QObject(0) {
 }
 
 Material::~Material() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Material" << this->objectName() << "is destroyed";
 }
 
@@ -93,7 +95,7 @@ QSharedPointer<Texture> Material::bumpTexture() {
 void Material::setColor(QVector3D color) {
     if (!isEqual(m_color, color)) {
         m_color = color;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The color of" << this->objectName() << "is set to" << color;
         colorChanged(m_color);
     }
@@ -102,7 +104,7 @@ void Material::setColor(QVector3D color) {
 void Material::setAmbient(float ambient) {
     if (!isEqual(m_ambient, ambient)) {
         m_ambient = ambient;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The ambient weight of" << this->objectName() << "is set to" << ambient;
         ambientChanged(m_ambient);
     }
@@ -111,7 +113,7 @@ void Material::setAmbient(float ambient) {
 void Material::setDiffuse(float diffuse) {
     if (!isEqual(m_diffuse, diffuse)) {
         m_diffuse = diffuse;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The diffuse weight of" << this->objectName() << "is set to" << diffuse;
         diffuseChanged(m_diffuse);
     }
@@ -120,7 +122,7 @@ void Material::setDiffuse(float diffuse) {
 void Material::setSpecular(float specular) {
     if (!isEqual(m_specular, specular)) {
         m_specular = specular;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The specular weight of" << this->objectName() << "is set to" << specular;
         specularChanged(m_specular);
     }
@@ -129,7 +131,7 @@ void Material::setSpecular(float specular) {
 void Material::setShininess(float shininess) {
     if (!isEqual(m_shininess, shininess)) {
         m_shininess = shininess;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The shininess of" << this->objectName() << "is set to" << shininess;
         shininessChanged(m_shininess);
     }
@@ -138,7 +140,7 @@ void Material::setShininess(float shininess) {
 void Material::setDiffuseTexture(QSharedPointer<Texture> diffuseTexture) {
     if (m_diffuseTexture != diffuseTexture) {
         m_diffuseTexture = diffuseTexture;
-        if (log_level >= LOG_LEVEL_INFO && !diffuseTexture.isNull())
+        if (logLV >= LOG_LEVEL_INFO && !diffuseTexture.isNull())
             dout << "Diffuse texture" << diffuseTexture->objectName()
                  << "is assigned to material" << this->objectName();
         diffuseTextureChanged(m_diffuseTexture);
@@ -148,7 +150,7 @@ void Material::setDiffuseTexture(QSharedPointer<Texture> diffuseTexture) {
 void Material::setSpecularTexture(QSharedPointer<Texture> specularTexture) {
     if (m_specularTexture != specularTexture) {
         m_specularTexture = specularTexture;
-        if (log_level >= LOG_LEVEL_INFO && !specularTexture.isNull())
+        if (logLV >= LOG_LEVEL_INFO && !specularTexture.isNull())
             dout << "Specular texture" << specularTexture->objectName()
                  << "is assigned to material" << this->objectName();
         specularTextureChanged(m_specularTexture);
@@ -158,7 +160,7 @@ void Material::setSpecularTexture(QSharedPointer<Texture> specularTexture) {
 void Material::setBumpTexture(QSharedPointer<Texture> bumpTexture) {
     if (m_bumpTexture != bumpTexture) {
         m_bumpTexture = bumpTexture;
-        if (log_level >= LOG_LEVEL_INFO && !bumpTexture.isNull())
+        if (logLV >= LOG_LEVEL_INFO && !bumpTexture.isNull())
             dout << "Bump texture" << bumpTexture->objectName()
                  << "is assigned to material" << this->objectName();
         bumpTextureChanged(m_bumpTexture);

@@ -1,8 +1,5 @@
 #include "OpenGLWinLayerControl.h"
 #include "Src/OWLogicService/OpenGLWindowsLayerService.h"
-#include "Src/OWCommon/MacroDefine.h"
-
-int log_level = LOG_LEVEL_WARNING;//此处定义日志等级，且定义一次
 
 OpenGLWinLayerControl::OpenGLWinLayerControl()
     :m_pOWLService(nullptr)

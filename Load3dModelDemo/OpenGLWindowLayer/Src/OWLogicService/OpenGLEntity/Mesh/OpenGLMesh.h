@@ -30,7 +30,6 @@ private:
 
     QOpenGLVertexArrayObject * m_vao;
     QOpenGLBuffer * m_vbo, *m_ebo;
-    QOpenGLFunctions_3_3_Core * glFuncs;
     OpenGLMaterial *m_openGLMaterial;
 
     static OpenGLUniformBufferObject *m_modelInfo;

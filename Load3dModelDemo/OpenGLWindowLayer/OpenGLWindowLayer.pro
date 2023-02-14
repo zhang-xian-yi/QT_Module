@@ -4,40 +4,25 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = OpenGLWinLayer
 TEMPLATE = lib
-#导出洪
+#配置
+CONFIG += c++17
+#导出宏定义
 DEFINES += OPENGLWINDOWLAYER_LIBRARY
-#参数
-#VERSION = 1.0.0
-DEFINES += \
-    QT_DEPRECATED_WARNINGS \
+#过时函数Warn 宏定义
+DEFINES += QT_DEPRECATED_WARNINGS
 
-#APP_VERSION=\\\"v$${VERSION}\\\"
 
+#输出路径
+DESTDIR = $$PWD/../OutputDir/ExecuteBin
+#预编译头文件
+PRECOMPILED_HEADER += \
+                    $$PWD/Src/OWCommon/PCH.h
+#头文件包含的搜索路径
 #模块外部使用的路径（带模块名的头文件搜索）
 INCLUDEPATH += $$PWD/../
 #模块内部使用的相对路径
 INCLUDEPATH += $$PWD/
-#配置
-CONFIG += c++17
-DESTDIR = $$PWD/../OutputDir/ExecuteBin
-
-PRECOMPILED_HEADER += \
-                    $$PWD/Src/OWCommon/PCH.h
-
-HEADERS += \
-    Src/ILoad3D.h \
-    Src/OWCommon/PCH.h \
-    Src/OWCommon/MacroDefine.h \
-    Src/OWCommon/OpenGLWindowLayer_global.h \
-    Src/IOpenGLWin.h \
-    Src/OpenGLWinLayerrFactory.h \
-    Src/OWMControl/OpenGLWinLayerControl.h \
-
-SOURCES += \
-    Src/OWMControl/OpenGLWinLayerControl.cpp \
-    Src/OpenGLWinLayerrFactory.cpp \
-
-
+#源码中的头文件搜索路径
 INCLUDEPATH += \
     Src/OWLogicService/Entity \
     Src/OWLogicService/Light \
@@ -45,13 +30,16 @@ INCLUDEPATH += \
     Src/OWLogicService/Services \
     Src/OWLogicService/TransformAxis \
     Src/OWLogicService/UI \
+#第三方库依赖的头文件搜索路径
+INCLUDEPATH += \
     VendorLib/include
-
+#资源文件
 RESOURCES += OWRes.qrc
-
+#第三方库连接
 LIBS += -lopengl32
 LIBS += -L$$PWD/VendorLib/libs -lassimp-vc142-mt
 
+#debug 配置
 CONFIG(debug) {
     DEFINES += DEBUG_OUTPUT
     MOC_DIR = $$PWD/../OutputDir/tmp/debug
@@ -59,7 +47,7 @@ CONFIG(debug) {
     RCC_DIR = $$PWD/../OutputDir/tmp/debug
     UI_DIR = $$PWD/../OutputDir/tmp/debug
 }
-
+#release 配置
 CONFIG(release) {
     MOC_DIR = $$PWD/../OutputDir/tmp/release
     OBJECTS_DIR = $$PWD/../OutputDir/tmp/release
@@ -67,8 +55,27 @@ CONFIG(release) {
     UI_DIR = $$PWD/../OutputDir/tmp/release
 }
 
+#外部 .h
 HEADERS += \
-    Src/OWCommon/extmath.h \
+    Src/ILoad3D.h \
+    Src/IOpenGLWin.h \
+    Src/OpenGLWinLayerrFactory.h \
+    Src/OWCommon/PCH.h \
+    Src/OWCommon/GlobalData.h \
+    Src/OWCommon/ExtendMath.h \
+    Src/OWCommon/OpenGLWindowLayer_global.h \
+    Src/OWMControl/OpenGLWinLayerControl.h \
+
+#外部 .cpp
+SOURCES += \
+    Src/OpenGLWinLayerrFactory.cpp \
+    Src/OWCommon/GlobalData.cpp \
+    Src/OWCommon/ExtendMath.cpp \
+    Src/OWMControl/OpenGLWinLayerControl.cpp \
+
+
+#内部 .h
+HEADERS += \
     Src/OWLogicService/Entity/AbstractEntity.h \
     Src/OWLogicService/Entity/Camera/Camera.h \
     Src/OWLogicService/Entity/Gridline/Gridline.h \
@@ -102,8 +109,8 @@ HEADERS += \
     Src/OWLogicService/OpenGLEntity/OpenGLUniformBufferObject.h \
     Src/OWLogicService/OpenGLWindowsLayerService.h \
 
+#内部 .cpp
 SOURCES += \
-    Src/OWCommon/extmath.cpp \
     Src/OWLogicService/Entity/AbstractEntity.cpp \
     Src/OWLogicService/Entity/Camera/Camera.cpp \
     Src/OWLogicService/Entity/Gridline/Gridline.cpp \

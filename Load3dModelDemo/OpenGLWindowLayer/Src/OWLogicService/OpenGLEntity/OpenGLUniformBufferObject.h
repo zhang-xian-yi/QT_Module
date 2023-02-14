@@ -22,8 +22,6 @@ public:
     void release();
 
     static void bindUniformBlock(QOpenGLShaderProgram * shader);
-
 private:
     GLuint m_id;
-    static QOpenGLFunctions_3_3_Core* glFuncs;
 };

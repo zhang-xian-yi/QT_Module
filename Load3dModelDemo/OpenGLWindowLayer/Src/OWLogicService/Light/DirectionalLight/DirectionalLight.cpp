@@ -1,4 +1,5 @@
 #include "DirectionalLight.h"
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 
 DirectionalLight::DirectionalLight(QObject * parent) : AbstractLight() {
     m_color = QVector3D(1.0f, 1.0f, 1.0f);
@@ -19,7 +20,7 @@ DirectionalLight::DirectionalLight(const DirectionalLight & light): AbstractLigh
 }
 
 DirectionalLight::~DirectionalLight() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Directional light" << this->objectName() << "is destroyed";
 }
 
@@ -42,7 +43,7 @@ QVector3D DirectionalLight::direction() {
 void DirectionalLight::setDirection(QVector3D direction) {
     if (!isEqual(m_direction, direction)) {
         m_direction = direction;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The direction of" << this->objectName() << "is set to" << direction;
         directionChanged(m_direction);
     }

@@ -1,5 +1,5 @@
 #include "SceneSaver.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 SceneSaver::SceneSaver(Scene* scene) {
     m_scene = scene;
 }
@@ -13,7 +13,7 @@ bool SceneSaver::saveToFile(QString filePath) {
     file.open(QIODevice::WriteOnly);
 
     if (!file.isOpen()) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to write to file:" << file.errorString();
         m_log += file.errorString();
         return false;

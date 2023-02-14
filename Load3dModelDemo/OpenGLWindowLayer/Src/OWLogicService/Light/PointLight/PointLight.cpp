@@ -1,6 +1,6 @@
 #include "PointLight.h"
 #include "Model/ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 PointLight::PointLight(QObject * parent): AbstractLight() {
     m_enableAttenuation = false;
     m_attenuationQuadratic = 0.0007f;
@@ -36,14 +36,14 @@ PointLight::PointLight(const PointLight & light): AbstractLight(light) {
 }
 
 PointLight::~PointLight() {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     delete m_marker;
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Point light" << objectName() << "is destroyed";
 }
 
@@ -109,7 +109,7 @@ void PointLight::setVisible(bool visible) {
 void PointLight::setPosition(QVector3D position) {
     if (!isEqual(m_position, position)) {
         m_position = position;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The position of" << this->objectName() << "is set to" << position;
         m_marker->setPosition(position);
         positionChanged(m_position);
@@ -124,7 +124,7 @@ void PointLight::setEnabled(bool enabled) {
 void PointLight::setEnableAttenuation(bool enabled) {
     if (m_enableAttenuation != enabled) {
         m_enableAttenuation = enabled;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The attenuation of" << this->objectName()
                  << "is" << (enabled ? "enabled" : "disabled");
         enableAttenuationChanged(m_enableAttenuation);
@@ -140,7 +140,7 @@ void PointLight::setAttenuationArguments(QVector3D value) {
 void PointLight::setAttenuationQuadratic(float value) {
     if (!isEqual(m_attenuationQuadratic, value)) {
         m_attenuationQuadratic = value;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The quadratic attenuation arg of" << this->objectName()
                  << "is set to" << value;
         attenuationQuadraticChanged(m_attenuationQuadratic);
@@ -151,7 +151,7 @@ void PointLight::setAttenuationQuadratic(float value) {
 void PointLight::setAttenuationLinear(float value) {
     if (!isEqual(m_attenuationLinear, value)) {
         m_attenuationLinear = value;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The linear attenuation arg of" << this->objectName()
                  << "is set to" << value;
         attenuationLinearChanged(m_attenuationLinear);
@@ -162,7 +162,7 @@ void PointLight::setAttenuationLinear(float value) {
 void PointLight::setAttenuationConstant(float value) {
     if (!isEqual(m_attenuationConstant, value)) {
         m_attenuationConstant = value;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The constant attenuation arg of" << this->objectName()
                  << "is set to" << value;
         attenuationConstantChanged(m_attenuationConstant);
@@ -171,8 +171,8 @@ void PointLight::setAttenuationConstant(float value) {
 }
 
 void PointLight::initMarker() {
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     ModelLoader loader;
 
@@ -182,7 +182,7 @@ void PointLight::initMarker() {
     m_marker->setObjectName("Point Light Marker");
     m_marker->setParent(this);
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     connect(m_marker, SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
     connect(m_marker, SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));

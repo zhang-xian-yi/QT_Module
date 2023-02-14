@@ -1,12 +1,12 @@
 #include "ScaleGizmo.h"
 #include "Model/ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 ScaleGizmo::ScaleGizmo(QObject* parent): AbstractGizmo(0) {
     setObjectName("Scaling Gizmo");
     m_markers.resize(3);
 
-    int tmp_log_level = log_level;
-    log_level = LOG_LEVEL_WARNING;
+    int tmp_log_level = logLV;
+    logLV = LOG_LEVEL_WARNING;
 
     ModelLoader loader;
     m_markers[0] = loader.loadMeshFromFile(":/resources/shapes/ScaleX.obj");
@@ -22,7 +22,7 @@ ScaleGizmo::ScaleGizmo(QObject* parent): AbstractGizmo(0) {
         m_markers[i]->setParent(this);
     }
 
-    log_level = tmp_log_level;
+    logLV = tmp_log_level;
 
     setParent(parent);
 }
@@ -30,17 +30,17 @@ ScaleGizmo::ScaleGizmo(QObject* parent): AbstractGizmo(0) {
 ScaleGizmo::~ScaleGizmo() {}
 
 void ScaleGizmo::translate(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Translating a SCALING ONLY gizmo is not allowed.";
 }
 
 void ScaleGizmo::rotate(QQuaternion) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Rotating a SCALING ONLY gizmo is not allowed.";
 }
 
 void ScaleGizmo::rotate(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Rotating a SCALING ONLY gizmo is not allowed.";
 }
 
@@ -127,17 +127,17 @@ void ScaleGizmo::drag(QPoint from, QPoint to, int scnWidth, int scnHeight, QMatr
 }
 
 void ScaleGizmo::setPosition(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the position of a SCALING ONLY gizmo is not allowed";
 }
 
 void ScaleGizmo::setRotation(QQuaternion) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the rotation of a SCALING ONLY gizmo is not allowed";
 }
 
 void ScaleGizmo::setRotation(QVector3D) {
-    if (log_level >= LOG_LEVEL_WARNING)
+    if (logLV >= LOG_LEVEL_WARNING)
         dout << "Setting the rotation of a SCALING ONLY gizmo is not allowed";
 }
 

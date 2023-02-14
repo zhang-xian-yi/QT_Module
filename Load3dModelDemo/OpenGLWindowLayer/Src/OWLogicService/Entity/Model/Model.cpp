@@ -1,5 +1,7 @@
 #include "Model.h"
 
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
+
 Model::Model(QObject * parent): AbstractEntity(0) {
     setObjectName("Untitled model");
     setParent(parent);
@@ -13,7 +15,7 @@ Model::Model(const Model & model): AbstractEntity(model) {
 }
 
 Model::~Model() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Model" << this->objectName() << "is destroyed";
 }
 
@@ -25,7 +27,7 @@ bool Model::addChildMesh(Mesh * mesh) {
     mesh->setParent(this);
     childMeshAdded(mesh);
 
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Mesh" << mesh->objectName() << "is added to model" << this->objectName() << "as child";
 
     return true;
@@ -39,7 +41,7 @@ bool Model::addChildModel(Model * model) {
     model->setParent(this);
     childModelAdded(model);
 
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Model" << model->objectName() << "is added to model" << this->objectName() << "as child";
 
     return true;
@@ -50,7 +52,7 @@ bool Model::removeChildMesh(QObject * mesh, bool recursive) {
         if (m_childMeshes[i] == mesh) {
             m_childMeshes.erase(m_childMeshes.begin() + i);
             childMeshRemoved(mesh);
-            if (log_level >= LOG_LEVEL_INFO)
+            if (logLV >= LOG_LEVEL_INFO)
                 dout << "Child mesh" << mesh->objectName() << "is removed from model" << this->objectName();
             if (m_childMeshes.size() == 0 && m_childModels.size() == 0)
                 delete this;
@@ -68,7 +70,7 @@ bool Model::removeChildModel(QObject * model, bool recursive) {
         if (m_childModels[i] == model) {
             m_childModels.erase(m_childModels.begin() + i);
             childModelRemoved(model);
-            if (log_level >= LOG_LEVEL_INFO)
+            if (logLV >= LOG_LEVEL_INFO)
                 dout << "Child model" << model->objectName() << "is removed from model" << this->objectName();
             if (m_childMeshes.size() == 0 && m_childModels.size() == 0)
                 delete this;

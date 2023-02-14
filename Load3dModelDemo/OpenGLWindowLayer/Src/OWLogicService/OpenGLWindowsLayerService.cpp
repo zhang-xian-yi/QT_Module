@@ -1,5 +1,6 @@
 #include "OpenGLWindowsLayerService.h"
 #include "Entity/Model/ModelLoader.h"
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent):
     m_pScene(nullptr)
 {
@@ -46,7 +47,7 @@ void OpenGLWindowsLayerService::ImportModelFile(QString& filepath)
     if (loader.hasErrorLog()) {
         QString log = loader.errorLog();
         QMessageBox::critical(0, "Error", log);
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << log;
     }
 

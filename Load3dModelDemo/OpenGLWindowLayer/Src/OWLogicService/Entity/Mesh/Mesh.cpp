@@ -1,7 +1,7 @@
 #include "Mesh.h"
 #include "AbstractGizmo.h"
 #include "AbstractLight.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 Mesh::Mesh(QObject * parent): AbstractEntity(0) {
     m_meshType = Triangle;
     m_material = 0;
@@ -25,7 +25,7 @@ Mesh::Mesh(const Mesh & mesh): AbstractEntity(mesh) {
 }
 
 Mesh::~Mesh() {
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Mesh" << this->objectName() << "is destroyed";
 }
 
@@ -154,12 +154,12 @@ Mesh * Mesh::merge(const Mesh * mesh1, const Mesh * mesh2) {
     }
 
     if (mesh1->meshType() != mesh2->meshType()) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to merge" << mesh1->objectName() << "and" << mesh2->objectName() << ": type not match";
         return 0;
     }
 
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Merging" << mesh1->objectName() << "and" << mesh2->objectName();
 
     Mesh* mergedMesh = new Mesh(mesh1->meshType());
@@ -182,7 +182,7 @@ Mesh * Mesh::merge(const Mesh * mesh1, const Mesh * mesh2) {
 void Mesh::setMeshType(MeshType meshType) {
     if (m_meshType != meshType) {
         m_meshType = meshType;
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "The type of mesh" << this->objectName() << "is set to"
                  << (m_meshType == Triangle ? "Triangle" : (m_meshType == Line ? "Line" : "Point"));
         meshTypeChanged(m_meshType);
@@ -209,7 +209,7 @@ bool Mesh::setMaterial(Material * material) {
     if (material) {
         m_material = material;
         m_material->setParent(this);
-        if (log_level >= LOG_LEVEL_INFO)
+        if (logLV >= LOG_LEVEL_INFO)
             dout << "Material" << material->objectName() << "is assigned to mesh" << objectName();
     }
 
@@ -220,7 +220,7 @@ bool Mesh::setMaterial(Material * material) {
 void Mesh::reverseNormals() {
     for (int i = 0; i < m_vertices.size(); i++)
         m_vertices[i].normal = -m_vertices[i].normal;
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Normals of" << this->objectName() << "is reversed";
     geometryChanged(m_vertices, m_indices);
 }
@@ -228,7 +228,7 @@ void Mesh::reverseNormals() {
 void Mesh::reverseTangents() {
     for (int i = 0; i < m_vertices.size(); i++)
         m_vertices[i].tangent = -m_vertices[i].tangent;
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Tangents of" << this->objectName() << "is reversed";
     geometryChanged(m_vertices, m_indices);
 }
@@ -236,7 +236,7 @@ void Mesh::reverseTangents() {
 void Mesh::reverseBitangents() {
     for (int i = 0; i < m_vertices.size(); i++)
         m_vertices[i].bitangent = -m_vertices[i].bitangent;
-    if (log_level >= LOG_LEVEL_INFO)
+    if (logLV >= LOG_LEVEL_INFO)
         dout << "Bitangents of" << this->objectName() << "is reversed";
     geometryChanged(m_vertices, m_indices);
 }

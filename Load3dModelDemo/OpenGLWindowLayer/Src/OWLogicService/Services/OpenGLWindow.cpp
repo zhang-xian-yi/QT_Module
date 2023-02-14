@@ -1,6 +1,6 @@
 #include "OpenGLWindow.h"
 #include "Model/ModelLoader.h"
-
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 OpenGLWindow::OpenGLWindow() {
     m_lastCursorPos = QCursor::pos();
     m_enableMousePicking = true;
@@ -54,7 +54,7 @@ void OpenGLWindow::setRenderer(OpenGLRenderer * renderer)
         if (m_renderer->hasErrorLog()) {
             QString log = m_renderer->errorLog();
             QMessageBox::critical(0, "Failed to load shaders", log);
-            if (log_level >= LOG_LEVEL_ERROR)
+            if (logLV >= LOG_LEVEL_ERROR)
                 dout << log;
         }
     }
@@ -70,6 +70,8 @@ void OpenGLWindow::setCustomRenderingLoop(void (*customRenderingLoop)(Scene*)) {
 
 void OpenGLWindow::initializeGL() {
     initializeOpenGLFunctions();
+    GlobalData::GetInstance().InitOpenGLFunc();//初始化OpenGL函数
+
     glEnable(GL_DEPTH_TEST);
 
     if (m_renderer)
@@ -79,14 +81,14 @@ void OpenGLWindow::initializeGL() {
         {
             QString log = m_renderer->errorLog();
             QMessageBox::critical(0, "Failed to load shaders", log);
-            if (log_level >= LOG_LEVEL_ERROR)
+            if (logLV >= LOG_LEVEL_ERROR)
                 dout << log;
         }
     }
     else
     {
         QMessageBox::critical(0, "Failed to initialize OpenGL", "No renderer specified.");
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "No renderer specified";
     }
 }
@@ -143,7 +145,7 @@ bool OpenGLWindow::event(QEvent * event) {
             if (loader.hasErrorLog()) {
                 QString log = loader.errorLog();
                 QMessageBox::critical(0, "Error", log);
-                if (log_level >= LOG_LEVEL_ERROR)
+                if (logLV >= LOG_LEVEL_ERROR)
                     dout << log;
             }
 

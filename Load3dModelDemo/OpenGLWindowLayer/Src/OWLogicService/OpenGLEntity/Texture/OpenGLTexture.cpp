@@ -1,11 +1,12 @@
 #include "OpenGLTexture.h"
+#include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 
 OpenGLTexture::OpenGLTexture(Texture * texture) {
     m_host = texture;
     m_openGLTexture = 0;
 
     if (m_host->property("OpenGLTexturePointer").isValid()) {
-        if (log_level >= LOG_LEVEL_ERROR)
+        if (logLV >= LOG_LEVEL_ERROR)
             dout << "FATAL: Multiple OpenGLTexture instances are bound to one texture";
         exit(-1);
     }
