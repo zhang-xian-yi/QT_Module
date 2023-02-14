@@ -19,10 +19,7 @@ OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent):
 
 OpenGLWindowsLayerService::~OpenGLWindowsLayerService()
 {
-    if (m_pScene) {
-        delete m_pScene;
-        m_pScene = nullptr;
-    }
+
 }
 
 

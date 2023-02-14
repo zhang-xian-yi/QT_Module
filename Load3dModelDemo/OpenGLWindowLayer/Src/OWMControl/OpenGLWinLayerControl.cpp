@@ -7,6 +7,15 @@ OpenGLWinLayerControl::OpenGLWinLayerControl()
 
 }
 
+OpenGLWinLayerControl::~OpenGLWinLayerControl()
+{
+    if(m_pOWLService)
+    {
+        delete m_pOWLService;
+        m_pOWLService = nullptr;
+    }
+}
+
 void OpenGLWinLayerControl::initOpenGLWin(QWidget* parent)
 {
     if(m_pOWLService == nullptr)

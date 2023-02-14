@@ -41,7 +41,8 @@ LIBS += -L$$PWD/VendorLib/libs -lassimp-vc142-mt
 
 #debug 配置
 CONFIG(debug) {
-    DEFINES += DEBUG_OUTPUT
+    DEFINES += DEBUG_VLD
+    LIBS += -L$$PWD/VendorLib/libs -lvld #debug 内存vld监测
     MOC_DIR = $$PWD/../OutputDir/tmp/debug
     OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug
     RCC_DIR = $$PWD/../OutputDir/tmp/debug

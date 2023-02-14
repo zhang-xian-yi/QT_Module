@@ -23,7 +23,7 @@ OpenGLMesh::OpenGLMesh(Mesh * mesh, QObject* parent): QObject(0) {
     if (m_host->material())
         m_openGLMaterial = new OpenGLMaterial(m_host->material());
     else
-        m_openGLMaterial = 0;
+        m_openGLMaterial = nullptr;
 
     connect(m_host, SIGNAL(materialChanged(Material*)), this, SLOT(materialChanged(Material*)));
     connect(m_host, SIGNAL(geometryChanged(QVector<Vertex>, QVector<uint32_t>)), this, SLOT(geometryChanged(QVector<Vertex>, QVector<uint32_t>)));
@@ -34,6 +34,13 @@ OpenGLMesh::OpenGLMesh(Mesh * mesh, QObject* parent): QObject(0) {
 
 OpenGLMesh::~OpenGLMesh() {
     this->destroy();
+    //此函数不止虚构会调用，如果将m_openGLMaterial释放也放入destory 那场景中可能会失去颜色纹理信息描述
+    //释放此处空间，将不会描述纹理和颜色
+    if(m_openGLMaterial)
+    {
+        delete m_openGLMaterial;
+        m_openGLMaterial = nullptr;
+    }
 }
 
 Mesh * OpenGLMesh::host() const {
@@ -124,12 +131,21 @@ void OpenGLMesh::render(bool pickingPass) {
 }
 
 void OpenGLMesh::destroy() {
-    if (m_vao) delete m_vao;
-    if (m_vbo) delete m_vbo;
-    if (m_ebo) delete m_ebo;
-    m_vao = 0;
-    m_vbo = 0;
-    m_ebo = 0;
+    if (m_vao)
+    {
+        delete m_vao;
+        m_vao = nullptr;
+    }
+    if (m_vbo)
+    {
+         delete m_vbo;
+        m_vbo = nullptr;
+    }
+    if (m_ebo)
+    {
+        delete m_ebo;
+        m_ebo = nullptr;
+    }
 }
 
 void OpenGLMesh::setSizeFixed(bool sizeFixed) {

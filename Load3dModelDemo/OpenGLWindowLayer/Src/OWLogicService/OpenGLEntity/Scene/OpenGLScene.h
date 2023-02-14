@@ -9,6 +9,7 @@ class OpenGLScene: public QObject {
 
 public:
     OpenGLScene(Scene* scene);
+    ~OpenGLScene();
 
     Scene* host() const;
 
@@ -27,9 +28,9 @@ protected:
 
 private:
     Scene* m_host;
+    //这里的容器是负责Scene中的指针，不用手动释放
     QVector<OpenGLMesh*> m_gizmoMeshes, m_gridlineMeshes, m_lightMeshes, m_normalMeshes;
     static OpenGLUniformBufferObject *m_cameraInfo, *m_lightInfo;
-
 private slots:
     void gizmoAdded(AbstractGizmo* gizmo);
     void gridlineAdded(Gridline* gridline);

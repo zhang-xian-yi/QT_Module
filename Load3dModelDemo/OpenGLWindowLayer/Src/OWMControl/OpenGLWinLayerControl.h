@@ -9,6 +9,7 @@ class OpenGLWinLayerControl:public OWlayerNS::IOpenGLWin,public OWlayerNS::ILoad
 {
 public:
     OpenGLWinLayerControl();
+    ~OpenGLWinLayerControl();
 public:
     //IOpenGLWin 实现函数
     void initOpenGLWin(QWidget* parent) override;

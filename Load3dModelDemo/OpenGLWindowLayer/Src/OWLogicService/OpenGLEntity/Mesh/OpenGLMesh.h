@@ -29,8 +29,8 @@ private:
     uint m_pickingID;
 
     QOpenGLVertexArrayObject * m_vao;
-    QOpenGLBuffer * m_vbo, *m_ebo;
-    OpenGLMaterial *m_openGLMaterial;
+    QOpenGLBuffer* m_vbo, *m_ebo;
+    OpenGLMaterial* m_openGLMaterial;
 
     static OpenGLUniformBufferObject *m_modelInfo;
 

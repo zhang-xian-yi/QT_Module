@@ -52,10 +52,8 @@ struct ShaderlightInfo { // struct size: 1424
 };
 
 static ShaderlightInfo shaderlightInfo;
-
 OpenGLUniformBufferObject *OpenGLScene::m_cameraInfo = 0;
 OpenGLUniformBufferObject *OpenGLScene::m_lightInfo = 0;
-
 OpenGLScene::OpenGLScene(Scene * scene) {
     m_host = scene;
 
@@ -73,6 +71,18 @@ OpenGLScene::OpenGLScene(Scene * scene) {
     connect(m_host, SIGNAL(lightAdded(AbstractLight*)), this, SLOT(lightAdded(AbstractLight*)));
     connect(m_host, SIGNAL(modelAdded(Model*)), this, SLOT(modelAdded(Model*)));
     connect(m_host, SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
+
+}
+
+//
+OpenGLScene::~OpenGLScene()
+{
+    if(m_host)
+    {
+        delete m_host;
+        m_host = nullptr;
+    }
+
 }
 
 Scene * OpenGLScene::host() const {

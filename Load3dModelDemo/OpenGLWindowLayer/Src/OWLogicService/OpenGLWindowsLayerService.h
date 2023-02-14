@@ -1,5 +1,15 @@
 #pragma once
 
+#ifdef DEBUG_VLD
+/*
+vld 需要deghelp.dll 、 Microsoft.DTfW.DHL.manifest、 vld_x64.dll 一起放入执行目录，
+且必须安装vld程序（读取配置文件）vld.ini
+*/
+//#include "vld/vld.h"
+
+#endif
+
+
 #include "Services/OpenGLWindow.h"
 #include "Entity/Scene/Scene.h"
 
@@ -21,5 +31,5 @@ private slots:
 private:
     QWidget* m_pWidgetWin;         //与m_openGLWindow是一样的地址只是窗口被强转为QWidget
     OpenGLWindow *m_openGLWindow;  //openGL的窗口
-    Scene *m_pScene;                 //显示的场景
+    Scene *m_pScene;               //显示的场景
 };

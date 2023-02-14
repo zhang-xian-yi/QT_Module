@@ -9,7 +9,10 @@ namespace OWlayerNS
     class OPENGLWINDOWLAYER_EXPORT ILoad3D
     {
     public:
+        //加载3D模型
         virtual void Load3DModel(QString path) = 0;
+        //删除3D模型
+        //virtual void Remove3DModel();
     };
 
 }
