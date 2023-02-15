@@ -13,7 +13,7 @@ ModelExporter::ModelExporter() {}
 
 ModelExporter::~ModelExporter() {}
 
-void ModelExporter::saveToFile(Model* model, QString filePath) {
+void ModelExporter::saveToFile(QSharedPointer<Model> model, QString filePath) {
     m_model = model;
 
     m_tmp_aiMeshes.clear();
@@ -21,20 +21,21 @@ void ModelExporter::saveToFile(Model* model, QString filePath) {
     m_tmp_textures.clear();
     getAllTextures(m_model);
 
-    m_aiScenePtr = new aiScene;
+    m_aiScenePtr = QSharedPointer<aiScene>(new aiScene);
     m_aiScenePtr->mRootNode = exportModel(m_model);
     m_aiScenePtr->mNumMeshes = m_tmp_aiMeshes.size();
-    m_aiScenePtr->mMeshes = new aiMesh*[m_tmp_aiMeshes.size()];
+    m_aiScenePtr->mMeshes = new aiMesh * [m_tmp_aiMeshes.size()];
     m_aiScenePtr->mNumMaterials = m_tmp_aiMaterials.size();
-    m_aiScenePtr->mMaterials = new aiMaterial*[m_tmp_aiMaterials.size()];
+    m_aiScenePtr->mMaterials = new aiMaterial * [m_tmp_aiMaterials.size()];
 
     for (int i = 0; i < m_tmp_aiMeshes.size(); i++)
-        m_aiScenePtr->mMeshes[i] = m_tmp_aiMeshes[i];
+        m_aiScenePtr->mMeshes[i] = m_tmp_aiMeshes[i].get();
     for (int i = 0; i < m_tmp_aiMaterials.size(); i++)
-        m_aiScenePtr->mMaterials[i] = m_tmp_aiMaterials[i];
+        m_aiScenePtr->mMaterials[i] = m_tmp_aiMaterials[i].get();
 
     Assimp::Exporter exporter;
-    if (AI_SUCCESS != exporter.Export(m_aiScenePtr,
+    //第三方接口要求传递参数
+    if (AI_SUCCESS != exporter.Export(m_aiScenePtr.get(),
                                       QFileInfo(filePath).suffix().toStdString(),
                                       filePath.toStdString())) {
         if (logLV >= LOG_LEVEL_ERROR)
@@ -55,12 +56,12 @@ void ModelExporter::saveToFile(Model* model, QString filePath) {
     }
 }
 
-void ModelExporter::saveToFile(Mesh * mesh, QString filePath) {
+void ModelExporter::saveToFile(QSharedPointer<Mesh> mesh, QString filePath) {
     m_tmp_aiMeshes.clear();
     m_tmp_aiMaterials.clear();
     m_tmp_textures.clear();
 
-    m_aiScenePtr = new aiScene;
+    m_aiScenePtr = QSharedPointer<aiScene>(new aiScene);
 
     m_aiScenePtr->mRootNode = new aiNode;
     m_aiScenePtr->mRootNode->mName = toAiString(mesh->objectName());
@@ -78,7 +79,7 @@ void ModelExporter::saveToFile(Mesh * mesh, QString filePath) {
     m_aiScenePtr->mMaterials[0] = exportMaterial(mesh->material());
 
     Assimp::Exporter exporter;
-    if (AI_SUCCESS != exporter.Export(m_aiScenePtr,
+    if (AI_SUCCESS != exporter.Export(m_aiScenePtr.get(),
                                       QFileInfo(filePath).suffix().toStdString(),
                                       filePath.toStdString())) {
         m_log += exporter.GetErrorString();
@@ -113,10 +114,10 @@ QString ModelExporter::errorLog() {
     return tmp;
 }
 
-void ModelExporter::getAllTextures(Model * model) {
+void ModelExporter::getAllTextures(QSharedPointer<Model> model) {
     for (int i = 0; i < model->childMeshes().size(); i++)
         if (model->childMeshes()[i]->material()) {
-            Material * material = model->childMeshes()[i]->material();
+            QSharedPointer<Material> material = model->childMeshes()[i]->material();
             if (material == 0) continue;
             if (!material->diffuseTexture().isNull() && !m_tmp_textures.contains(material->diffuseTexture()))
                 m_tmp_textures.push_back(material->diffuseTexture());
@@ -129,28 +130,32 @@ void ModelExporter::getAllTextures(Model * model) {
         getAllTextures(model->childModels()[i]);
 }
 
-aiNode * ModelExporter::exportModel(Model * model) {
+aiNode* ModelExporter::exportModel(QSharedPointer<Model> model) {
     aiNode* aiNodePtr = new aiNode;
     aiNodePtr->mName = toAiString(model->objectName());
 
     aiNodePtr->mNumMeshes = (uint32_t) model->childMeshes().size();
     aiNodePtr->mMeshes = new uint32_t[aiNodePtr->mNumMeshes];
 
-    for (int i = 0; i < model->childMeshes().size(); i++) {
+    for (int i = 0; i < model->childMeshes().size(); i++)
+    {
         aiNodePtr->mMeshes[i] = m_tmp_aiMeshes.size();
-        m_tmp_aiMeshes.push_back(exportMesh(model->childMeshes()[i]));
+        auto tmp = exportMesh(model->childMeshes()[i]);
+        m_tmp_aiMeshes.push_back( QSharedPointer<aiMesh>(tmp));
     }
 
     aiNodePtr->mNumChildren = (uint32_t) model->childModels().size();
     aiNodePtr->mChildren = new aiNode*[aiNodePtr->mNumChildren];
 
     for (int i = 0; i < model->childModels().size(); i++)
+    {
         aiNodePtr->mChildren[i] = exportModel(model->childModels()[i]);
+    }
 
     return aiNodePtr;
 }
 
-aiMesh * ModelExporter::exportMesh(Mesh * mesh) {
+aiMesh* ModelExporter::exportMesh(QSharedPointer<Mesh> mesh) {
     aiMesh* aiMeshPtr = new aiMesh;
 
     aiMeshPtr->mNumVertices = (uint32_t) mesh->vertices().size();
@@ -185,11 +190,12 @@ aiMesh * ModelExporter::exportMesh(Mesh * mesh) {
     }
 
     aiMeshPtr->mMaterialIndex = m_tmp_aiMaterials.size();
-    m_tmp_aiMaterials.push_back(exportMaterial(mesh->material()));
+    auto tmp = exportMaterial(mesh->material());
+    m_tmp_aiMaterials.push_back(QSharedPointer<aiMaterial>(tmp));
     return aiMeshPtr;
 }
 
-aiMaterial * ModelExporter::exportMaterial(Material * material) {
+aiMaterial* ModelExporter::exportMaterial(QSharedPointer<Material> material) {
     aiMaterial* aiMaterialPtr = new aiMaterial;
     if (material == 0) return aiMaterialPtr;
 

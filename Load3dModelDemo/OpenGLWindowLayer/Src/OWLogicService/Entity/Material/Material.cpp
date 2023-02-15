@@ -37,7 +37,7 @@ Material::Material(const Material & material): QObject(0) {
 }
 
 Material::~Material() {
-    if (logLV >= LOG_LEVEL_INFO)
+    if (logLV == DEBUG_DESTORY_INFO)
         dout << "Material" << this->objectName() << "is destroyed";
 }
 

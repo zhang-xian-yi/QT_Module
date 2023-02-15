@@ -10,8 +10,8 @@ public:
     Model(const Model& model);
     ~Model();
 
-    bool addChildMesh(Mesh* mesh);
-    bool addChildModel(Model* model);
+    bool addChildMesh(QSharedPointer<Mesh> mesh);
+    bool addChildModel(QSharedPointer<Model> model);
 
     bool removeChildMesh(QObject* mesh, bool recursive);
     bool removeChildModel(QObject* model, bool recursive);
@@ -27,10 +27,10 @@ public:
     QVector3D centerOfMass() const;
     float mass() const;
 
-    Mesh* assemble() const;
+    QSharedPointer<Mesh> assemble() const;
 
-    const QVector<Mesh*> & childMeshes() const;
-    const QVector<Model*> & childModels() const;
+    const QVector<QSharedPointer<Mesh>> & childMeshes() const;
+    const QVector<QSharedPointer<Model>> & childModels() const;
 
 public slots:
     void reverseNormals();
@@ -38,15 +38,15 @@ public slots:
     void reverseBitangents();
 
 signals:
-    void childMeshAdded(Mesh* mesh);
+    void childMeshAdded(QSharedPointer<Mesh> mesh);
     void childMeshRemoved(QObject* object);
-    void childModelAdded(Model* model);
+    void childModelAdded(QSharedPointer<Model> model);
     void childModelRemoved(QObject* object);
 
 protected:
     void childEvent(QChildEvent *event) override;
 
 private:
-    QVector<Mesh*> m_childMeshes;
-    QVector<Model*> m_childModels;
+    QVector<QSharedPointer<Mesh>> m_childMeshes;
+    QVector<QSharedPointer<Model>> m_childModels;
 };

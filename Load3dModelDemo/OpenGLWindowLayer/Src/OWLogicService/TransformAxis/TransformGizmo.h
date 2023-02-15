@@ -33,7 +33,7 @@ public:
 
     bool alwaysOnTop() const;
 
-    QVector<Mesh*>& markers() override;
+    QVector<QSharedPointer<Mesh>>& markers() override;
     void drag(QPoint from, QPoint to, int scnWidth, int scnHeight, QMatrix4x4 proj, QMatrix4x4 view) override;
 
     void bindTo(AbstractEntity* host) override;

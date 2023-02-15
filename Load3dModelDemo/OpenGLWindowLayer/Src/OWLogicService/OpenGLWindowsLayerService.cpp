@@ -4,8 +4,8 @@
 OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent):
     m_pScene(nullptr)
 {
-    m_openGLWindow = new OpenGLWindow;//由QT父级控件控制释放
-    m_openGLWindow->setRenderer(new OpenGLRenderer);//由QT父级控件控制释放
+    m_openGLWindow = QSharedPointer<OpenGLWindow>(new OpenGLWindow);//由QT父级控件控制释放
+    m_openGLWindow->setRenderer(QSharedPointer<OpenGLRenderer>(new OpenGLRenderer));//由QT父级控件控制释放
 
     //设置为父控件的大小
     m_openGLWindow->setParent(parent);
@@ -20,21 +20,21 @@ OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent):
 
 OpenGLWindowsLayerService::~OpenGLWindowsLayerService()
 {
-    m_openGLWindow = nullptr; //由QT父控件控制
+    m_pScene = nullptr;//减少引用计数
+    m_openGLWindow = nullptr; //减少引用技术由QT父控件控制
+    if (logLV == DEBUG_DESTORY_INFO)
+        dout << "OpenGLWindowsLayerService is destroyed";
 }
 
 
 void OpenGLWindowsLayerService::CreateScene() {
-    if (m_pScene) {
-        delete m_pScene;
-        m_pScene = nullptr;
-    }
 
-    m_pScene = new Scene();
+    m_pScene = QSharedPointer<Scene>(new Scene);
     m_pScene->addDirectionalLight(new DirectionalLight(QVector3D(1, 1, 1), QVector3D(-2, -4, -3)));//增加方向光
     //m_pScene->addGridline(new Gridline); 增加网格线
 
-    m_openGLWindow->setScene(new OpenGLScene(m_pScene));
+    auto GLScene = QSharedPointer<OpenGLScene>(new OpenGLScene(m_pScene));
+    m_openGLWindow->setScene(GLScene);
 }
 
 void OpenGLWindowsLayerService::ImportModelFile(QString& filepath)

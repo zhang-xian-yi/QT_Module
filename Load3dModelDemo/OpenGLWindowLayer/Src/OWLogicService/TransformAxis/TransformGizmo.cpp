@@ -101,7 +101,7 @@ bool TransformGizmo::alwaysOnTop() const {
     return m_alwaysOnTop;
 }
 
-QVector<Mesh*>& TransformGizmo::markers() {
+QVector<QSharedPointer<Mesh>>& TransformGizmo::markers() {
     return m_markers;
 }
 

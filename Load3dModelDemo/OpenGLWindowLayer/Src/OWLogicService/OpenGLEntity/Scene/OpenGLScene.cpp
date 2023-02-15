@@ -54,7 +54,7 @@ struct ShaderlightInfo { // struct size: 1424
 static ShaderlightInfo shaderlightInfo;
 OpenGLUniformBufferObject *OpenGLScene::m_cameraInfo = 0;
 OpenGLUniformBufferObject *OpenGLScene::m_lightInfo = 0;
-OpenGLScene::OpenGLScene(Scene * scene) {
+OpenGLScene::OpenGLScene(QSharedPointer<Scene> scene) {
     m_host = scene;
 
     this->gizmoAdded(m_host->transformGizmo());
@@ -67,16 +67,16 @@ OpenGLScene::OpenGLScene(Scene * scene) {
     for (int i = 0; i < m_host->models().size(); i++)
         this->modelAdded(m_host->models()[i]);
 
-    connect(m_host, SIGNAL(gridlineAdded(Gridline*)), this, SLOT(gridlineAdded(Gridline*)));
-    connect(m_host, SIGNAL(lightAdded(AbstractLight*)), this, SLOT(lightAdded(AbstractLight*)));
-    connect(m_host, SIGNAL(modelAdded(Model*)), this, SLOT(modelAdded(Model*)));
-    connect(m_host, SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
-
+    connect(m_host.get(), SIGNAL(gridlineAdded(Gridline*)), this, SLOT(gridlineAdded(Gridline*)));
+    connect(m_host.get(), SIGNAL(lightAdded(AbstractLight*)), this, SLOT(lightAdded(AbstractLight*)));
+    connect(m_host.get(), SIGNAL(modelAdded(Model*)), this, SLOT(modelAdded(Model*)));
+    connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));//指针销毁时出现的两次释放
 }
 
 //
 OpenGLScene::~OpenGLScene()
 {
+    /*
     for (int i = 0; i < m_gizmoMeshes.size(); i++)
         delete m_gizmoMeshes[i];
     for (int i = 0; i < m_gridlineMeshes.size(); i++)
@@ -91,16 +91,18 @@ OpenGLScene::~OpenGLScene()
     m_gridlineMeshes.clear();
     m_normalMeshes.clear();
     m_lightMeshes.clear();
+    */
     /*
-    if(m_host)  不删除主要m_host 由传递方负责
+    if(m_host)  //不删除主要m_host 由传递方负责
     {
         delete m_host;
         m_host = nullptr;
     }
     */
+
 }
 
-Scene * OpenGLScene::host() const {
+QSharedPointer<Scene>  OpenGLScene::host() const {
     return m_host;
 }
 
@@ -227,21 +229,29 @@ void OpenGLScene::childEvent(QChildEvent * e) {
     }
 }
 
-void OpenGLScene::gizmoAdded(AbstractGizmo* gizmo) {
-    for (int i = 0; i < gizmo->markers().size(); i++) {
-        m_gizmoMeshes.push_back(new OpenGLMesh(gizmo->markers()[i], this));
+void OpenGLScene::gizmoAdded(AbstractGizmo* gizmo)
+{
+    for (int i = 0; i < gizmo->markers().size(); i++)
+    {
+        auto tmp = QSharedPointer<OpenGLMesh>(new OpenGLMesh(gizmo->markers()[i], this));
+        m_gizmoMeshes.push_back(tmp);
         m_gizmoMeshes.back()->setSizeFixed(true);
         m_gizmoMeshes.back()->setPickingID(90 + i);
     }
 }
 
-void OpenGLScene::gridlineAdded(Gridline * gridline) {
-    m_gridlineMeshes.push_back(new OpenGLMesh(gridline->marker(), this));
+void OpenGLScene::gridlineAdded(Gridline * gridline)
+{
+    auto tmp = QSharedPointer<OpenGLMesh>(new OpenGLMesh(gridline->marker(), this));
+    m_gridlineMeshes.push_back(tmp);
 }
 
 void OpenGLScene::lightAdded(AbstractLight * light) {
     if (light->marker())
-        m_lightMeshes.push_back(new OpenGLMesh(light->marker(), this));
+    {
+        auto tmp = QSharedPointer<OpenGLMesh>(new OpenGLMesh(light->marker(), this));
+        m_lightMeshes.push_back(tmp);
+    }
 }
 
 void OpenGLScene::modelAdded(Model * model) {
@@ -252,8 +262,9 @@ void OpenGLScene::modelAdded(Model * model) {
         modelAdded(model->childModels()[i]);
 }
 
-void OpenGLScene::meshAdded(Mesh* mesh) {
-    m_normalMeshes.push_back(new OpenGLMesh(mesh, this));
+void OpenGLScene::meshAdded(QSharedPointer<Mesh> mesh)
+{
+    m_normalMeshes.push_back(QSharedPointer<OpenGLMesh>(new OpenGLMesh(mesh, this)));
 }
 
 void OpenGLScene::hostDestroyed(QObject *) {

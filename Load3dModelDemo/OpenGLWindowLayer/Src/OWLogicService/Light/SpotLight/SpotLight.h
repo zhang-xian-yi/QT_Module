@@ -26,7 +26,7 @@ public:
     float attenuationQuadratic() const;
     float attenuationLinear() const;
     float attenuationConstant() const;
-    Mesh* marker() const override;
+    QSharedPointer<Mesh> marker() const override;
 
 public slots:
     void setEnabled(bool enabled) override;
@@ -59,7 +59,7 @@ protected:
     float m_innerCutOff, m_outerCutOff;
     bool m_enableAttenuation;
     float m_attenuationQuadratic, m_attenuationLinear, m_attenuationConstant;
-    Mesh* m_marker;
+    QSharedPointer<Mesh> m_marker;
 
     void initMarker();
 

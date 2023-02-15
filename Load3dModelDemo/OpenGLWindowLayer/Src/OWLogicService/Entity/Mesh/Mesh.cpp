@@ -20,7 +20,7 @@ Mesh::Mesh(const Mesh & mesh): AbstractEntity(mesh) {
     m_meshType = mesh.m_meshType;
     m_vertices = mesh.m_vertices;
     m_indices = mesh.m_indices;
-    m_material = new Material(*mesh.m_material);
+    m_material = QSharedPointer<Material>(new Material(*mesh.m_material));
     setObjectName(mesh.objectName());
 }
 
@@ -135,11 +135,11 @@ const QVector<uint32_t>& Mesh::indices() const {
     return m_indices;
 }
 
-Material * Mesh::material() const{
+QSharedPointer<Material> Mesh::material() const{
     return m_material;
 }
 
-Mesh * Mesh::merge(const Mesh * mesh1, const Mesh * mesh2) {
+QSharedPointer<Mesh> Mesh::merge(QSharedPointer<Mesh> mesh1, QSharedPointer<Mesh>  mesh2) {
     if (mesh1 == nullptr && mesh2 == nullptr)
     {
         return nullptr;
@@ -150,9 +150,9 @@ Mesh * Mesh::merge(const Mesh * mesh1, const Mesh * mesh2) {
         {
             mesh1 = mesh2;
         }
-        Mesh* mergedMesh = new Mesh(mesh1->meshType());
+        QSharedPointer<Mesh> mergedMesh = QSharedPointer<Mesh>(new Mesh(mesh1->meshType()));
         mergedMesh->setObjectName(mesh1->objectName());
-        mergedMesh->setMaterial(new Material(*mesh1->material()));
+        mergedMesh->setMaterial(QSharedPointer<Material>(new Material(*mesh1->material())));
         for (int i = 0; i < mesh1->m_vertices.size(); i++)
         {
             mergedMesh->m_vertices.push_back(mesh1->globalModelMatrix() * mesh1->m_vertices[i]);
@@ -173,9 +173,9 @@ Mesh * Mesh::merge(const Mesh * mesh1, const Mesh * mesh2) {
         dout << "Merging" << mesh1->objectName() << "and" << mesh2->objectName();
     }
 
-    Mesh* mergedMesh = new Mesh(mesh1->meshType());
+    QSharedPointer<Mesh> mergedMesh = QSharedPointer<Mesh>(new Mesh(mesh1->meshType()));
     mergedMesh->setObjectName(mesh1->objectName() + mesh2->objectName());
-    mergedMesh->setMaterial(new Material);
+    mergedMesh->setMaterial(QSharedPointer<Material>(new Material));
 
     for (int i = 0; i < mesh1->m_vertices.size(); i++)
     {
@@ -214,16 +214,19 @@ void Mesh::setGeometry(const QVector<Vertex>& vertices, const QVector<uint32_t>&
     }
 }
 
-bool Mesh::setMaterial(Material * material) {
+bool Mesh::setMaterial(QSharedPointer<Material> material) {
     if (m_material == material) return false;
 
+    /*
     if (m_material) {
         Material* tmp = m_material;
         m_material = nullptr;
         delete tmp;
     }
+    */
 
-    if (material) {
+    if (!material.isNull())
+    {
         m_material = material;
         m_material->setParent(this);
         if (logLV >= LOG_LEVEL_INFO)
@@ -259,12 +262,18 @@ void Mesh::reverseBitangents() {
 }
 
 void Mesh::childEvent(QChildEvent * e) {
-    if (e->added()) {
+    if (e->added())
+    {
         if (Material* material = qobject_cast<Material*>(e->child()))
-            setMaterial(material);
-    } else if (e->removed()) {
-        if (e->child() == m_material) {
-            m_material = 0;
+        {
+            setMaterial(QSharedPointer<Material>(material));
+        }
+    }
+    else if (e->removed())
+    {
+        if (e->child() == m_material)
+        {
+            m_material = nullptr;
             materialChanged(0);
         }
     }

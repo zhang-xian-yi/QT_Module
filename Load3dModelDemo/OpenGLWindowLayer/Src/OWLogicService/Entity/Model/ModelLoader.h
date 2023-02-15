@@ -12,14 +12,14 @@ class ModelLoader {
 public:
     ModelLoader();
 
-    Model* loadModelFromFile(QString filePath);
-    Mesh* loadMeshFromFile(QString filePath);
+    QSharedPointer<Model> loadModelFromFile(QString filePath);
+    QSharedPointer<Mesh> loadMeshFromFile(QString filePath);
 
-    static Model* loadConeModel();
-    static Model* loadCubeModel();
-    static Model* loadCylinderModel();
-    static Model* loadPlaneModel();
-    static Model* loadSphereModel();
+    static QSharedPointer<Model> loadConeModel();
+    static QSharedPointer<Model> loadCubeModel();
+    static QSharedPointer<Model> loadCylinderModel();
+    static QSharedPointer<Model> loadPlaneModel();
+    static QSharedPointer<Model> loadSphereModel();
 
     bool hasErrorLog();
     QString errorLog();
@@ -31,7 +31,7 @@ private:
 
     const aiScene* m_aiScenePtr;
 
-    Model* loadModel(const aiNode* aiNodePtr);
-    Mesh* loadMesh(const aiMesh* aiMeshPtr);
-    Material* loadMaterial(const aiMaterial* aiMaterialPtr);
+    QSharedPointer<Model> loadModel(const aiNode* aiNodePtr);
+    QSharedPointer<Mesh> loadMesh(const aiMesh* aiMeshPtr);
+    QSharedPointer<Material> loadMaterial(const aiMaterial* aiMaterialPtr);
 };

@@ -36,7 +36,7 @@ Camera::Camera(const Camera & camera): QObject(0) {
 }
 
 Camera::~Camera() {
-    if (logLV >= LOG_LEVEL_INFO)
+    if (logLV == DEBUG_DESTORY_INFO)
         dout << "Camera" << this->objectName() << "is destroyed";
 }
 

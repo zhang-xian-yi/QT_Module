@@ -46,12 +46,6 @@ SpotLight::SpotLight(const SpotLight & light): AbstractLight(light) {
 }
 
 SpotLight::~SpotLight() {
-    int tmp_log_level = logLV;
-    logLV = LOG_LEVEL_WARNING;
-
-    delete m_marker;
-
-    logLV = tmp_log_level;
 
     if (logLV >= LOG_LEVEL_ERROR)
         dout << "Spotlight" << this->objectName() << "is destroyed";
@@ -122,7 +116,7 @@ float SpotLight::attenuationConstant() const {
     return m_attenuationConstant;
 }
 
-Mesh * SpotLight::marker() const {
+QSharedPointer<Mesh> SpotLight::marker() const {
     return m_marker;
 }
 
@@ -251,7 +245,7 @@ void SpotLight::initMarker() {
 
     logLV = tmp_log_level;
 
-    connect(m_marker, SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
-    connect(m_marker, SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));
-    connect(m_marker, SIGNAL(rotationChanged(QVector3D)), this, SLOT(setDirectionFromRotation(QVector3D)));
+    connect(m_marker.get(), SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
+    connect(m_marker.get(), SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));
+    connect(m_marker.get(), SIGNAL(rotationChanged(QVector3D)), this, SLOT(setDirectionFromRotation(QVector3D)));
 }

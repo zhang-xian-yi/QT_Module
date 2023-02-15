@@ -37,6 +37,7 @@ private:
 #define LOG_LEVEL_ERROR 1
 #define LOG_LEVEL_WARNING 2
 #define LOG_LEVEL_INFO 3
+#define DEBUG_DESTORY_INFO -1
 
 #define logLV       GlobalData::GetInstance().log_level
 #define pGlFuncs    GlobalData::GetInstance().GetGLFunc()

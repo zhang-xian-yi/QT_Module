@@ -2,8 +2,8 @@
 #include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 Scene::Scene(): QObject(0), m_gizmo(0), m_camera(0) {
     setObjectName("Untitled Scene");
-    m_gizmo = new TransformGizmo(this);
-    m_camera = new Camera(this);
+    m_gizmo = QSharedPointer<TransformGizmo>(new TransformGizmo(this));
+    m_camera = QSharedPointer<Camera>(new Camera(this));
     m_gridlineNameCounter = 1;
     m_ambientLightNameCounter = 1;
     m_directionalLightNameCounter = 1;
@@ -16,8 +16,8 @@ Scene::Scene(): QObject(0), m_gizmo(0), m_camera(0) {
 Scene::Scene(const Scene & scene): QObject(0) {
     setObjectName(scene.objectName());
 
-    m_gizmo = new TransformGizmo(this);
-    m_camera = new Camera(*scene.m_camera);
+    m_gizmo = QSharedPointer<TransformGizmo>(new TransformGizmo(this));
+    m_camera = QSharedPointer<Camera>(new Camera(*scene.m_camera));
     m_gridlineNameCounter = scene.m_gridlineNameCounter;
     m_ambientLightNameCounter = scene.m_ambientLightNameCounter;
     m_directionalLightNameCounter = scene.m_directionalLightNameCounter;
@@ -25,32 +25,35 @@ Scene::Scene(const Scene & scene): QObject(0) {
     m_spotLightNameCounter = scene.m_spotLightNameCounter;
 
     for (int i = 0; i < scene.m_gridlines.size(); i++)
-        addGridline(new Gridline(*scene.m_gridlines[i]));
+        addGridline(QSharedPointer<Gridline>(new Gridline(*scene.m_gridlines[i])));
     for (int i = 0; i < scene.m_ambientLights.size(); i++)
-        addAmbientLight(new AmbientLight(*scene.m_ambientLights[i]));
+        addAmbientLight(QSharedPointer<AmbientLight>(new AmbientLight(*scene.m_ambientLights[i])));
     for (int i = 0; i < scene.m_directionalLights.size(); i++)
-        addDirectionalLight(new DirectionalLight(*scene.m_directionalLights[i]));
+        addDirectionalLight(QSharedPointer<DirectionalLight>(new DirectionalLight(*scene.m_directionalLights[i])));
     for (int i = 0; i < scene.m_pointLights.size(); i++)
-        addPointLight(new PointLight(*scene.m_pointLights[i]));
+        addPointLight(QSharedPointer<PointLight>(new PointLight(*scene.m_pointLights[i])));
     for (int i = 0; i < scene.m_spotLights.size(); i++)
-        addSpotLight(new SpotLight(*scene.m_spotLights[i]));
+        addSpotLight(QSharedPointer<SpotLight>(new SpotLight(*scene.m_spotLights[i])));
     for (int i = 0; i < scene.m_models.size(); i++)
-        addModel(new Model(*scene.m_models[i]));
+        addModel(QSharedPointer<Model>(new Model(*scene.m_models[i])));
 }
 
 Scene::~Scene() {
+
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Scene" << this->objectName() << "is destroyed";
 }
 
-bool Scene::setCamera(Camera * camera) {
+bool Scene::setCamera(QSharedPointer<Camera> camera) {
     if (m_camera == camera) return false;
-
+    /*
+    // 智能指针自动释放
     if (m_camera) {
         Camera* tmp = m_camera;
         m_camera = 0;
         delete tmp;
     }
+    */
 
     if (camera) {
         m_camera = camera;
@@ -63,7 +66,7 @@ bool Scene::setCamera(Camera * camera) {
     return true;
 }
 
-bool Scene::addGridline(Gridline * gridline) {
+bool Scene::addGridline(QSharedPointer<Gridline> gridline) {
     if (!gridline || m_gridlines.contains(gridline))
         return false;
 
@@ -80,17 +83,17 @@ bool Scene::addGridline(Gridline * gridline) {
 
 bool Scene::addLight(AbstractLight * l) {
     if (SpotLight* light = qobject_cast<SpotLight*>(l))
-        return addSpotLight(light);
+        return addSpotLight(QSharedPointer<SpotLight>(light));
     else if (AmbientLight* light = qobject_cast<AmbientLight*>(l))
-        return addAmbientLight(light);
+        return addAmbientLight(QSharedPointer<AmbientLight>(light));
     else if (DirectionalLight* light = qobject_cast<DirectionalLight*>(l))
-        return addDirectionalLight(light);
+        return addDirectionalLight(QSharedPointer<DirectionalLight>(light));
     else if (PointLight* light = qobject_cast<PointLight*>(l))
-        return addPointLight(light);
+        return addPointLight(QSharedPointer<PointLight>(light));
     return false;
 }
 
-bool Scene::addAmbientLight(AmbientLight * light) {
+bool Scene::addAmbientLight(QSharedPointer<AmbientLight> light) {
     if (!light || m_ambientLights.contains(light))
         return false;
     if (m_ambientLights.size() >= 8) {
@@ -102,7 +105,7 @@ bool Scene::addAmbientLight(AmbientLight * light) {
     m_ambientLights.push_back(light);
     light->setParent(this);
     light->setObjectName("AmbientLight" + QString::number(m_ambientLightNameCounter++));
-    lightAdded(light);
+    lightAdded(light.get());
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Ambient light" << light->objectName() << "is added to scene" << this->objectName();
@@ -110,7 +113,7 @@ bool Scene::addAmbientLight(AmbientLight * light) {
     return true;
 }
 
-bool Scene::addDirectionalLight(DirectionalLight * light) {
+bool Scene::addDirectionalLight(QSharedPointer<DirectionalLight> light) {
     if (!light || m_directionalLights.contains(light))
         return false;
     if (m_directionalLights.size() >= 8) {
@@ -122,7 +125,7 @@ bool Scene::addDirectionalLight(DirectionalLight * light) {
     m_directionalLights.push_back(light);
     light->setParent(this);
     light->setObjectName("DirectionalLight" + QString::number(m_directionalLightNameCounter++));
-    lightAdded(light);
+    lightAdded(light.get());
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Directional light" << light->objectName() << "is added to scene" << this->objectName();
@@ -130,7 +133,7 @@ bool Scene::addDirectionalLight(DirectionalLight * light) {
     return true;
 }
 
-bool Scene::addPointLight(PointLight * light) {
+bool Scene::addPointLight(QSharedPointer<PointLight> light) {
     if (!light || m_pointLights.contains(light))
         return false;
     if (m_pointLights.size() >= 8) {
@@ -142,7 +145,7 @@ bool Scene::addPointLight(PointLight * light) {
     m_pointLights.push_back(light);
     light->setParent(this);
     light->setObjectName("PointLight" + QString::number(m_pointLightNameCounter++));
-    lightAdded(light);
+    lightAdded(light.get());
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Point light" << light->objectName() << "is added to scene" << this->objectName();
@@ -150,7 +153,7 @@ bool Scene::addPointLight(PointLight * light) {
     return true;
 }
 
-bool Scene::addSpotLight(SpotLight * light) {
+bool Scene::addSpotLight(QSharedPointer<SpotLight> light) {
     if (!light || m_spotLights.contains(light))
         return false;
     if (m_spotLights.size() >= 8) {
@@ -162,7 +165,7 @@ bool Scene::addSpotLight(SpotLight * light) {
     m_spotLights.push_back(light);
     light->setParent(this);
     light->setObjectName("SpotLight" + QString::number(m_spotLightNameCounter++));
-    lightAdded(light);
+    lightAdded(light.get());
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Spot light" << light->objectName() << "is added to scene" << this->objectName();
@@ -170,7 +173,7 @@ bool Scene::addSpotLight(SpotLight * light) {
     return true;
 }
 
-bool Scene::addModel(Model * model) {
+bool Scene::addModel(QSharedPointer<Model> model) {
     if (!model || m_models.contains(model))
         return false;
 
@@ -282,48 +285,48 @@ void Scene::dumpObjectTree(int l) {
 
 // Get properties
 
-TransformGizmo * Scene::transformGizmo() const {
+QSharedPointer<TransformGizmo> Scene::transformGizmo() const {
     return m_gizmo;
 }
 
-Camera * Scene::camera() const {
+QSharedPointer<Camera> Scene::camera() const {
     return m_camera;
 }
 
-const QVector<Gridline*>& Scene::gridlines() const {
+const QVector<QSharedPointer<Gridline>>& Scene::gridlines() const {
     return m_gridlines;
 }
 
-const QVector<AmbientLight*>& Scene::ambientLights() const {
+const QVector<QSharedPointer<AmbientLight>>& Scene::ambientLights() const {
     return m_ambientLights;
 }
 
-const QVector<DirectionalLight*>& Scene::directionalLights() const {
+const QVector<QSharedPointer<DirectionalLight>>& Scene::directionalLights() const {
     return m_directionalLights;
 }
 
-const QVector<PointLight*>& Scene::pointLights() const {
+const QVector<QSharedPointer<PointLight>>& Scene::pointLights() const {
     return m_pointLights;
 }
 
-const QVector<SpotLight*>& Scene::spotLights() const {
+const QVector<QSharedPointer<SpotLight>>& Scene::spotLights() const {
     return m_spotLights;
 }
 
-const QVector<Model*>& Scene::models() const {
+const QVector<QSharedPointer<Model>>& Scene::models() const {
     return m_models;
 }
 
 void Scene::childEvent(QChildEvent * e) {
     if (e->added()) {
         if (Camera* camera = qobject_cast<Camera*>(e->child()))
-            setCamera(camera);
+            setCamera(QSharedPointer<Camera>(camera));
         else if (Gridline* gridline = qobject_cast<Gridline*>(e->child()))
-            addGridline(gridline);
+            addGridline(QSharedPointer<Gridline>(gridline));
         else if (AbstractLight* light = qobject_cast<AbstractLight*>(e->child()))
             addLight(light);
         else if (Model* model = qobject_cast<Model*>(e->child()))
-            addModel(model);
+            addModel(QSharedPointer<Model>(model));
     } else if (e->removed()) {
         if (m_camera == e->child()) {
             m_camera = 0;

@@ -1,6 +1,7 @@
 #include "SceneSaver.h"
 #include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
-SceneSaver::SceneSaver(Scene* scene) {
+SceneSaver::SceneSaver(QSharedPointer<Scene> scene)
+{
     m_scene = scene;
 }
 
@@ -76,10 +77,10 @@ QString SceneSaver::errorLog() {
     return tmp;
 }
 
-void SceneSaver::getAllTextures(Model * model) {
+void SceneSaver::getAllTextures(QSharedPointer<Model> model) {
     for (int i = 0; i < model->childMeshes().size(); i++)
         if (model->childMeshes()[i]->material()) {
-            Material * material = model->childMeshes()[i]->material();
+            QSharedPointer<Material> material = model->childMeshes()[i]->material();
             if (material == 0) continue;
             if (!material->diffuseTexture().isNull() && !m_textures.contains(material->diffuseTexture()))
                 m_textures.push_back(material->diffuseTexture());
@@ -92,7 +93,7 @@ void SceneSaver::getAllTextures(Model * model) {
         getAllTextures(model->childModels()[i]);
 }
 
-void SceneSaver::saveCamera(Camera * camera, QDataStream & out) {
+void SceneSaver::saveCamera(QSharedPointer<Camera> camera, QDataStream & out) {
     out << camera->movingSpeed();
     out << camera->fieldOfView();
     out << camera->aspectRatio();
@@ -102,7 +103,7 @@ void SceneSaver::saveCamera(Camera * camera, QDataStream & out) {
     out << camera->direction();
 }
 
-void SceneSaver::saveGridline(Gridline * gridline, QDataStream & out) {
+void SceneSaver::saveGridline(QSharedPointer<Gridline> gridline, QDataStream & out) {
     out << gridline->objectName();
     out << QVector3D(gridline->xRange().first, gridline->xRange().second, gridline->xStride());
     out << QVector3D(gridline->yRange().first, gridline->yRange().second, gridline->yStride());
@@ -110,14 +111,14 @@ void SceneSaver::saveGridline(Gridline * gridline, QDataStream & out) {
     out << gridline->color();
 }
 
-void SceneSaver::saveAmbientLight(AmbientLight * light, QDataStream & out) {
+void SceneSaver::saveAmbientLight(QSharedPointer<AmbientLight> light, QDataStream & out) {
     out << light->objectName();
     out << light->color();
     out << light->enabled();
     out << light->intensity();
 }
 
-void SceneSaver::saveDirectionalLight(DirectionalLight * light, QDataStream & out) {
+void SceneSaver::saveDirectionalLight(QSharedPointer<DirectionalLight> light, QDataStream & out) {
     out << light->objectName();
     out << light->color();
     out << light->enabled();
@@ -125,7 +126,7 @@ void SceneSaver::saveDirectionalLight(DirectionalLight * light, QDataStream & ou
     out << light->direction();
 }
 
-void SceneSaver::savePointLight(PointLight * light, QDataStream & out) {
+void SceneSaver::savePointLight(QSharedPointer<PointLight> light, QDataStream & out) {
     out << light->objectName();
     out << light->color();
     out << light->enabled();
@@ -135,7 +136,7 @@ void SceneSaver::savePointLight(PointLight * light, QDataStream & out) {
     out << light->attenuationArguments();
 }
 
-void SceneSaver::saveSpotLight(SpotLight * light, QDataStream & out) {
+void SceneSaver::saveSpotLight(QSharedPointer<SpotLight> light, QDataStream & out) {
     out << light->objectName();
     out << light->color();
     out << light->enabled();
@@ -148,7 +149,7 @@ void SceneSaver::saveSpotLight(SpotLight * light, QDataStream & out) {
     out << light->attenuationArguments();
 }
 
-void SceneSaver::saveModel(Model * model, QDataStream & out) {
+void SceneSaver::saveModel(QSharedPointer<Model> model, QDataStream & out) {
     out << model->objectName();
     out << model->visible();
     out << model->position();
@@ -164,7 +165,7 @@ void SceneSaver::saveModel(Model * model, QDataStream & out) {
         saveModel(model->childModels()[i], out);
 }
 
-void SceneSaver::saveMesh(Mesh * mesh, QDataStream & out) {
+void SceneSaver::saveMesh(QSharedPointer<Mesh> mesh, QDataStream & out) {
     out << mesh->objectName();
     out << mesh->visible();
     out << mesh->meshType();
@@ -179,7 +180,7 @@ void SceneSaver::saveMesh(Mesh * mesh, QDataStream & out) {
         saveMaterial(mesh->material(), out);
 }
 
-void SceneSaver::saveMaterial(Material * material, QDataStream & out) {
+void SceneSaver::saveMaterial(QSharedPointer<Material> material, QDataStream & out) {
     out << material->objectName();
     out << material->color();
     out << material->ambient();

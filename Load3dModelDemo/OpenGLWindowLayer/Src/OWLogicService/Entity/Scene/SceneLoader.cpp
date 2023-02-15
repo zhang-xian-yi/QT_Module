@@ -2,7 +2,7 @@
 #include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 SceneLoader::SceneLoader() {}
 
-Scene * SceneLoader::loadFromFile(QString filePath) {
+QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     m_textures.clear();
 
     QFile file(filePath);
@@ -57,7 +57,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int gridlineNum;
     in >> gridlineNum;
     for (int i = 0; i < gridlineNum; i++) {
-        Gridline* gridline = loadGridline(in);
+        auto gridline = loadGridline(in);
         scene->m_gridlines.push_back(gridline);
         gridline->setParent(scene);
     }
@@ -65,7 +65,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int ambientLightNum;
     in >> ambientLightNum;
     for (int i = 0; i < ambientLightNum; i++) {
-        AmbientLight* light = loadAmbientLight(in);
+        auto light = loadAmbientLight(in);
         scene->m_ambientLights.push_back(light);
         light->setParent(scene);
     }
@@ -73,7 +73,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int directionalLightNum;
     in >> directionalLightNum;
     for (int i = 0; i < directionalLightNum; i++) {
-        DirectionalLight* light = loadDirectionalLight(in);
+        auto light = loadDirectionalLight(in);
         scene->m_directionalLights.push_back(light);
         light->setParent(scene);
     }
@@ -81,7 +81,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int pointLightNum;
     in >> pointLightNum;
     for (int i = 0; i < pointLightNum; i++) {
-        PointLight* light = loadPointLight(in);
+        auto light = loadPointLight(in);
         scene->m_pointLights.push_back(light);
         light->setParent(scene);
     }
@@ -89,7 +89,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int spotLightNum;
     in >> spotLightNum;
     for (int i = 0; i < spotLightNum; i++) {
-        SpotLight* light = loadSpotLight(in);
+        auto light = loadSpotLight(in);
         scene->m_spotLights.push_back(light);
         light->setParent(scene);
     }
@@ -97,7 +97,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     int modelNum;
     in >> modelNum;
     for (int i = 0; i < modelNum; i++) {
-        Model* model = loadModel(in);
+        auto model = loadModel(in);
         scene->m_models.push_back(model);
         model->setParent(scene);
     }
@@ -108,7 +108,7 @@ Scene * SceneLoader::loadFromFile(QString filePath) {
     in >> scene->m_pointLightNameCounter;
     in >> scene->m_spotLightNameCounter;
 
-    return scene;
+    return QSharedPointer<Scene>(scene);
 }
 
 bool SceneLoader::hasErrorLog() {
@@ -121,7 +121,7 @@ QString SceneLoader::errorLog() {
     return tmp;
 }
 
-Camera * SceneLoader::loadCamera(QDataStream & in) {
+QSharedPointer<Camera> SceneLoader::loadCamera(QDataStream & in) {
     Camera* camera = new Camera;
 
     float movingSpeed, fieldOfView, aspectRatio, nearPlane, farPlane;
@@ -138,10 +138,10 @@ Camera * SceneLoader::loadCamera(QDataStream & in) {
     camera->setPosition(position);
     camera->setDirection(direction);
 
-    return camera;
+    return QSharedPointer<Camera>(camera);
 }
 
-Gridline * SceneLoader::loadGridline(QDataStream & in) {
+QSharedPointer<Gridline> SceneLoader::loadGridline(QDataStream & in) {
     Gridline* gridline = new Gridline;
 
     QString name;
@@ -153,10 +153,10 @@ Gridline * SceneLoader::loadGridline(QDataStream & in) {
     gridline->setYArguments(yargs);
     gridline->setZArguments(zargs);
 
-    return gridline;
+    return QSharedPointer<Gridline>(gridline);
 }
 
-AmbientLight * SceneLoader::loadAmbientLight(QDataStream & in) {
+QSharedPointer<AmbientLight> SceneLoader::loadAmbientLight(QDataStream & in) {
     AmbientLight* light = new AmbientLight;
 
     QString name;
@@ -170,10 +170,10 @@ AmbientLight * SceneLoader::loadAmbientLight(QDataStream & in) {
     light->setEnabled(enabled);
     light->setIntensity(intensity);
 
-    return light;
+    return QSharedPointer<AmbientLight>(light);
 }
 
-DirectionalLight * SceneLoader::loadDirectionalLight(QDataStream & in) {
+QSharedPointer<DirectionalLight> SceneLoader::loadDirectionalLight(QDataStream & in) {
     DirectionalLight* light = new DirectionalLight;
 
     QString name;
@@ -188,10 +188,10 @@ DirectionalLight * SceneLoader::loadDirectionalLight(QDataStream & in) {
     light->setIntensity(intensity);
     light->setDirection(direction);
 
-    return light;
+    return QSharedPointer<DirectionalLight>(light);
 }
 
-PointLight * SceneLoader::loadPointLight(QDataStream & in) {
+QSharedPointer<PointLight> SceneLoader::loadPointLight(QDataStream & in) {
     PointLight* light = new PointLight;
 
     QString name;
@@ -210,10 +210,10 @@ PointLight * SceneLoader::loadPointLight(QDataStream & in) {
     light->setEnableAttenuation(enableAttenuation);
     light->setAttenuationArguments(attenuationArgs);
 
-    return light;
+    return QSharedPointer<PointLight>(light);
 }
 
-SpotLight * SceneLoader::loadSpotLight(QDataStream & in) {
+QSharedPointer<SpotLight> SceneLoader::loadSpotLight(QDataStream & in) {
     SpotLight* light = new SpotLight;
 
     QString name;
@@ -236,10 +236,10 @@ SpotLight * SceneLoader::loadSpotLight(QDataStream & in) {
     light->setEnableAttenuation(enableAttenuation);
     light->setAttenuationArguments(attenuationArgs);
 
-    return light;
+    return QSharedPointer<SpotLight>(light);
 }
 
-Model * SceneLoader::loadModel(QDataStream & in) {
+QSharedPointer<Model> SceneLoader::loadModel(QDataStream & in) {
     Model* model = new Model;
 
     QString name;
@@ -255,22 +255,24 @@ Model * SceneLoader::loadModel(QDataStream & in) {
 
     int childMeshNum;
     in >> childMeshNum;
-    for (int i = 0; i < childMeshNum; i++) {
-        Mesh* mesh = loadMesh(in);
+    for (int i = 0; i < childMeshNum; i++)
+    {
+        auto mesh = loadMesh(in);
         model->addChildMesh(mesh);
     }
 
     int childModelNum;
     in >> childModelNum;
-    for (int i = 0; i < childModelNum; i++) {
-        Model* model = loadModel(in);
+    for (int i = 0; i < childModelNum; i++)
+    {
+        auto model = loadModel(in);
         model->addChildModel(model);
     }
 
-    return model;
+    return QSharedPointer<Model>(model);
 }
 
-Mesh * SceneLoader::loadMesh(QDataStream & in) {
+QSharedPointer<Mesh> SceneLoader::loadMesh(QDataStream & in) {
     Mesh* mesh = new Mesh;
 
     QString name;
@@ -294,14 +296,15 @@ Mesh * SceneLoader::loadMesh(QDataStream & in) {
 
     bool hasMaterial;
     in >> hasMaterial;
-    if (hasMaterial) {
-        mesh->setMaterial(loadMaterial(in));
+    if (hasMaterial)
+    {
+        mesh->setMaterial(QSharedPointer<Material>(loadMaterial(in)));
     }
 
-    return mesh;
+    return QSharedPointer<Mesh>(mesh);
 }
 
-Material * SceneLoader::loadMaterial(QDataStream & in) {
+QSharedPointer<Material> SceneLoader::loadMaterial(QDataStream & in) {
     Material* material = new Material;
 
     QString name;
@@ -333,7 +336,7 @@ Material * SceneLoader::loadMaterial(QDataStream & in) {
         }
     }
 
-    return material;
+    return QSharedPointer<Material>(material);
 }
 
 QSharedPointer<Texture> SceneLoader::loadTexture(QDataStream & in) {

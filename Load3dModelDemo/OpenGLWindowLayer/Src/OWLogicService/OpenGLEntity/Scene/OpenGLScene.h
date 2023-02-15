@@ -8,10 +8,10 @@ class OpenGLScene: public QObject {
     Q_OBJECT
 
 public:
-    OpenGLScene(Scene* scene);
+    OpenGLScene(QSharedPointer<Scene>  scene);
     ~OpenGLScene();
 
-    Scene* host() const;
+    QSharedPointer<Scene> host() const;
 
     OpenGLMesh* pick(uint32_t pickingID);
 
@@ -27,9 +27,9 @@ protected:
     void childEvent(QChildEvent *event) override;
 
 private:
-    Scene* m_host;
+    QSharedPointer<Scene> m_host;
     //这里的容器是负责Scene中的指针，不用手动释放
-    QVector<OpenGLMesh*> m_gizmoMeshes, m_gridlineMeshes, m_lightMeshes, m_normalMeshes;
+    QVector<QSharedPointer<OpenGLMesh>> m_gizmoMeshes, m_gridlineMeshes, m_lightMeshes, m_normalMeshes;
     static OpenGLUniformBufferObject *m_cameraInfo, *m_lightInfo;
 private slots:
     void gizmoAdded(AbstractGizmo* gizmo);

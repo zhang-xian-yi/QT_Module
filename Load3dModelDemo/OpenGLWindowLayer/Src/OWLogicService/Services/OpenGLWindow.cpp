@@ -13,20 +13,10 @@ OpenGLWindow::OpenGLWindow() {
 
 OpenGLWindow::~OpenGLWindow()
 {
-    if(m_openGLScene)
-    {
-        delete m_openGLScene;
-        m_openGLScene = nullptr;
-    }
 
-    if(m_renderer)
-    {
-        delete m_renderer;
-        m_renderer = nullptr;
-    }
 }
 
-OpenGLWindow::OpenGLWindow(OpenGLScene * openGLScene, OpenGLRenderer * renderer) {
+OpenGLWindow::OpenGLWindow(QSharedPointer<OpenGLScene> openGLScene, QSharedPointer<OpenGLRenderer> renderer) {
     m_lastCursorPos = QCursor::pos();
     m_enableMousePicking = true;
     m_renderer = renderer;
@@ -35,17 +25,17 @@ OpenGLWindow::OpenGLWindow(OpenGLScene * openGLScene, OpenGLRenderer * renderer)
     configSignals();
 }
 
-void OpenGLWindow::setScene(OpenGLScene* openGLScene)
+void OpenGLWindow::setScene(QSharedPointer<OpenGLScene> openGLScene)
 {
     if (m_openGLScene)
     {
-        disconnect(m_openGLScene, 0, this, 0);
+        disconnect(m_openGLScene.get(), 0, this, 0);
     }
     m_openGLScene = openGLScene;
     configSignals();
 }
 
-void OpenGLWindow::setRenderer(OpenGLRenderer * renderer)
+void OpenGLWindow::setRenderer(QSharedPointer<OpenGLRenderer> renderer)
 {
     m_renderer = renderer;
     if (isInit() && m_renderer)
@@ -65,7 +55,7 @@ void OpenGLWindow::setEnableMousePicking(bool enabled) {
     m_enableMousePicking = enabled;
 }
 
-void OpenGLWindow::setCustomRenderingLoop(void (*customRenderingLoop)(Scene*)) {
+void OpenGLWindow::setCustomRenderingLoop(void (*customRenderingLoop)(QSharedPointer<Scene>)) {
     m_customRenderingLoop = customRenderingLoop;
 }
 
@@ -159,7 +149,7 @@ bool OpenGLWindow::event(QEvent * event) {
         foreach(const QUrl &url, dropEvent->mimeData()->urls())
         {
             ModelLoader loader;
-            Model* model = loader.loadModelFromFile(url.toLocalFile());
+            auto model = loader.loadModelFromFile(url.toLocalFile());
 
             if (loader.hasErrorLog())
             {
@@ -254,7 +244,7 @@ void OpenGLWindow::processUserInput() {
     //用户输入的鼠标相应
     if (m_keyPressed[Qt::LeftButton]) {
         QPoint cntCursorPos = mapFromGlobal(QCursor::pos());
-        TransformGizmo* gizmo = m_openGLScene->host()->transformGizmo();
+       auto gizmo = m_openGLScene->host()->transformGizmo();
         if (gizmo->visible() && gizmo->transformAxis() != TransformGizmo::None) {
             gizmo->drag(m_lastCursorPos, cntCursorPos,
                         width(), height(),
@@ -273,7 +263,7 @@ void OpenGLWindow::configSignals() {
     connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
     if(m_openGLScene)
     {
-        connect(m_openGLScene, SIGNAL(destroyed(QObject*)), this, SLOT(sceneDestroyed(QObject*)));
+        connect(m_openGLScene.get(), SIGNAL(destroyed(QObject*)), this, SLOT(sceneDestroyed(QObject*)));
         //设置坐标轴永远在上
         m_openGLScene->host()->transformGizmo()->setAlwaysOnTop(false);
     }

@@ -15,6 +15,8 @@ namespace OWlayerNS
             delete m_pOWLCtl;
             m_pOWLCtl = nullptr;
         }
+        if (logLV == DEBUG_DESTORY_INFO)
+            dout << "OpenGLWinLayerrFactory is destroyed";
     }
 
     //获取窗口

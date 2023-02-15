@@ -60,7 +60,7 @@ void OpenGLRenderer::reloadFrameBuffers() {
     m_pickingPassFBO = new QOpenGLFramebufferObject(data[2], data[3], QOpenGLFramebufferObject::CombinedDepthStencil);
 }
 
-uint32_t OpenGLRenderer::pickingPass(OpenGLScene * openGLScene, QPoint cursorPos) {
+uint32_t OpenGLRenderer::pickingPass(QSharedPointer<OpenGLScene> openGLScene, QPoint cursorPos) {
     if (m_pickingPassFBO == 0) reloadFrameBuffers();
 
     int data[4];
@@ -90,7 +90,7 @@ uint32_t OpenGLRenderer::pickingPass(OpenGLScene * openGLScene, QPoint cursorPos
     return rgb.red() + rgb.green() * 256 + rgb.blue() * 256 * 256;
 }
 
-void OpenGLRenderer::render(OpenGLScene* openGLScene) {
+void OpenGLRenderer::render(QSharedPointer<OpenGLScene> openGLScene) {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (m_basicShader) {

@@ -7,11 +7,12 @@ Model::Model(QObject * parent): AbstractEntity(0) {
     setParent(parent);
 }
 
-Model::Model(const Model & model): AbstractEntity(model) {
+Model::Model(const Model & model): AbstractEntity(model)
+{
     for (int i = 0; i < model.m_childMeshes.size(); i++)
-        addChildMesh(new Mesh(*model.m_childMeshes[i]));
+        addChildMesh(QSharedPointer<Mesh>(new Mesh(*model.m_childMeshes[i])));
     for (int i = 0; i < model.m_childModels.size(); i++)
-        addChildModel(new Model(*model.m_childModels[i]));
+        addChildModel(QSharedPointer<Model>(new Model(*model.m_childModels[i])));
 }
 
 Model::~Model()
@@ -24,7 +25,7 @@ Model::~Model()
         dout << "Model" << this->objectName() << "is destroyed";
 }
 
-bool Model::addChildMesh(Mesh * mesh) {
+bool Model::addChildMesh(QSharedPointer<Mesh> mesh) {
     if (!mesh || m_childMeshes.contains(mesh))
         return false;
 
@@ -38,7 +39,7 @@ bool Model::addChildMesh(Mesh * mesh) {
     return true;
 }
 
-bool Model::addChildModel(Model * model) {
+bool Model::addChildModel(QSharedPointer<Model> model) {
     if (!model || m_childModels.contains(model))
         return false;
 
@@ -149,41 +150,30 @@ float Model::mass() const
     return totalMass;
 }
 
-Mesh * Model::assemble() const
+QSharedPointer<Mesh> Model::assemble() const
 {
-    Mesh* assembledMesh = 0;
+    QSharedPointer<Mesh> assembledMesh = nullptr;
     for (int i = 0; i < m_childMeshes.size(); i++)
     {
-        Mesh* old = assembledMesh;
+        QSharedPointer<Mesh> old = assembledMesh;
         assembledMesh = Mesh::merge(old, m_childMeshes[i]);
-        if (old)
-        {
-            delete old;
-        }
     }
     for (int i = 0; i < m_childModels.size(); i++)
     {
-        Mesh* old1 = assembledMesh;
-        Mesh* old2 = m_childModels[i]->assemble();
+        QSharedPointer<Mesh> old1 = assembledMesh;
+        QSharedPointer<Mesh> old2 = m_childModels[i]->assemble();
         assembledMesh = Mesh::merge(old1, old2);
-        if (old1)
-        {
-            delete old1;
-        }
-        if (old2)
-        {
-            delete old2;
-        }
+        //old1 和 old2 自动释放
     }
     return assembledMesh;
 }
 
-const QVector<Mesh*>& Model::childMeshes() const
+const QVector<QSharedPointer<Mesh>>& Model::childMeshes() const
 {
     return m_childMeshes;
 }
 
-const QVector<Model*>& Model::childModels() const
+const QVector<QSharedPointer<Model>>& Model::childModels() const
 {
     return m_childModels;
 }
@@ -218,11 +208,11 @@ void Model::childEvent(QChildEvent * e)
     {
         if (Model* model = qobject_cast<Model*>(e->child()))
         {
-            addChildModel(model);
+            addChildModel(QSharedPointer<Model>(model));
         }
         else if (Mesh* mesh = qobject_cast<Mesh*>(e->child()))
         {
-            addChildMesh(mesh);
+            addChildMesh(QSharedPointer<Mesh>(mesh));
         }
     }
     else if (e->removed())

@@ -13,7 +13,7 @@ static ShaderModelInfo shaderModelInfo;
 
 OpenGLUniformBufferObject *OpenGLMesh::m_modelInfo = 0;
 
-OpenGLMesh::OpenGLMesh(Mesh * mesh, QObject* parent): QObject(0) {
+OpenGLMesh::OpenGLMesh(QSharedPointer<Mesh> mesh, QObject* parent): QObject(0) {
     m_host = mesh;
     m_sizeFixed = false;
     m_pickingID = 0;
@@ -21,13 +21,13 @@ OpenGLMesh::OpenGLMesh(Mesh * mesh, QObject* parent): QObject(0) {
     m_vbo = 0;
     m_ebo = 0;
     if (m_host->material())
-        m_openGLMaterial = new OpenGLMaterial(m_host->material());
+        m_openGLMaterial = QSharedPointer<OpenGLMaterial>(new OpenGLMaterial(m_host->material()));
     else
         m_openGLMaterial = nullptr;
 
-    connect(m_host, SIGNAL(materialChanged(Material*)), this, SLOT(materialChanged(Material*)));
-    connect(m_host, SIGNAL(geometryChanged(QVector<Vertex>, QVector<uint32_t>)), this, SLOT(geometryChanged(QVector<Vertex>, QVector<uint32_t>)));
-    connect(m_host, SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
+    connect(m_host.get(), SIGNAL(materialChanged(Material*)), this, SLOT(materialChanged(Material*)));
+    connect(m_host.get(), SIGNAL(geometryChanged(QVector<Vertex>, QVector<uint32_t>)), this, SLOT(geometryChanged(QVector<Vertex>, QVector<uint32_t>)));
+    connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 
     setParent(parent);
 }
@@ -43,22 +43,22 @@ OpenGLMesh::~OpenGLMesh() {
     }
 }
 
-Mesh * OpenGLMesh::host() const {
+QSharedPointer<Mesh> OpenGLMesh::host() const {
     return m_host;
 }
 
 void OpenGLMesh::create() {
     this->destroy();
 
-    m_vao = new QOpenGLVertexArrayObject;
+    m_vao = QSharedPointer<QOpenGLVertexArrayObject>(new QOpenGLVertexArrayObject);
     m_vao->create();
     m_vao->bind();
-    m_vbo = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    m_vbo = QSharedPointer<QOpenGLBuffer>(new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer));
     m_vbo->create();
     m_vbo->bind();
     if (m_host->vertices().size())
         m_vbo->allocate(&m_host->vertices()[0], int(sizeof(Vertex) * m_host->vertices().size()));
-    m_ebo = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    m_ebo = QSharedPointer<QOpenGLBuffer>(new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer));
     m_ebo->create();
     m_ebo->bind();
     if (m_host->indices().size())
@@ -131,6 +131,7 @@ void OpenGLMesh::render(bool pickingPass) {
 }
 
 void OpenGLMesh::destroy() {
+    /*
     if (m_vao)
     {
         //delete m_vao; 暂时不做销毁，最后来处理此问题
@@ -146,6 +147,7 @@ void OpenGLMesh::destroy() {
         delete m_ebo;
         m_ebo = nullptr;
     }
+    */
 }
 
 void OpenGLMesh::setSizeFixed(bool sizeFixed) {

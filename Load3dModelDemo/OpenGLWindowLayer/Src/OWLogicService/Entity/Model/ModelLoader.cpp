@@ -10,7 +10,7 @@ ModelLoader::ModelLoader() {
     m_aiScenePtr = 0;
 }
 
-Model * ModelLoader::loadModelFromFile(QString filePath) {
+QSharedPointer<Model> ModelLoader::loadModelFromFile(QString filePath) {
     if (filePath.length() == 0) {
         m_log += "Filepath is empty.";
         if (logLV >= LOG_LEVEL_ERROR)
@@ -57,47 +57,41 @@ Model * ModelLoader::loadModelFromFile(QString filePath) {
         return 0;
     }
 
-    Model* model = loadModel(m_aiScenePtr->mRootNode);
+    QSharedPointer<Model> model = loadModel(m_aiScenePtr->mRootNode);
     model->setObjectName(QFileInfo(filePath).baseName());
 
-    return model;
+    return QSharedPointer<Model>(model);
 }
 
-Mesh * ModelLoader::loadMeshFromFile(QString filePath) {
-    Model* model = loadModelFromFile(filePath);
-    Mesh* assembledMesh = model->assemble();
-    delete model;
+QSharedPointer<Mesh> ModelLoader::loadMeshFromFile(QString filePath) {
+    QSharedPointer<Model> model = loadModelFromFile(filePath);//model 自动释放
+    QSharedPointer<Mesh> assembledMesh = model->assemble();
     return assembledMesh;
 }
 
-Model * ModelLoader::loadConeModel() {
-    static ModelLoader * loader = new ModelLoader;
-    Model* model = loader->loadModelFromFile(":/resources/shapes/Cone.obj");
-    return model;
+QSharedPointer<Model> ModelLoader::loadConeModel() {
+    static ModelLoader loader;
+    return loader.loadModelFromFile(":/resources/shapes/Cone.obj");
 }
 
-Model * ModelLoader::loadCubeModel() {
-    static ModelLoader * loader = new ModelLoader;
-    Model* model = loader->loadModelFromFile(":/resources/shapes/Cube.obj");
-    return model;
+QSharedPointer<Model> ModelLoader::loadCubeModel() {
+    static ModelLoader loader;
+    return loader.loadModelFromFile(":/resources/shapes/Cube.obj");
 }
 
-Model * ModelLoader::loadCylinderModel() {
-    static ModelLoader * loader = new ModelLoader;
-    Model* model = loader->loadModelFromFile(":/resources/shapes/Cylinder.obj");
-    return model;
+QSharedPointer<Model> ModelLoader::loadCylinderModel() {
+    static ModelLoader loader;
+    return loader.loadModelFromFile(":/resources/shapes/Cylinder.obj");
 }
 
-Model * ModelLoader::loadPlaneModel() {
-    static ModelLoader * loader = new ModelLoader;
-    Model* model = loader->loadModelFromFile(":/resources/shapes/Plane.obj");
-    return model;
+QSharedPointer<Model> ModelLoader::loadPlaneModel() {
+    static ModelLoader loader;
+    return loader.loadModelFromFile(":/resources/shapes/Plane.obj");
 }
 
-Model * ModelLoader::loadSphereModel() {
-    static ModelLoader * loader = new ModelLoader;
-    Model* model = loader->loadModelFromFile(":/resources/shapes/Sphere.obj");
-    return model;
+QSharedPointer<Model> ModelLoader::loadSphereModel() {
+    static ModelLoader loader;
+    return loader.loadModelFromFile(":/resources/shapes/Sphere.obj");
 }
 
 bool ModelLoader::hasErrorLog() {
@@ -110,13 +104,19 @@ QString ModelLoader::errorLog() {
     return tmp;
 }
 
-Model * ModelLoader::loadModel(const aiNode * aiNodePtr) {
-    Model* model = new Model;
+QSharedPointer<Model> ModelLoader::loadModel(const aiNode * aiNodePtr) {
+    QSharedPointer<Model> model = QSharedPointer<Model>(new Model);
+
     model->setObjectName(aiNodePtr->mName.length ? aiNodePtr->mName.C_Str() : "Untitled");
     for (uint32_t i = 0; i < aiNodePtr->mNumMeshes; i++)
+    {
         model->addChildMesh(loadMesh(m_aiScenePtr->mMeshes[aiNodePtr->mMeshes[i]]));
+    }
+
     for (uint32_t i = 0; i < aiNodePtr->mNumChildren; i++)
+    {
         model->addChildModel(loadModel(aiNodePtr->mChildren[i]));
+    }
 
     QVector3D center = model->centerOfMass();
 
@@ -130,8 +130,8 @@ Model * ModelLoader::loadModel(const aiNode * aiNodePtr) {
     return model;
 }
 
-Mesh * ModelLoader::loadMesh(const aiMesh * aiMeshPtr) {
-    Mesh* mesh = new Mesh;
+QSharedPointer<Mesh> ModelLoader::loadMesh(const aiMesh * aiMeshPtr) {
+    QSharedPointer<Mesh> mesh = QSharedPointer<Mesh>(new Mesh);
     mesh->setObjectName(aiMeshPtr->mName.length ? aiMeshPtr->mName.C_Str() : "Untitled");
 
     for (uint32_t i = 0; i < aiMeshPtr->mNumVertices; i++) {
@@ -173,8 +173,8 @@ Mesh * ModelLoader::loadMesh(const aiMesh * aiMeshPtr) {
     return mesh;
 }
 
-Material * ModelLoader::loadMaterial(const aiMaterial * aiMaterialPtr) {
-    Material* material = new Material;
+QSharedPointer<Material> ModelLoader::loadMaterial(const aiMaterial * aiMaterialPtr) {
+    QSharedPointer<Material> material = QSharedPointer<Material>(new Material);
     aiColor4D color; float value; aiString aiStr;
 
     if (AI_SUCCESS == aiMaterialPtr->Get(AI_MATKEY_NAME, aiStr))

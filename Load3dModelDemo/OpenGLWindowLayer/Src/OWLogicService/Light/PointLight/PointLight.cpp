@@ -36,12 +36,6 @@ PointLight::PointLight(const PointLight & light): AbstractLight(light) {
 }
 
 PointLight::~PointLight() {
-    int tmp_log_level = logLV;
-    logLV = LOG_LEVEL_WARNING;
-
-    delete m_marker;
-
-    logLV = tmp_log_level;
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Point light" << objectName() << "is destroyed";
@@ -93,7 +87,7 @@ float PointLight::attenuationConstant() const {
     return m_attenuationConstant;
 }
 
-Mesh * PointLight::marker() const {
+QSharedPointer<Mesh> PointLight::marker() const {
     return m_marker;
 }
 
@@ -179,6 +173,6 @@ void PointLight::initMarker() {
     m_marker->setObjectName("Point Light Marker");
     m_marker->setParent(this);
 
-    connect(m_marker, SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
-    connect(m_marker, SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));
+    connect(m_marker.get(), SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
+    connect(m_marker.get(), SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));
 }

@@ -35,7 +35,7 @@ float AbstractLight::intensity() {
     return m_intensity;
 }
 
-Mesh * AbstractLight::marker() const {
+QSharedPointer<Mesh> AbstractLight::marker() const {
     return nullptr;
 }
 

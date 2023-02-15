@@ -1,6 +1,5 @@
 #include "OpenGLWinLayerControl.h"
 #include "Src/OWLogicService/OpenGLWindowsLayerService.h"
-
 OpenGLWinLayerControl::OpenGLWinLayerControl()
     :m_pOWLService(nullptr)
 {
@@ -14,6 +13,8 @@ OpenGLWinLayerControl::~OpenGLWinLayerControl()
         delete m_pOWLService;
         m_pOWLService = nullptr;
     }
+    if (logLV == DEBUG_DESTORY_INFO)
+        dout << "OpenGLWinLayerControl is destroyed";
 }
 
 void OpenGLWinLayerControl::initOpenGLWin(QWidget* parent)

@@ -20,7 +20,7 @@ public:
     float yStride() const;
     float zStride() const;
     QVector3D color() const;
-    Mesh* marker();
+    QSharedPointer<Mesh> marker();
 
 public slots:
     void reset();
@@ -39,7 +39,7 @@ private:
     QPair<float, float> m_xRange, m_yRange, m_zRange;
     float m_xStride, m_yStride, m_zStride;
     QVector3D m_color;
-    Mesh* m_marker;
+    QSharedPointer<Mesh> m_marker;
 
     void update();
 };

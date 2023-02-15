@@ -10,7 +10,7 @@ public:
     OpenGLMesh(Mesh* mesh, QObject* parent = 0);
     ~OpenGLMesh();
 
-    Mesh* host() const;
+    QSharedPointer<Mesh> host() const;
 
     void create();
     void commit();
@@ -24,13 +24,13 @@ protected:
     void childEvent(QChildEvent *event) override;
 
 private:
-    Mesh* m_host;
+    QSharedPointer<Mesh> m_host;
     bool m_sizeFixed;
     uint m_pickingID;
 
-    QOpenGLVertexArrayObject * m_vao;
-    QOpenGLBuffer* m_vbo, *m_ebo;
-    OpenGLMaterial* m_openGLMaterial;//矩阵随时更新,但是不做释放
+    QSharedPointer<QOpenGLVertexArrayObject>  m_vao;
+    QSharedPointer<QOpenGLBuffer> m_vbo, m_ebo;
+    QSharedPointer<OpenGLMaterial> m_openGLMaterial;//矩阵随时更新,但是不做释放
 
     static OpenGLUniformBufferObject *m_modelInfo;
 

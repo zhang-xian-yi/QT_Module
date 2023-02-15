@@ -6,21 +6,21 @@ class SceneLoader {
 public:
     SceneLoader();
 
-    Scene* loadFromFile(QString filePath);
+    QSharedPointer<Scene> loadFromFile(QString filePath);
 
     bool hasErrorLog();
     QString errorLog();
 
 private:
-    Camera* loadCamera(QDataStream& in);
-    Gridline* loadGridline(QDataStream& in);
-    AmbientLight* loadAmbientLight(QDataStream& in);
-    DirectionalLight* loadDirectionalLight(QDataStream& in);
-    PointLight* loadPointLight(QDataStream& in);
-    SpotLight* loadSpotLight(QDataStream& in);
-    Model* loadModel(QDataStream& in);
-    Mesh* loadMesh(QDataStream& in);
-    Material* loadMaterial(QDataStream& in);
+    QSharedPointer<Camera> loadCamera(QDataStream& in);
+    QSharedPointer<Gridline> loadGridline(QDataStream& in);
+    QSharedPointer<AmbientLight> loadAmbientLight(QDataStream& in);
+    QSharedPointer<DirectionalLight> loadDirectionalLight(QDataStream& in);
+    QSharedPointer<PointLight> loadPointLight(QDataStream& in);
+    QSharedPointer<SpotLight> loadSpotLight(QDataStream& in);
+    QSharedPointer<Model> loadModel(QDataStream& in);
+    QSharedPointer<Mesh> loadMesh(QDataStream& in);
+    QSharedPointer<Material> loadMaterial(QDataStream& in);
     QSharedPointer<Texture> loadTexture(QDataStream& in);
 
     QVector<QSharedPointer<Texture>> m_textures;

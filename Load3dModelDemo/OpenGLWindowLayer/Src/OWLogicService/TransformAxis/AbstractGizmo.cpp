@@ -10,10 +10,6 @@ AbstractGizmo::AbstractGizmo(QObject* parent): AbstractEntity(nullptr) {
 
 AbstractGizmo::~AbstractGizmo()
 {
-    for(auto tmp:m_markers)
-    {
-        delete tmp;
-    }
     m_markers.clear();
 }
 
@@ -37,7 +33,7 @@ AbstractGizmo::TransformAxis AbstractGizmo::transformAxis() const {
     return m_axis;
 }
 
-QVector<Mesh*>& AbstractGizmo::markers() {
+QVector<QSharedPointer<Mesh>>& AbstractGizmo::markers() {
     return m_markers;
 }
 

@@ -9,8 +9,6 @@
 #include <cstdint>
 #include <ctime>
 #include <memory>
-//self defie
-#include "Src/OWCommon/ExtendMath.h"
 
 //add QT Lib
 #include <QByteArray>
@@ -41,3 +39,8 @@
 #include <QSurfaceFormat>
 #include <QMessageBox>
 #include <QSizePolicy>
+#include <QSharedPointer>
+//self defie
+#include "Src/OWCommon/ExtendMath.h"
+//临时debug使用
+#include "Src/OWCommon/GlobalData.h"

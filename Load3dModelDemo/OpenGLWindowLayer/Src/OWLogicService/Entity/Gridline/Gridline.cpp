@@ -6,9 +6,9 @@ Gridline::Gridline(QObject* parent): QObject(0) {
     int tmp_log_level = logLV;
     logLV = LOG_LEVEL_WARNING;
 
-    m_marker = new Mesh(Mesh::Line, this);
+    m_marker = QSharedPointer<Mesh>(new Mesh(Mesh::Line, this));
     m_marker->setObjectName("Gridline Marker");
-    m_marker->setMaterial(new Material);
+    m_marker->setMaterial(QSharedPointer<Material>(new Material));
 
     setObjectName("Untitled Gridline");
     reset();
@@ -24,8 +24,8 @@ Gridline::Gridline(const Gridline & gridline): QObject(0) {
     int tmp_log_level = logLV;
     logLV = LOG_LEVEL_WARNING;
 
-    m_marker = new Mesh(Mesh::Line, 0);
-    m_marker->setMaterial(new Material);
+    m_marker = QSharedPointer<Mesh>(new Mesh(Mesh::Line, 0));
+    m_marker->setMaterial(QSharedPointer<Material>(new Material));
     m_xRange = gridline.m_xRange;
     m_yRange = gridline.m_yRange;
     m_zRange = gridline.m_zRange;
@@ -42,9 +42,7 @@ Gridline::Gridline(const Gridline & gridline): QObject(0) {
 
 Gridline::~Gridline() {
 
-    delete m_marker;
-
-    if (logLV >= LOG_LEVEL_INFO)
+    if (logLV == DEBUG_DESTORY_INFO)
         dout << "Gridline" << this->objectName() << "is destroyed";
 }
 
@@ -93,7 +91,7 @@ QVector3D Gridline::color() const {
     return m_color;
 }
 
-Mesh * Gridline::marker() {
+QSharedPointer<Mesh> Gridline::marker() {
     return m_marker;
 }
 

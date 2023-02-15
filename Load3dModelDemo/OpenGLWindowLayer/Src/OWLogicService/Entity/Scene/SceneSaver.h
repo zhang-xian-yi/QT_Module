@@ -4,7 +4,7 @@
 
 class SceneSaver {
 public:
-    SceneSaver(Scene* scene);
+    SceneSaver(QSharedPointer<Scene> scene);
 
     bool saveToFile(QString filePath);
 
@@ -12,20 +12,20 @@ public:
     QString errorLog();
 
 private:
-    void getAllTextures(Model* model);
+    void getAllTextures(QSharedPointer<Model> model);
 
-    void saveCamera(Camera* camera, QDataStream& out);
-    void saveGridline(Gridline* gridline, QDataStream& out);
-    void saveAmbientLight(AmbientLight* light, QDataStream& out);
-    void saveDirectionalLight(DirectionalLight* light, QDataStream& out);
-    void savePointLight(PointLight* light, QDataStream& out);
-    void saveSpotLight(SpotLight* light, QDataStream& out);
-    void saveModel(Model* model, QDataStream& out);
-    void saveMesh(Mesh* mesh, QDataStream& out);
-    void saveMaterial(Material* material, QDataStream& out);
+    void saveCamera(QSharedPointer<Camera> camera, QDataStream& out);
+    void saveGridline(QSharedPointer<Gridline> gridline, QDataStream& out);
+    void saveAmbientLight(QSharedPointer<AmbientLight> light, QDataStream& out);
+    void saveDirectionalLight(QSharedPointer<DirectionalLight> light, QDataStream& out);
+    void savePointLight(QSharedPointer<PointLight> light, QDataStream& out);
+    void saveSpotLight(QSharedPointer<SpotLight> light, QDataStream& out);
+    void saveModel(QSharedPointer<Model> model, QDataStream& out);
+    void saveMesh(QSharedPointer<Mesh> mesh, QDataStream& out);
+    void saveMaterial(QSharedPointer<Material> material, QDataStream& out);
     void saveTexture(QSharedPointer<Texture> texture, QDataStream& out);
 
-    Scene* m_scene;
+    QSharedPointer<Scene> m_scene;
     QVector<QSharedPointer<Texture>> m_textures;
     QString m_log;
 };

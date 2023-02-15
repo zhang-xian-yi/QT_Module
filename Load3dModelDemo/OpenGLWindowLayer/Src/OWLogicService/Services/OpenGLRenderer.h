@@ -15,8 +15,8 @@ public:
     bool reloadShaders();
     void reloadFrameBuffers();
 
-    uint32_t pickingPass(OpenGLScene* openGLScene, QPoint cursorPos);
-    void render(OpenGLScene* openGLScene);
+    uint32_t pickingPass(QSharedPointer<OpenGLScene> openGLScene, QPoint cursorPos);
+    void render(QSharedPointer<OpenGLScene> openGLScene);
 
 private:
     QString m_log;

@@ -20,14 +20,14 @@ public:
     Scene(const Scene& scene);
     ~Scene();
 
-    bool setCamera(Camera* camera);
-    bool addGridline(Gridline* gridline);
+    bool setCamera(QSharedPointer<Camera> camera);
+    bool addGridline(QSharedPointer<Gridline> gridline);
     bool addLight(AbstractLight* light);
-    bool addAmbientLight(AmbientLight* light);
-    bool addDirectionalLight(DirectionalLight* light);
-    bool addPointLight(PointLight* light);
-    bool addSpotLight(SpotLight* light);
-    bool addModel(Model* model);
+    bool addAmbientLight(QSharedPointer<AmbientLight> light);
+    bool addDirectionalLight(QSharedPointer<DirectionalLight> light);
+    bool addPointLight(QSharedPointer<PointLight> light);
+    bool addSpotLight(QSharedPointer<SpotLight> light);
+    bool addModel(QSharedPointer<Model> model);
 
     bool removeGridline(QObject* gridline);
     bool removeLight(QObject* light);
@@ -36,36 +36,36 @@ public:
     void dumpObjectInfo(int level = 0);
     void dumpObjectTree(int level = 0);
 
-    TransformGizmo* transformGizmo() const;
-    Camera* camera() const;
-    const QVector<Gridline*>& gridlines() const;
-    const QVector<AmbientLight*>& ambientLights() const;
-    const QVector<DirectionalLight*>& directionalLights() const;
-    const QVector<PointLight*>& pointLights() const;
-    const QVector<SpotLight*>& spotLights() const;
-    const QVector<Model*>& models() const;
+    QSharedPointer<TransformGizmo> transformGizmo() const;
+    QSharedPointer<Camera> camera() const;
+    const QVector<QSharedPointer<Gridline>>& gridlines() const;
+    const QVector<QSharedPointer<AmbientLight>>& ambientLights() const;
+    const QVector<QSharedPointer<DirectionalLight>>& directionalLights() const;
+    const QVector<QSharedPointer<PointLight>>& pointLights() const;
+    const QVector<QSharedPointer<SpotLight>>& spotLights() const;
+    const QVector<QSharedPointer<Model>>& models() const;
 
 signals:
-    void cameraChanged(Camera* camera);
-    void gridlineAdded(Gridline* gridline);
+    void cameraChanged(QSharedPointer<Camera> camera);
+    void gridlineAdded(QSharedPointer<Gridline> gridline);
     void gridlineRemoved(QObject* object);
     void lightAdded(AbstractLight* light);
     void lightRemoved(QObject* object);
-    void modelAdded(Model* model);
+    void modelAdded(QSharedPointer<Model> model);
     void modelRemoved(QObject* object);
 
 protected:
     void childEvent(QChildEvent *event) override;
 
 private:
-    TransformGizmo * m_gizmo;
-    Camera * m_camera;
-    QVector<Gridline*> m_gridlines;
-    QVector<AmbientLight*> m_ambientLights;
-    QVector<DirectionalLight*> m_directionalLights;
-    QVector<PointLight*> m_pointLights;
-    QVector<SpotLight*> m_spotLights;
-    QVector<Model*> m_models;
+    QSharedPointer<TransformGizmo> m_gizmo;
+    QSharedPointer<Camera> m_camera;
+    QVector<QSharedPointer<Gridline>> m_gridlines;
+    QVector<QSharedPointer<AmbientLight>> m_ambientLights;
+    QVector<QSharedPointer<DirectionalLight>> m_directionalLights;
+    QVector<QSharedPointer<PointLight>> m_pointLights;
+    QVector<QSharedPointer<SpotLight>> m_spotLights;
+    QVector<QSharedPointer<Model>> m_models;
 
     int m_gridlineNameCounter;
     int m_ambientLightNameCounter;

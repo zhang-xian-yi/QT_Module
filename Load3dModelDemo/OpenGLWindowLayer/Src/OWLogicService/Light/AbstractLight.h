@@ -17,7 +17,7 @@ public:
     QVector3D color();
     bool enabled();
     float intensity();
-    virtual Mesh* marker() const;
+    virtual QSharedPointer<Mesh> marker() const;
 
 public slots:
     virtual void setColor(QVector3D color);

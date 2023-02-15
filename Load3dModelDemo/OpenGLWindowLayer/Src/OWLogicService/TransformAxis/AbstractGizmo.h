@@ -25,7 +25,7 @@ public:
     bool isModel() const override;
 
     virtual TransformAxis transformAxis() const;
-    virtual QVector<Mesh*>& markers();
+    virtual QVector<QSharedPointer<Mesh>>& markers();
     virtual void drag(QPoint from, QPoint to, int scnWidth, int scnHeight, QMatrix4x4 proj, QMatrix4x4 view) = 0;
     virtual void bindTo(AbstractEntity* host);
     virtual void unbind();
@@ -36,7 +36,7 @@ public slots:
 
 protected:
     TransformAxis m_axis;
-    QVector<Mesh*> m_markers;
+    QVector<QSharedPointer<Mesh>> m_markers;
     AbstractEntity* m_host;
 
 private slots:

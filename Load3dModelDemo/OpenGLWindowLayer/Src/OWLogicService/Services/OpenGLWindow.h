@@ -9,12 +9,12 @@ class OpenGLWindow: public QOpenGLWidget{
 public:
     OpenGLWindow();
     ~OpenGLWindow();
-    OpenGLWindow(OpenGLScene* openGLScene, OpenGLRenderer* renderer);
+    OpenGLWindow(QSharedPointer<OpenGLScene> openGLScene, QSharedPointer<OpenGLRenderer> renderer);
 
-    void setScene(OpenGLScene* openGLScene);
-    void setRenderer(OpenGLRenderer* renderer);
+    void setScene(QSharedPointer<OpenGLScene> openGLScene);
+    void setRenderer(QSharedPointer<OpenGLRenderer> renderer);
     void setEnableMousePicking(bool enabled);
-    void setCustomRenderingLoop(void (*customRenderingLoop)(Scene*));
+    void setCustomRenderingLoop(void (*customRenderingLoop)(QSharedPointer<Scene>));
 protected:
     virtual void initializeGL() override;
     virtual void paintGL() override;
@@ -31,9 +31,9 @@ private:
     QPoint m_lastCursorPos;
     QTime m_lastMousePressTime;
     bool m_enableMousePicking;
-    OpenGLScene* m_openGLScene;
-    OpenGLRenderer * m_renderer;
-    void (*m_customRenderingLoop)(Scene*);
+    QSharedPointer<OpenGLScene>    m_openGLScene;
+    QSharedPointer<OpenGLRenderer> m_renderer;
+    void (*m_customRenderingLoop)(QSharedPointer<Scene> p);
 
     void processUserInput();
     void configSignals();
