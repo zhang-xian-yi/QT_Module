@@ -18,6 +18,7 @@ OpenGLTexture::OpenGLTexture(Texture * texture) {
 
 OpenGLTexture::~OpenGLTexture() {
     delete m_openGLTexture;
+    //不删除m_host 由传递方负责
     m_host->setProperty("OpenGLTexturePointer", QVariant());
 }
 

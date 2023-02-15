@@ -92,7 +92,7 @@ OpenGLScene::~OpenGLScene()
     m_normalMeshes.clear();
     m_lightMeshes.clear();
     /*
-    if(m_host)
+    if(m_host)  不删除主要m_host 由传递方负责
     {
         delete m_host;
         m_host = nullptr;
