@@ -13,7 +13,6 @@ public:
 public:
     //IOpenGLWin 实现函数
     virtual void initOpenGLWin(QWidget* parent) override;
-    virtual void resizeOpenGLWin(int w,int h) override;
 public:
     //ILoad3D 实现函数
     virtual void Load3DModel(QString path) override;

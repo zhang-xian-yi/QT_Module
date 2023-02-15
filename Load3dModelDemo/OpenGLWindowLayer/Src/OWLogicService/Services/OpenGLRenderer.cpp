@@ -91,8 +91,6 @@ uint32_t OpenGLRenderer::pickingPass(OpenGLScene * openGLScene, QPoint cursorPos
 }
 
 void OpenGLRenderer::render(OpenGLScene* openGLScene) {
-    glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (m_basicShader) {

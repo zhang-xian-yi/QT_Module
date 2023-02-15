@@ -3,7 +3,7 @@
 #include "Scene/OpenGLScene.h"
 #include "OpenGLRenderer.h"
 
-class OpenGLWindow: public QOpenGLWindow{
+class OpenGLWindow: public QOpenGLWidget{
     Q_OBJECT
 
 public:
@@ -11,15 +11,10 @@ public:
     ~OpenGLWindow();
     OpenGLWindow(OpenGLScene* openGLScene, OpenGLRenderer* renderer);
 
-    QString rendererName();
-    QString openGLVersion();
-    QString shadingLanguageVersion();
-
     void setScene(OpenGLScene* openGLScene);
     void setRenderer(OpenGLRenderer* renderer);
     void setEnableMousePicking(bool enabled);
     void setCustomRenderingLoop(void (*customRenderingLoop)(Scene*));
-
 protected:
     virtual void initializeGL() override;
     virtual void paintGL() override;
@@ -31,9 +26,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
-private slots:
-    //坐标轴变换
-    void gizmoAlwaysOnTop(bool alwaysOnTop);
 private:
     QHash<int, bool> m_keyPressed;
     QPoint m_lastCursorPos;

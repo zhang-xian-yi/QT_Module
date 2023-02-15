@@ -13,7 +13,11 @@ OpenGLWindow::OpenGLWindow() {
 
 OpenGLWindow::~OpenGLWindow()
 {
-
+    if(m_renderer)
+    {
+        delete m_renderer;
+        m_renderer = nullptr;
+    }
 }
 
 OpenGLWindow::OpenGLWindow(OpenGLScene * openGLScene, OpenGLRenderer * renderer) {
@@ -25,21 +29,6 @@ OpenGLWindow::OpenGLWindow(OpenGLScene * openGLScene, OpenGLRenderer * renderer)
     configSignals();
 }
 
-QString OpenGLWindow::rendererName()
-{
-    return isInit() ? QString((char*) pGlFuncs->glGetString(GL_RENDERER)) : "";
-}
-
-QString OpenGLWindow::openGLVersion()
-{
-    return isInit() ? QString((char*) pGlFuncs->glGetString(GL_VERSION)) : "";
-}
-
-QString OpenGLWindow::shadingLanguageVersion()
-{
-    return isInit() ? QString((char*) pGlFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION)) : "";
-}
-
 void OpenGLWindow::setScene(OpenGLScene* openGLScene)
 {
     if (m_openGLScene)
@@ -47,13 +36,7 @@ void OpenGLWindow::setScene(OpenGLScene* openGLScene)
         disconnect(m_openGLScene, 0, this, 0);
     }
     m_openGLScene = openGLScene;
-    if (m_openGLScene)
-    {
-        //场景释放,场景销毁
-        connect(m_openGLScene, SIGNAL(destroyed(QObject*)), this, SLOT(sceneDestroyed(QObject*)));
-        //设置坐标轴永远在上
-        m_openGLScene->host()->transformGizmo()->setAlwaysOnTop(false);
-    }
+    configSignals();
 }
 
 void OpenGLWindow::setRenderer(OpenGLRenderer * renderer)
@@ -82,7 +65,6 @@ void OpenGLWindow::setCustomRenderingLoop(void (*customRenderingLoop)(Scene*)) {
 
 void OpenGLWindow::initializeGL() {
     GlobalData::GetInstance().InitOpenGLFunc();//初始化OpenGL函数
-
     pGlFuncs->glEnable(GL_DEPTH_TEST);
 
     if (m_renderer)
@@ -105,7 +87,7 @@ void OpenGLWindow::initializeGL() {
 }
 
 void OpenGLWindow::paintGL() {
-    pGlFuncs->glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+    pGlFuncs->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     pGlFuncs->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     processUserInput();
@@ -118,42 +100,62 @@ void OpenGLWindow::paintGL() {
         m_openGLScene->commitCameraInfo();
         m_openGLScene->commitLightInfo();
 
-        if (!m_keyPressed[Qt::LeftButton] && m_enableMousePicking) {
+        if (!m_keyPressed[Qt::LeftButton] && m_enableMousePicking)
+        {
+            //获取鼠标点击所对应的位置
             uint32_t pickingID = m_renderer->pickingPass(m_openGLScene, mapFromGlobal(QCursor::pos()) * devicePixelRatioF());
+            //获取点击位置上的mesh
             OpenGLMesh* pickedOpenGLMesh = m_openGLScene->pick(pickingID);
+            //如果点击mesh存在
             if (pickedOpenGLMesh)
+            {
+                //设置模型高亮
                 pickedOpenGLMesh->host()->setHighlighted(true);
-            else if (Mesh::getHighlighted())
+            }
+            else if (Mesh::getHighlighted())//但模型高亮（已被选中）
+            {
+                //取消高亮
                 Mesh::getHighlighted()->setHighlighted(false);
+            }
         }
-
+        //渲染场景
         m_renderer->render(m_openGLScene);
     }
 }
 
 bool OpenGLWindow::event(QEvent * event) {
-    if (QOpenGLWindow::event(event)) return true;
+    if (QOpenGLWidget::event(event)) return true;
     if (!m_openGLScene) return false;
+    //重新绘制事件
 
-    if (event->type() == QEvent::DragEnter) {
+
+    //鼠标事件
+    if (event->type() == QEvent::DragEnter)
+    {
         QDragEnterEvent* dragEnterEvent = static_cast<QDragEnterEvent*>(event);
         if (dragEnterEvent->mimeData()->hasUrls())
             dragEnterEvent->acceptProposedAction();
         event->accept();
         return true;
-    } else if (event->type() == QEvent::DragMove) {
+    }
+    else if (event->type() == QEvent::DragMove)
+    {
         QDragMoveEvent* dragMoveEvent = static_cast<QDragMoveEvent*>(event);
         if (dragMoveEvent->mimeData()->hasUrls())
             dragMoveEvent->acceptProposedAction();
         event->accept();
         return true;
-    } else if (event->type() == QEvent::Drop) {
+    }
+    else if (event->type() == QEvent::Drop)
+    {
         QDropEvent* dropEvent = static_cast<QDropEvent*>(event);
-        foreach(const QUrl &url, dropEvent->mimeData()->urls()) {
+        foreach(const QUrl &url, dropEvent->mimeData()->urls())
+        {
             ModelLoader loader;
             Model* model = loader.loadModelFromFile(url.toLocalFile());
 
-            if (loader.hasErrorLog()) {
+            if (loader.hasErrorLog())
+            {
                 QString log = loader.errorLog();
                 QMessageBox::critical(0, "Error", log);
                 if (logLV >= LOG_LEVEL_ERROR)
@@ -260,20 +262,17 @@ void OpenGLWindow::processUserInput() {
 }
 
 void OpenGLWindow::configSignals() {
+    //关键代码，联通用户操作域ui刷新的方式
     connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
     if(m_openGLScene)
     {
         connect(m_openGLScene, SIGNAL(destroyed(QObject*)), this, SLOT(sceneDestroyed(QObject*)));
+        //设置坐标轴永远在上
+        m_openGLScene->host()->transformGizmo()->setAlwaysOnTop(false);
     }
-
 }
 
 void OpenGLWindow::sceneDestroyed(QObject *) {
     m_openGLScene = nullptr;
 }
 
-
-void OpenGLWindow::gizmoAlwaysOnTop(bool alwaysOnTop)
-{
-    if (m_openGLScene) m_openGLScene->host()->transformGizmo()->setAlwaysOnTop(alwaysOnTop);
-}

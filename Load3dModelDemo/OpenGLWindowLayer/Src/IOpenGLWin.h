@@ -9,7 +9,6 @@ namespace OWlayerNS
     {
     public:
         virtual void initOpenGLWin(QWidget* parent) = 0;
-        virtual void resizeOpenGLWin(int w,int h) = 0;
     };
 }
 

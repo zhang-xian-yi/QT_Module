@@ -21,16 +21,7 @@ public:
 public:
     void CreateScene();//创建场景
     void ImportModelFile(QString& filepath);//加载模型
-    //刷新窗口大小
-    void updateWinSize(int w,int h);
-private slots:
-    //刷新矩阵
-    void polygonAssignMaterial();
-    void polygonReverseNormals();
-    void polygonReverseTangents();
-    void polygonReverseBitangents();
 private:
-    QWidget* m_pWidgetWin;         //与m_openGLWindow是一样的地址只是窗口被强转为QWidget
     OpenGLWindow *m_openGLWindow;  //openGL的窗口 由QT自身控制释放
     Scene *m_pScene;               //显示的场景创建的场景,由OpenGLScene控制释放
 };
