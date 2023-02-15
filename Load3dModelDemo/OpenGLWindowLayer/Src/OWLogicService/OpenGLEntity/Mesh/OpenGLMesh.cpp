@@ -133,7 +133,7 @@ void OpenGLMesh::render(bool pickingPass) {
 void OpenGLMesh::destroy() {
     if (m_vao)
     {
-        delete m_vao;
+        //delete m_vao; 暂时不做销毁，最后来处理此问题
         m_vao = nullptr;
     }
     if (m_vbo)
