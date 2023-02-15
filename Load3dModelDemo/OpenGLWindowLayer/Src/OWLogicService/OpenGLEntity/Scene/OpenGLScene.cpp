@@ -77,12 +77,27 @@ OpenGLScene::OpenGLScene(Scene * scene) {
 //
 OpenGLScene::~OpenGLScene()
 {
+    for (int i = 0; i < m_gizmoMeshes.size(); i++)
+        delete m_gizmoMeshes[i];
+    for (int i = 0; i < m_gridlineMeshes.size(); i++)
+        delete m_gridlineMeshes[i];
+    for (int i = 0; i < m_normalMeshes.size(); i++)
+        delete m_normalMeshes[i];
+    for (int i = 0; i < m_lightMeshes.size(); i++)
+        delete m_lightMeshes[i];
+
+
+    m_gizmoMeshes.clear();
+    m_gridlineMeshes.clear();
+    m_normalMeshes.clear();
+    m_lightMeshes.clear();
+    /*
     if(m_host)
     {
         delete m_host;
         m_host = nullptr;
     }
-
+    */
 }
 
 Scene * OpenGLScene::host() const {

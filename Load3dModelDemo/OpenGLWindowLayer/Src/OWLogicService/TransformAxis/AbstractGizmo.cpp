@@ -1,14 +1,21 @@
 #include "AbstractGizmo.h"
 #include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
-AbstractGizmo::AbstractGizmo(QObject* parent): AbstractEntity(0) {
+AbstractGizmo::AbstractGizmo(QObject* parent): AbstractEntity(nullptr) {
     m_visible = false;
     m_axis = None;
-    m_host = 0;
+    m_host = nullptr;
     setParent(parent);
     setObjectName("Untitled Gizmo");
 }
 
-AbstractGizmo::~AbstractGizmo() {}
+AbstractGizmo::~AbstractGizmo()
+{
+    for(auto tmp:m_markers)
+    {
+        delete tmp;
+    }
+    m_markers.clear();
+}
 
 bool AbstractGizmo::isGizmo() const {
     return true;

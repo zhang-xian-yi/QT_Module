@@ -4,14 +4,14 @@
 #include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
 Mesh::Mesh(QObject * parent): AbstractEntity(0) {
     m_meshType = Triangle;
-    m_material = 0;
+    m_material = nullptr;
     setObjectName("Untitled Mesh");
     setParent(parent);
 }
 
 Mesh::Mesh(MeshType _meshType, QObject * parent): AbstractEntity(0) {
     m_meshType = _meshType;
-    m_material = 0;
+    m_material = nullptr;
     setObjectName("Untitled Mesh");
     setParent(parent);
 }
@@ -140,41 +140,58 @@ Material * Mesh::material() const{
 }
 
 Mesh * Mesh::merge(const Mesh * mesh1, const Mesh * mesh2) {
-    if (mesh1 == 0 && mesh2 == 0)
-        return 0;
-    else if (mesh1 == 0 || mesh2 == 0) {
-        if (mesh1 == 0) mesh1 = mesh2;
+    if (mesh1 == nullptr && mesh2 == nullptr)
+    {
+        return nullptr;
+    }
+    else if (mesh1 == nullptr || mesh2 == nullptr)
+    {
+        if (mesh1 == nullptr)
+        {
+            mesh1 = mesh2;
+        }
         Mesh* mergedMesh = new Mesh(mesh1->meshType());
         mergedMesh->setObjectName(mesh1->objectName());
         mergedMesh->setMaterial(new Material(*mesh1->material()));
         for (int i = 0; i < mesh1->m_vertices.size(); i++)
+        {
             mergedMesh->m_vertices.push_back(mesh1->globalModelMatrix() * mesh1->m_vertices[i]);
+        }
         mergedMesh->m_indices = mesh1->m_indices;
         return mergedMesh;
     }
 
-    if (mesh1->meshType() != mesh2->meshType()) {
+    if (mesh1->meshType() != mesh2->meshType())
+    {
         if (logLV >= LOG_LEVEL_ERROR)
             dout << "Failed to merge" << mesh1->objectName() << "and" << mesh2->objectName() << ": type not match";
-        return 0;
+        return nullptr;
     }
 
     if (logLV >= LOG_LEVEL_INFO)
+    {
         dout << "Merging" << mesh1->objectName() << "and" << mesh2->objectName();
+    }
 
     Mesh* mergedMesh = new Mesh(mesh1->meshType());
     mergedMesh->setObjectName(mesh1->objectName() + mesh2->objectName());
     mergedMesh->setMaterial(new Material);
 
     for (int i = 0; i < mesh1->m_vertices.size(); i++)
+    {
         mergedMesh->m_vertices.push_back(mesh1->globalModelMatrix() * mesh1->m_vertices[i]);
+    }
 
     for (int i = 0; i < mesh2->m_vertices.size(); i++)
+    {
         mergedMesh->m_vertices.push_back(mesh2->globalModelMatrix() * mesh2->m_vertices[i]);
+    }
 
     mergedMesh->m_indices = mesh1->m_indices;
     for (int i = 0; i < mesh2->m_indices.size(); i++)
+    {
         mergedMesh->m_indices.push_back(mesh2->m_indices[i] + mesh1->m_vertices.size());
+    }
 
     return mergedMesh;
 }
@@ -202,7 +219,7 @@ bool Mesh::setMaterial(Material * material) {
 
     if (m_material) {
         Material* tmp = m_material;
-        m_material = 0;
+        m_material = nullptr;
         delete tmp;
     }
 

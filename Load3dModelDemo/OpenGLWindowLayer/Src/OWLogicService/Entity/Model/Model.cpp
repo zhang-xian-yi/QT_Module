@@ -124,7 +124,8 @@ bool Model::isModel() const {
     return true;
 }
 
-QVector3D Model::centerOfMass() const {
+QVector3D Model::centerOfMass() const
+{
     QVector3D centerOfMass;
     float totalMass = 0;
     for (int i = 0; i < m_childMeshes.size(); i++) {
@@ -138,7 +139,8 @@ QVector3D Model::centerOfMass() const {
     return centerOfMass / totalMass;
 }
 
-float Model::mass() const {
+float Model::mass() const
+{
     float totalMass = 0;
     for (int i = 0; i < m_childMeshes.size(); i++)
         totalMass += m_childMeshes[i]->mass();
@@ -147,59 +149,84 @@ float Model::mass() const {
     return totalMass;
 }
 
-Mesh * Model::assemble() const {
+Mesh * Model::assemble() const
+{
     Mesh* assembledMesh = 0;
-    for (int i = 0; i < m_childMeshes.size(); i++) {
+    for (int i = 0; i < m_childMeshes.size(); i++)
+    {
         Mesh* old = assembledMesh;
         assembledMesh = Mesh::merge(old, m_childMeshes[i]);
-        if (old) delete old;
+        if (old)
+        {
+            delete old;
+        }
     }
-    for (int i = 0; i < m_childModels.size(); i++) {
+    for (int i = 0; i < m_childModels.size(); i++)
+    {
         Mesh* old1 = assembledMesh;
         Mesh* old2 = m_childModels[i]->assemble();
         assembledMesh = Mesh::merge(old1, old2);
-        if (old1) delete old1;
-        if (old2) delete old2;
+        if (old1)
+        {
+            delete old1;
+        }
+        if (old2)
+        {
+            delete old2;
+        }
     }
     return assembledMesh;
 }
 
-const QVector<Mesh*>& Model::childMeshes() const {
+const QVector<Mesh*>& Model::childMeshes() const
+{
     return m_childMeshes;
 }
 
-const QVector<Model*>& Model::childModels() const {
+const QVector<Model*>& Model::childModels() const
+{
     return m_childModels;
 }
 
-void Model::reverseNormals() {
+void Model::reverseNormals()
+{
     for (int i = 0; i < m_childMeshes.size(); i++)
         m_childMeshes[i]->reverseNormals();
     for (int i = 0; i < m_childModels.size(); i++)
         m_childModels[i]->reverseNormals();
 }
 
-void Model::reverseTangents() {
+void Model::reverseTangents()
+{
     for (int i = 0; i < m_childMeshes.size(); i++)
         m_childMeshes[i]->reverseTangents();
     for (int i = 0; i < m_childModels.size(); i++)
         m_childModels[i]->reverseTangents();
 }
 
-void Model::reverseBitangents() {
+void Model::reverseBitangents()
+{
     for (int i = 0; i < m_childMeshes.size(); i++)
         m_childMeshes[i]->reverseBitangents();
     for (int i = 0; i < m_childModels.size(); i++)
         m_childModels[i]->reverseBitangents();
 }
 
-void Model::childEvent(QChildEvent * e) {
-    if (e->added()) {
+void Model::childEvent(QChildEvent * e)
+{
+    if (e->added())
+    {
         if (Model* model = qobject_cast<Model*>(e->child()))
+        {
             addChildModel(model);
+        }
         else if (Mesh* mesh = qobject_cast<Mesh*>(e->child()))
+        {
             addChildMesh(mesh);
-    } else if (e->removed()) {
+        }
+    }
+    else if (e->removed())
+    {
         if (removeChildModel(e->child(), false)) return;
         if (removeChildMesh(e->child(), false)) return;
     }

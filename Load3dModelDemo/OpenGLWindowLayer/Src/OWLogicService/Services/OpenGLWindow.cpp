@@ -13,6 +13,12 @@ OpenGLWindow::OpenGLWindow() {
 
 OpenGLWindow::~OpenGLWindow()
 {
+    if(m_openGLScene)
+    {
+        delete m_openGLScene;
+        m_openGLScene = nullptr;
+    }
+
     if(m_renderer)
     {
         delete m_renderer;
