@@ -1,38 +1,32 @@
-QT += core gui network opengl
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+QT += core gui opengl
 TARGET = OpenGLWinLayer
 TEMPLATE = lib
+greaterThan(QT_MAJOR_VERSION,4): QT += widgets
+#导出宏定义
+DEFINES = OPENGLWINDOWLAYER_LIBRARY
 #配置
 CONFIG += c++17
-#导出宏定义
-DEFINES += OPENGLWINDOWLAYER_LIBRARY
-#过时函数Warn 宏定义
-DEFINES += QT_DEPRECATED_WARNINGS
-
 
 #输出路径
 DESTDIR = $$PWD/../OutputDir/ExecuteBin
 #预编译头文件
-PRECOMPILED_HEADER += \
-                    $$PWD/Src/OWCommon/PCH.h
+PRECOMPILED_HEADER += $$PWD/Src/OWCommon/PCH.h
+
 #头文件包含的搜索路径
 #模块外部使用的路径（带模块名的头文件搜索）
 INCLUDEPATH += $$PWD/../
 #模块内部使用的相对路径
 INCLUDEPATH += $$PWD/
 #源码中的头文件搜索路径
-INCLUDEPATH += \
-    Src/OWLogicService/Entity \
-    Src/OWLogicService/Light \
-    Src/OWLogicService/OpenGLEntity \
-    Src/OWLogicService/Services \
-    Src/OWLogicService/TransformAxis \
-    Src/OWLogicService/UI \
+INCLUDEPATH += Src/OWLogicService/Entity
+INCLUDEPATH += Src/OWLogicService/Light
+INCLUDEPATH += Src/OWLogicService/OpenGLEntity
+INCLUDEPATH += Src/OWLogicService/Services
+INCLUDEPATH += Src/OWLogicService/TransformAxis
+
 #第三方库依赖的头文件搜索路径
-INCLUDEPATH += \
-    VendorLib/include
+INCLUDEPATH += VendorLib/include
+
 #资源文件
 RESOURCES += OWRes.qrc
 #第三方库连接
@@ -42,7 +36,8 @@ LIBS += -L$$PWD/VendorLib/libs -lassimp-vc142-mt
 #debug 配置
 CONFIG(debug) {
     DEFINES += DEBUG_VLD
-    LIBS += -L$$PWD/VendorLib/libs -lvld #debug 内存vld监测
+    #debug 内存vld监测
+    LIBS += -L$$PWD/VendorLib/libs -lvld
     MOC_DIR = $$PWD/../OutputDir/tmp/debug
     OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug
     RCC_DIR = $$PWD/../OutputDir/tmp/debug
