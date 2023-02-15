@@ -84,3 +84,8 @@ void OpenGLWindowsLayerService::polygonReverseBitangents() {
     else
         QMessageBox::critical(0, "Error", "Select a model/mesh to do this operation.");
 }
+
+void OpenGLWindowsLayerService::updateWinSize(int w, int h)
+{
+    m_pWidgetWin->setSizeIncrement(w,h);//设置窗口大小
+}

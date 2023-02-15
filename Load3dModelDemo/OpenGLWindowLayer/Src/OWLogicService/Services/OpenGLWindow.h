@@ -3,11 +3,12 @@
 #include "Scene/OpenGLScene.h"
 #include "OpenGLRenderer.h"
 
-class OpenGLWindow: public QOpenGLWindow, protected QOpenGLFunctions_3_3_Core {
+class OpenGLWindow: public QOpenGLWindow{
     Q_OBJECT
 
 public:
     OpenGLWindow();
+    ~OpenGLWindow();
     OpenGLWindow(OpenGLScene* openGLScene, OpenGLRenderer* renderer);
 
     QString rendererName();
@@ -20,8 +21,8 @@ public:
     void setCustomRenderingLoop(void (*customRenderingLoop)(Scene*));
 
 protected:
-    void initializeGL() override;
-    void paintGL() override;
+    virtual void initializeGL() override;
+    virtual void paintGL() override;
 protected:
     bool event(QEvent *ev) override;
     void keyPressEvent(QKeyEvent *event) override;
@@ -30,9 +31,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
-
-signals:
-    void fpsChanged(int fps);
 private slots:
     //坐标轴变换
     void gizmoAlwaysOnTop(bool alwaysOnTop);

@@ -19,9 +19,11 @@ public:
     int log_level;
 public:
     void InitOpenGLFunc();
-    QOpenGLFunctions_3_3_Core* GetGLFunc();
+    bool IsInitOpenGLFuncs()const;
+    QOpenGLFunctions_3_3_Core* GetGLFunc()const;
 private:
     QOpenGLFunctions_3_3_Core* m_pGLFuncs;
+    bool isInitF;
 };
 
 #define FILENAME (QFileInfo(__FILE__).fileName().toStdString().c_str())
@@ -38,5 +40,5 @@ private:
 
 #define logLV       GlobalData::GetInstance().log_level
 #define pGlFuncs    GlobalData::GetInstance().GetGLFunc()
-
+#define isInit()      GlobalData::GetInstance().IsInitOpenGLFuncs()
 #endif // GLOBALDATA_H

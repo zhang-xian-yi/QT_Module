@@ -30,7 +30,7 @@ private:
 
     QOpenGLVertexArrayObject * m_vao;
     QOpenGLBuffer* m_vbo, *m_ebo;
-    OpenGLMaterial* m_openGLMaterial;
+    OpenGLMaterial* m_openGLMaterial;//矩阵随时更新,但是不做释放
 
     static OpenGLUniformBufferObject *m_modelInfo;
 

@@ -12,10 +12,11 @@ public:
     ~OpenGLWinLayerControl();
 public:
     //IOpenGLWin 实现函数
-    void initOpenGLWin(QWidget* parent) override;
+    virtual void initOpenGLWin(QWidget* parent) override;
+    virtual void resizeOpenGLWin(int w,int h) override;
 public:
     //ILoad3D 实现函数
-    void Load3DModel(QString path) override;
+    virtual void Load3DModel(QString path) override;
 private:
     void initEnvirnoMent();
 private:

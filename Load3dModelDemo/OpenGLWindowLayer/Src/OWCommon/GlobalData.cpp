@@ -2,7 +2,8 @@
 
 GlobalData::GlobalData()
     :log_level(NO_LOG),
-     m_pGLFuncs(nullptr)
+     m_pGLFuncs(nullptr),
+     isInitF(false)
 {
 
 }
@@ -18,10 +19,17 @@ void GlobalData::InitOpenGLFunc()
     if(m_pGLFuncs == nullptr)
     {
         m_pGLFuncs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
+        m_pGLFuncs->initializeOpenGLFunctions();
+        isInitF = true;
     }
 }
 
-QOpenGLFunctions_3_3_Core *GlobalData::GetGLFunc()
+bool GlobalData::IsInitOpenGLFuncs() const
+{
+    return isInitF;
+}
+
+QOpenGLFunctions_3_3_Core *GlobalData::GetGLFunc()const
 {
     return m_pGLFuncs;
 }

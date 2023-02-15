@@ -9,7 +9,7 @@ class OpenGLMaterial: public QObject {
 
 public:
     OpenGLMaterial(Material* material, QObject* parent = 0);
-
+    ~OpenGLMaterial();
     Material* host() const;
 
     void bind();

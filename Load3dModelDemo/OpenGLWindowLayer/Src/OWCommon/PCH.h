@@ -39,4 +39,4 @@
 
 #include <QSurfaceFormat>
 #include <QMessageBox>
-
+#include <QSizePolicy>

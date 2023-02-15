@@ -10,6 +10,12 @@ OpenGLWindow::OpenGLWindow() {
     configSignals();
 }
 
+
+OpenGLWindow::~OpenGLWindow()
+{
+
+}
+
 OpenGLWindow::OpenGLWindow(OpenGLScene * openGLScene, OpenGLRenderer * renderer) {
     m_lastCursorPos = QCursor::pos();
     m_enableMousePicking = true;
@@ -21,37 +27,43 @@ OpenGLWindow::OpenGLWindow(OpenGLScene * openGLScene, OpenGLRenderer * renderer)
 
 QString OpenGLWindow::rendererName()
 {
-    return isInitialized() ? QString((char*) glGetString(GL_RENDERER)) : "";
+    return isInit() ? QString((char*) pGlFuncs->glGetString(GL_RENDERER)) : "";
 }
 
 QString OpenGLWindow::openGLVersion()
 {
-    return isInitialized() ? QString((char*) glGetString(GL_VERSION)) : "";
+    return isInit() ? QString((char*) pGlFuncs->glGetString(GL_VERSION)) : "";
 }
 
 QString OpenGLWindow::shadingLanguageVersion()
 {
-    return isInitialized() ? QString((char*) glGetString(GL_SHADING_LANGUAGE_VERSION)) : "";
+    return isInit() ? QString((char*) pGlFuncs->glGetString(GL_SHADING_LANGUAGE_VERSION)) : "";
 }
 
 void OpenGLWindow::setScene(OpenGLScene* openGLScene)
 {
     if (m_openGLScene)
+    {
         disconnect(m_openGLScene, 0, this, 0);
+    }
     m_openGLScene = openGLScene;
     if (m_openGLScene)
+    {
         //场景释放,场景销毁
         connect(m_openGLScene, SIGNAL(destroyed(QObject*)), this, SLOT(sceneDestroyed(QObject*)));
         //设置坐标轴永远在上
         m_openGLScene->host()->transformGizmo()->setAlwaysOnTop(false);
+    }
 }
 
 void OpenGLWindow::setRenderer(OpenGLRenderer * renderer)
 {
     m_renderer = renderer;
-    if (isInitialized() && m_renderer) {
+    if (isInit() && m_renderer)
+    {
         m_renderer->reloadShaders();
-        if (m_renderer->hasErrorLog()) {
+        if (m_renderer->hasErrorLog())
+        {
             QString log = m_renderer->errorLog();
             QMessageBox::critical(0, "Failed to load shaders", log);
             if (logLV >= LOG_LEVEL_ERROR)
@@ -69,10 +81,9 @@ void OpenGLWindow::setCustomRenderingLoop(void (*customRenderingLoop)(Scene*)) {
 }
 
 void OpenGLWindow::initializeGL() {
-    initializeOpenGLFunctions();
     GlobalData::GetInstance().InitOpenGLFunc();//初始化OpenGL函数
 
-    glEnable(GL_DEPTH_TEST);
+    pGlFuncs->glEnable(GL_DEPTH_TEST);
 
     if (m_renderer)
     {
@@ -94,8 +105,8 @@ void OpenGLWindow::initializeGL() {
 }
 
 void OpenGLWindow::paintGL() {
-    glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    pGlFuncs->glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+    pGlFuncs->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     processUserInput();
 
@@ -258,7 +269,7 @@ void OpenGLWindow::configSignals() {
 }
 
 void OpenGLWindow::sceneDestroyed(QObject *) {
-    m_openGLScene = 0;
+    m_openGLScene = nullptr;
 }
 
 

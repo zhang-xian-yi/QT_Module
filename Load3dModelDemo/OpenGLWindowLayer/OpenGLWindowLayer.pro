@@ -60,11 +60,11 @@ CONFIG(release) {
 HEADERS += \
     Src/ILoad3D.h \
     Src/IOpenGLWin.h \
+    Src/OpenGLWindowLayer_global.h \
     Src/OpenGLWinLayerrFactory.h \
     Src/OWCommon/PCH.h \
     Src/OWCommon/GlobalData.h \
     Src/OWCommon/ExtendMath.h \
-    Src/OWCommon/OpenGLWindowLayer_global.h \
     Src/OWMControl/OpenGLWinLayerControl.h \
 
 #外部 .cpp

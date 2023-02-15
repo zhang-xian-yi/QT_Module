@@ -27,6 +27,11 @@ void OpenGLWinLayerControl::initOpenGLWin(QWidget* parent)
 
 }
 
+void OpenGLWinLayerControl::resizeOpenGLWin(int w, int h)
+{
+
+}
+
 void OpenGLWinLayerControl::Load3DModel(QString path)
 {
     if(m_pOWLService)
