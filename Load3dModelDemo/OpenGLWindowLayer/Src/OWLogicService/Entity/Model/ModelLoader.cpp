@@ -30,9 +30,11 @@ Model * ModelLoader::loadModelFromFile(QString filePath) {
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Loading" << filePath;
 
-    if (filePath[0] == ':') { // qrc
+    if (filePath[0] == ':')// qrc
+    {
         QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly)) {
+        if (!file.open(QIODevice::ReadOnly))
+        {
             if (logLV >= LOG_LEVEL_ERROR)
                 dout << "FATAL: failed to open internal file" << filePath;
             exit(-1);
@@ -40,12 +42,15 @@ Model * ModelLoader::loadModelFromFile(QString filePath) {
 
         QByteArray bytes = file.readAll();
         m_aiScenePtr = importer.ReadFileFromMemory(bytes.constData(), bytes.length(), flags);
-    } else {
+    }
+    else
+    {
         m_dir = QFileInfo(filePath).absoluteDir();
         m_aiScenePtr = importer.ReadFile(filePath.toStdString(), flags);
     }
 
-    if (!m_aiScenePtr || !m_aiScenePtr->mRootNode || m_aiScenePtr->mFlags == AI_SCENE_FLAGS_INCOMPLETE) {
+    if (!m_aiScenePtr || !m_aiScenePtr->mRootNode || m_aiScenePtr->mFlags == AI_SCENE_FLAGS_INCOMPLETE)
+    {
         m_log += importer.GetErrorString();
         if (logLV >= LOG_LEVEL_ERROR)
             dout << importer.GetErrorString();

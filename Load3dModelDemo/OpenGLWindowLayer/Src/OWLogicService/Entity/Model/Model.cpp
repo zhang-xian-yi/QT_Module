@@ -14,7 +14,12 @@ Model::Model(const Model & model): AbstractEntity(model) {
         addChildModel(new Model(*model.m_childModels[i]));
 }
 
-Model::~Model() {
+Model::~Model()
+{
+    /*
+     * 不能释放m_childModels，m_childMeshes 的数据，
+     * 模型运行过程中该结果会反复变动且模型变动一次,但是材质和网格不应该删除
+    */
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Model" << this->objectName() << "is destroyed";
 }

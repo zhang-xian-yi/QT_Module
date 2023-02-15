@@ -50,7 +50,7 @@ public slots:
 signals:
     void meshTypeChanged(int meshType);
     void geometryChanged(const QVector<Vertex>& vertices, const QVector<uint32_t>& indices);
-    void materialChanged(Material* material);
+    void materialChanged(Material* material);//材质随时会发生变化也无需释放
 
 protected:
     void childEvent(QChildEvent *event) override;

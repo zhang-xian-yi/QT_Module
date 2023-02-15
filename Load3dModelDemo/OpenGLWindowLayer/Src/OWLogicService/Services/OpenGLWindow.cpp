@@ -87,7 +87,8 @@ void OpenGLWindow::initializeGL() {
 }
 
 void OpenGLWindow::paintGL() {
-    pGlFuncs->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    //pGlFuncs->glClearColor(0.7f, 0.7f, 0.7f, 1.0f);  //灰色
+    pGlFuncs->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//黑色
     pGlFuncs->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     processUserInput();

@@ -41,12 +41,8 @@ Gridline::Gridline(const Gridline & gridline): QObject(0) {
 }
 
 Gridline::~Gridline() {
-    int tmp_log_level = logLV;
-    logLV = LOG_LEVEL_WARNING;
 
     delete m_marker;
-
-    logLV = tmp_log_level;
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Gridline" << this->objectName() << "is destroyed";

@@ -171,9 +171,6 @@ void PointLight::setAttenuationConstant(float value) {
 }
 
 void PointLight::initMarker() {
-    int tmp_log_level = logLV;
-    logLV = LOG_LEVEL_WARNING;
-
     ModelLoader loader;
 
     m_marker = loader.loadMeshFromFile(":/resources/shapes/PointLight.obj");
@@ -181,8 +178,6 @@ void PointLight::initMarker() {
     m_marker->material()->setColor(this->color());
     m_marker->setObjectName("Point Light Marker");
     m_marker->setParent(this);
-
-    logLV = tmp_log_level;
 
     connect(m_marker, SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
     connect(m_marker, SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));
