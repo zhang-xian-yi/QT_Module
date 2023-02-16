@@ -13,7 +13,7 @@ public:
 
     QSharedPointer<Scene> host() const;
 
-    OpenGLMesh* pick(uint32_t pickingID);
+    QSharedPointer<OpenGLMesh> pick(uint32_t pickingID);
 
     void renderAxis();
     void renderGridlines();
@@ -32,10 +32,10 @@ private:
     QVector<QSharedPointer<OpenGLMesh>> m_gizmoMeshes, m_gridlineMeshes, m_lightMeshes, m_normalMeshes;
     static OpenGLUniformBufferObject *m_cameraInfo, *m_lightInfo;
 private slots:
-    void gizmoAdded(AbstractGizmo* gizmo);
-    void gridlineAdded(Gridline* gridline);
-    void lightAdded(AbstractLight* light);
-    void modelAdded(Model* model);
-    void meshAdded(Mesh* mesh);
+    void gizmoAdded(QSharedPointer<AbstractGizmo> gizmo);
+    void gridlineAdded(QSharedPointer<Gridline> gridline);
+    void lightAdded(QSharedPointer<AbstractLight> light);
+    void modelAdded(QSharedPointer<Model> model);
+    void meshAdded(QSharedPointer<Mesh> mesh);
     void hostDestroyed(QObject* host);
 };

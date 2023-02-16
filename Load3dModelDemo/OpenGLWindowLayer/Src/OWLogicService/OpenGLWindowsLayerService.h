@@ -22,6 +22,6 @@ public:
     void CreateScene();//创建场景
     void ImportModelFile(QString& filepath);//加载模型
 private:
-    QSharedPointer<OpenGLWindow>  m_openGLWindow;  //openGL的窗口 由QT自身控制释放
+    OpenGLWindow*  m_openGLWindow;  //openGL的窗口 由QT自身控制释放
     QSharedPointer<Scene>  m_pScene;               //显示的场景创建的场景,由OpenGLScene控制释放
 };

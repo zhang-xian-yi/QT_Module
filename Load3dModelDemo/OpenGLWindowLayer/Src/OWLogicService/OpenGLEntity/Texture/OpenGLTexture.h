@@ -6,7 +6,7 @@ class OpenGLTexture: public QObject {
     Q_OBJECT
 
 public:
-    OpenGLTexture(Texture* texture);
+    OpenGLTexture(QSharedPointer<Texture> texture);
     ~OpenGLTexture();
 
     void create();
@@ -14,8 +14,8 @@ public:
     void release();
 
 private:
-    Texture* m_host;
-    QOpenGLTexture *m_openGLTexture;
+    QSharedPointer<Texture> m_host;
+    QSharedPointer<QOpenGLTexture> m_openGLTexture;
 
 private slots:
     void imageChanged(const QImage& image);

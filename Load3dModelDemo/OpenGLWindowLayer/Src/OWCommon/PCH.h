@@ -40,6 +40,7 @@
 #include <QMessageBox>
 #include <QSizePolicy>
 #include <QSharedPointer>
+#include <QWeakPointer>
 //self defie
 #include "Src/OWCommon/ExtendMath.h"
 //临时debug使用

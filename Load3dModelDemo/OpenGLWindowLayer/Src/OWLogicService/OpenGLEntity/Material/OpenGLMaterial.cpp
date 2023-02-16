@@ -16,17 +16,17 @@ static ShaderMaterialInfo shaderMaterialInfo;
 
 OpenGLUniformBufferObject *OpenGLMaterial::m_materialInfo = 0;
 
-OpenGLMaterial::OpenGLMaterial(Material * material, QObject* parent): QObject(0) {
+OpenGLMaterial::OpenGLMaterial(QSharedPointer<Material> material, QObject* parent): QObject(0) {
     m_host = material;
 
     this->diffuseTextureChanged(m_host->diffuseTexture());
     this->specularTextureChanged(m_host->specularTexture());
     this->bumpTextureChanged(m_host->bumpTexture());
 
-    connect(m_host, SIGNAL(diffuseTextureChanged(QSharedPointer<Texture>)), this, SLOT(diffuseTextureChanged(QSharedPointer<Texture>)));
-    connect(m_host, SIGNAL(specularTextureChanged(QSharedPointer<Texture>)), this, SLOT(specularTextureChanged(QSharedPointer<Texture>)));
-    connect(m_host, SIGNAL(bumpTextureChanged(QSharedPointer<Texture>)), this, SLOT(bumpTextureChanged(QSharedPointer<Texture>)));
-    connect(m_host, SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
+    connect(m_host.get(), SIGNAL(diffuseTextureChanged(QSharedPointer<Texture>)), this, SLOT(diffuseTextureChanged(QSharedPointer<Texture>)));
+    connect(m_host.get(), SIGNAL(specularTextureChanged(QSharedPointer<Texture>)), this, SLOT(specularTextureChanged(QSharedPointer<Texture>)));
+    connect(m_host.get(), SIGNAL(bumpTextureChanged(QSharedPointer<Texture>)), this, SLOT(bumpTextureChanged(QSharedPointer<Texture>)));
+    connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 
     setParent(parent);
 }
@@ -36,7 +36,7 @@ OpenGLMaterial::~OpenGLMaterial()
 
 }
 
-Material* OpenGLMaterial::host() const {
+QSharedPointer<Material> OpenGLMaterial::host() const {
     return m_host;
 }
 
@@ -99,11 +99,11 @@ void OpenGLMaterial::diffuseTextureChanged(QSharedPointer<Texture> diffuseTextur
     }
     else if (diffuseTexture->property("OpenGLTexturePointer").isValid())
     {
-        m_openGLDiffuseTexture = diffuseTexture->property("OpenGLTexturePointer").value<OpenGLTexture*>();
+        m_openGLDiffuseTexture =diffuseTexture->property("OpenGLTexturePointer").value<QSharedPointer<OpenGLTexture>>();
     }
     else
     {
-        m_openGLDiffuseTexture = new OpenGLTexture(diffuseTexture.data());
+        m_openGLDiffuseTexture = QSharedPointer<OpenGLTexture>(new OpenGLTexture(diffuseTexture));
     }
 }
 
@@ -114,11 +114,11 @@ void OpenGLMaterial::specularTextureChanged(QSharedPointer<Texture> specularText
     }
     else if (specularTexture->property("OpenGLTexturePointer").isValid())
     {
-        m_openGLSpecularTexture = specularTexture->property("OpenGLTexturePointer").value<OpenGLTexture*>();
+        m_openGLSpecularTexture = specularTexture->property("OpenGLTexturePointer").value<QSharedPointer<OpenGLTexture>>();
     }
     else
     {
-        m_openGLSpecularTexture = new OpenGLTexture(specularTexture.data());
+        m_openGLSpecularTexture = QSharedPointer<OpenGLTexture>(new OpenGLTexture(specularTexture));
     }
 }
 
@@ -129,11 +129,11 @@ void OpenGLMaterial::bumpTextureChanged(QSharedPointer<Texture> bumpTexture) {
     }
     else if (bumpTexture->property("OpenGLTexturePointer").isValid())
     {
-        m_openGLBumpTexture = bumpTexture->property("OpenGLTexturePointer").value<OpenGLTexture*>();
+        m_openGLBumpTexture = bumpTexture->property("OpenGLTexturePointer").value<QSharedPointer<OpenGLTexture>>();
     }
     else
     {
-        m_openGLBumpTexture = new OpenGLTexture(bumpTexture.data());
+        m_openGLBumpTexture = QSharedPointer<OpenGLTexture>(new OpenGLTexture(bumpTexture));
     }
 }
 

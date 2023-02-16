@@ -106,7 +106,7 @@ QSharedPointer<Scene>  OpenGLScene::host() const {
     return m_host;
 }
 
-OpenGLMesh * OpenGLScene::pick(uint32_t pickingID) {
+QSharedPointer<OpenGLMesh> OpenGLScene::pick(uint32_t pickingID) {
     if (pickingID >= 1000 && pickingID - 1000 < (uint32_t) m_normalMeshes.size())
         return m_normalMeshes[pickingID - 1000];
     else if (pickingID >= 100 && pickingID - 100 < (uint32_t) m_lightMeshes.size())
@@ -229,7 +229,7 @@ void OpenGLScene::childEvent(QChildEvent * e) {
     }
 }
 
-void OpenGLScene::gizmoAdded(AbstractGizmo* gizmo)
+void OpenGLScene::gizmoAdded(QSharedPointer<AbstractGizmo> gizmo)
 {
     for (int i = 0; i < gizmo->markers().size(); i++)
     {
@@ -240,13 +240,13 @@ void OpenGLScene::gizmoAdded(AbstractGizmo* gizmo)
     }
 }
 
-void OpenGLScene::gridlineAdded(Gridline * gridline)
+void OpenGLScene::gridlineAdded(QSharedPointer<Gridline> gridline)
 {
     auto tmp = QSharedPointer<OpenGLMesh>(new OpenGLMesh(gridline->marker(), this));
     m_gridlineMeshes.push_back(tmp);
 }
 
-void OpenGLScene::lightAdded(AbstractLight * light) {
+void OpenGLScene::lightAdded(QSharedPointer<AbstractLight> light) {
     if (light->marker())
     {
         auto tmp = QSharedPointer<OpenGLMesh>(new OpenGLMesh(light->marker(), this));
@@ -254,8 +254,9 @@ void OpenGLScene::lightAdded(AbstractLight * light) {
     }
 }
 
-void OpenGLScene::modelAdded(Model * model) {
-    connect(model, SIGNAL(childMeshAdded(Mesh*)), this, SLOT(meshAdded(Mesh*)));
+void OpenGLScene::modelAdded(QSharedPointer<Model> model)
+{
+    connect(model.get(), SIGNAL(childMeshAdded(QSharedPointer<Mesh>)), this, SLOT(meshAdded(QSharedPointer<Mesh>)));
     for (int i = 0; i < model->childMeshes().size(); i++)
         meshAdded(model->childMeshes()[i]);
     for (int i = 0; i < model->childModels().size(); i++)
@@ -264,7 +265,8 @@ void OpenGLScene::modelAdded(Model * model) {
 
 void OpenGLScene::meshAdded(QSharedPointer<Mesh> mesh)
 {
-    m_normalMeshes.push_back(QSharedPointer<OpenGLMesh>(new OpenGLMesh(mesh, this)));
+    auto tmp = QSharedPointer<Mesh>(mesh);
+    m_normalMeshes.push_back(QSharedPointer<OpenGLMesh>(new OpenGLMesh(tmp, this)));
 }
 
 void OpenGLScene::hostDestroyed(QObject *) {

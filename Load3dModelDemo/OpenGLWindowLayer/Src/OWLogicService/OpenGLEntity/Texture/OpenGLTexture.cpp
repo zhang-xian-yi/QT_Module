@@ -1,7 +1,7 @@
 #include "OpenGLTexture.h"
 #include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
 
-OpenGLTexture::OpenGLTexture(Texture * texture) {
+OpenGLTexture::OpenGLTexture(QSharedPointer<Texture> texture) {
     m_host = texture;
     m_openGLTexture = 0;
 
@@ -12,18 +12,18 @@ OpenGLTexture::OpenGLTexture(Texture * texture) {
     }
     m_host->setProperty("OpenGLTexturePointer", QVariant::fromValue(this));
 
-    connect(m_host, SIGNAL(imageChanged(QImage)), this, SLOT(imageChanged(QImage)));
-    connect(m_host, SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
+    connect(m_host.get(), SIGNAL(imageChanged(QImage)), this, SLOT(imageChanged(QImage)));
+    connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 }
 
 OpenGLTexture::~OpenGLTexture() {
-    delete m_openGLTexture;
+
     //不删除m_host 由传递方负责
     m_host->setProperty("OpenGLTexturePointer", QVariant());
 }
 
 void OpenGLTexture::create() {
-    m_openGLTexture = new QOpenGLTexture(m_host->image().mirrored());
+    m_openGLTexture = QSharedPointer<QOpenGLTexture>(new QOpenGLTexture(m_host->image().mirrored()));
     m_openGLTexture->setMinificationFilter(QOpenGLTexture::Nearest);
     m_openGLTexture->setMagnificationFilter(QOpenGLTexture::Linear);
     m_openGLTexture->setWrapMode(QOpenGLTexture::Repeat);
@@ -62,8 +62,8 @@ void OpenGLTexture::release() {
 
 void OpenGLTexture::imageChanged(const QImage& image) {
     if (m_openGLTexture) {
-        delete m_openGLTexture;
-        m_openGLTexture = new QOpenGLTexture(image);
+        m_openGLTexture.clear();
+        m_openGLTexture = QSharedPointer<QOpenGLTexture>(new QOpenGLTexture(image));
         m_openGLTexture->setMinificationFilter(QOpenGLTexture::Nearest);
         m_openGLTexture->setMagnificationFilter(QOpenGLTexture::Linear);
         m_openGLTexture->setWrapMode(QOpenGLTexture::Repeat);

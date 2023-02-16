@@ -7,7 +7,7 @@ class OpenGLMesh: public QObject {
     Q_OBJECT
 
 public:
-    OpenGLMesh(Mesh* mesh, QObject* parent = 0);
+    OpenGLMesh(QSharedPointer<Mesh> mesh, QObject* parent = 0);
     ~OpenGLMesh();
 
     QSharedPointer<Mesh> host() const;
@@ -30,12 +30,12 @@ private:
 
     QSharedPointer<QOpenGLVertexArrayObject>  m_vao;
     QSharedPointer<QOpenGLBuffer> m_vbo, m_ebo;
-    QSharedPointer<OpenGLMaterial> m_openGLMaterial;//矩阵随时更新,但是不做释放
+    QSharedPointer<OpenGLMaterial> m_openGLMaterial;//弱引用，
 
     static OpenGLUniformBufferObject *m_modelInfo;
 
 private slots:
-    void materialChanged(Material* material);
+    void materialChanged(QSharedPointer<Material> material);
     void geometryChanged(const QVector<Vertex>& vertices, const QVector<uint32_t>& indices);
     void hostDestroyed(QObject* host);
 };

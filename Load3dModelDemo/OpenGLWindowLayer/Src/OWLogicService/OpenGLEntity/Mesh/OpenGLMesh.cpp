@@ -36,11 +36,7 @@ OpenGLMesh::~OpenGLMesh() {
     this->destroy();
     //此函数不止虚构会调用，如果将m_openGLMaterial释放也放入destory 那场景中可能会失去颜色纹理信息描述
     //释放此处空间，将不会描述纹理和颜色
-    if(m_openGLMaterial)
-    {
-        delete m_openGLMaterial;
-        m_openGLMaterial = nullptr;
-    }
+
 }
 
 QSharedPointer<Mesh> OpenGLMesh::host() const {
@@ -131,23 +127,7 @@ void OpenGLMesh::render(bool pickingPass) {
 }
 
 void OpenGLMesh::destroy() {
-    /*
-    if (m_vao)
-    {
-        //delete m_vao; 暂时不做销毁，最后来处理此问题
-        m_vao = nullptr;
-    }
-    if (m_vbo)
-    {
-         delete m_vbo;
-        m_vbo = nullptr;
-    }
-    if (m_ebo)
-    {
-        delete m_ebo;
-        m_ebo = nullptr;
-    }
-    */
+
 }
 
 void OpenGLMesh::setSizeFixed(bool sizeFixed) {
@@ -165,11 +145,11 @@ void OpenGLMesh::childEvent(QChildEvent * e) {
     }
 }
 
-void OpenGLMesh::materialChanged(Material * material) {
+void OpenGLMesh::materialChanged(QSharedPointer<Material> material) {
     if (material == 0)
-        m_openGLMaterial = 0;
+        m_openGLMaterial = nullptr;
     else
-        m_openGLMaterial = new OpenGLMaterial(material);
+        m_openGLMaterial = QSharedPointer<OpenGLMaterial>(new OpenGLMaterial(material));
 }
 
 void OpenGLMesh::geometryChanged(const QVector<Vertex>&, const QVector<uint32_t>&) {

@@ -102,7 +102,7 @@ void OpenGLWindow::paintGL() {
             //获取鼠标点击所对应的位置
             uint32_t pickingID = m_renderer->pickingPass(m_openGLScene, mapFromGlobal(QCursor::pos()) * devicePixelRatioF());
             //获取点击位置上的mesh
-            OpenGLMesh* pickedOpenGLMesh = m_openGLScene->pick(pickingID);
+            QSharedPointer<OpenGLMesh> pickedOpenGLMesh = m_openGLScene->pick(pickingID);
             //如果点击mesh存在
             if (pickedOpenGLMesh)
             {

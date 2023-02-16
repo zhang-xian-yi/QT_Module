@@ -1,10 +1,10 @@
 #include "OpenGLWindowsLayerService.h"
 #include "Entity/Model/ModelLoader.h"
 #include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
-OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent):
-    m_pScene(nullptr)
+OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent)
 {
-    m_openGLWindow = QSharedPointer<OpenGLWindow>(new OpenGLWindow);//由QT父级控件控制释放
+    m_pScene = nullptr;//减少引用计数
+    m_openGLWindow = new OpenGLWindow;//由QT父级控件控制释放
     m_openGLWindow->setRenderer(QSharedPointer<OpenGLRenderer>(new OpenGLRenderer));//由QT父级控件控制释放
 
     //设置为父控件的大小
@@ -14,8 +14,6 @@ OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent):
 
     m_openGLWindow->setAcceptDrops(true);
     m_openGLWindow->setFocusPolicy(Qt::StrongFocus);
-
-
 }
 
 OpenGLWindowsLayerService::~OpenGLWindowsLayerService()
@@ -30,8 +28,8 @@ OpenGLWindowsLayerService::~OpenGLWindowsLayerService()
 void OpenGLWindowsLayerService::CreateScene() {
 
     m_pScene = QSharedPointer<Scene>(new Scene);
-    m_pScene->addDirectionalLight(new DirectionalLight(QVector3D(1, 1, 1), QVector3D(-2, -4, -3)));//增加方向光
-    //m_pScene->addGridline(new Gridline); 增加网格线
+    m_pScene->addDirectionalLight(QSharedPointer<DirectionalLight>(new DirectionalLight(QVector3D(1, 1, 1), QVector3D(-2, -4, -3))));//增加方向光
+    //m_pScene->addGridline(QSharedPointer<Gridline>(new Gridline)); //增加网格线
 
     auto GLScene = QSharedPointer<OpenGLScene>(new OpenGLScene(m_pScene));
     m_openGLWindow->setScene(GLScene);
@@ -40,7 +38,7 @@ void OpenGLWindowsLayerService::CreateScene() {
 void OpenGLWindowsLayerService::ImportModelFile(QString& filepath)
 {
     ModelLoader loader;
-    Model* model = loader.loadModelFromFile(filepath);
+    QSharedPointer<Model> model = loader.loadModelFromFile(filepath);
 
     if (loader.hasErrorLog()) {
         QString log = loader.errorLog();
