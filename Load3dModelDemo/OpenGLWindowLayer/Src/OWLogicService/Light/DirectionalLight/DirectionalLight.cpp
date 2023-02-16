@@ -5,13 +5,13 @@ DirectionalLight::DirectionalLight(QObject * parent) : AbstractLight() {
     m_color = QVector3D(1.0f, 1.0f, 1.0f);
     m_direction = QVector3D(-1.0f, -1.0f, -1.0f);
     setObjectName("Untitled Directional Light");
-    setParent(parent);
+    //setParent(parent);
 }
 
 DirectionalLight::DirectionalLight(QVector3D color, QVector3D direction, QObject * parent): AbstractLight(color) {
     m_direction = direction;
     setObjectName("Untitled Directional Light");
-    setParent(parent);
+    //setParent(parent);
 }
 
 DirectionalLight::DirectionalLight(const DirectionalLight & light): AbstractLight(light) {

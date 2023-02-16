@@ -1,6 +1,6 @@
 #include "Scene.h"
 #include "Src/OWCommon/GlobalData.h" //LogLv 引入 dout 引入
-Scene::Scene(): QObject(0), m_gizmo(0), m_camera(0) {
+Scene::Scene(): QObject(0), m_gizmo(nullptr), m_camera(nullptr) {
     setObjectName("Untitled Scene");
     m_gizmo = QSharedPointer<TransformGizmo>(new TransformGizmo(this));
     m_camera = QSharedPointer<Camera>(new Camera(this));
@@ -46,18 +46,16 @@ Scene::~Scene() {
 
 bool Scene::setCamera(QSharedPointer<Camera> camera) {
     if (m_camera == camera) return false;
-    /*
+    
     // 智能指针自动释放
     if (m_camera) {
-        Camera* tmp = m_camera;
-        m_camera = 0;
-        delete tmp;
+        m_camera.clear();
     }
-    */
+    
 
     if (camera) {
         m_camera = camera;
-        m_camera->setParent(this);
+        //m_camera->setParent(this);
         if (logLV >= LOG_LEVEL_INFO)
             dout << "Camera" << camera->objectName() << "is assigned to scene" << this->objectName();
     }
@@ -71,7 +69,7 @@ bool Scene::addGridline(QSharedPointer<Gridline> gridline) {
         return false;
 
     m_gridlines.push_back(gridline);
-    gridline->setParent(this);
+    //gridline->setParent(this);
     gridline->setObjectName("Gridline" + QString::number(m_gridlineNameCounter++));
     gridlineAdded(gridline);
 
@@ -103,7 +101,7 @@ bool Scene::addAmbientLight(QSharedPointer<AmbientLight> light) {
     }
 
     m_ambientLights.push_back(light);
-    light->setParent(this);
+    //light->setParent(this);
     light->setObjectName("AmbientLight" + QString::number(m_ambientLightNameCounter++));
     lightAdded(light.get());
 
@@ -123,7 +121,7 @@ bool Scene::addDirectionalLight(QSharedPointer<DirectionalLight> light) {
     }
 
     m_directionalLights.push_back(light);
-    light->setParent(this);
+    //light->setParent(this);
     light->setObjectName("DirectionalLight" + QString::number(m_directionalLightNameCounter++));
     lightAdded(light.get());
 
@@ -143,7 +141,7 @@ bool Scene::addPointLight(QSharedPointer<PointLight> light) {
     }
 
     m_pointLights.push_back(light);
-    light->setParent(this);
+    //light->setParent(this);
     light->setObjectName("PointLight" + QString::number(m_pointLightNameCounter++));
     lightAdded(light.get());
 
@@ -163,7 +161,7 @@ bool Scene::addSpotLight(QSharedPointer<SpotLight> light) {
     }
 
     m_spotLights.push_back(light);
-    light->setParent(this);
+    //light->setParent(this);
     light->setObjectName("SpotLight" + QString::number(m_spotLightNameCounter++));
     lightAdded(light.get());
 
@@ -178,7 +176,7 @@ bool Scene::addModel(QSharedPointer<Model> model) {
         return false;
 
     m_models.push_back(model);
-    model->setParent(this);
+    //model->setParent(this);
     modelAdded(model);
 
     if (logLV >= LOG_LEVEL_INFO)

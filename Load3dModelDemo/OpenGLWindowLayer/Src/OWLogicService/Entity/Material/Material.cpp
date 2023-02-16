@@ -9,7 +9,7 @@ Material::Material(QObject* parent): QObject(0) {
     m_specular = 0.5f;
     m_shininess = 32.0f;
     setObjectName("Untitled Material");
-    setParent(parent);
+    //setParent(parent);
 }
 
 Material::Material(QVector3D color,
@@ -21,7 +21,7 @@ Material::Material(QVector3D color,
     m_specular = specular;
     m_shininess = 32.0f;
     setObjectName("Untitled Material");
-    setParent(parent);
+    //setParent(parent);
 }
 
 Material::Material(const Material & material): QObject(0) {

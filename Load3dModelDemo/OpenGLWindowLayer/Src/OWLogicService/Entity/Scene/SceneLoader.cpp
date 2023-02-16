@@ -59,7 +59,7 @@ QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     for (int i = 0; i < gridlineNum; i++) {
         auto gridline = loadGridline(in);
         scene->m_gridlines.push_back(gridline);
-        gridline->setParent(scene);
+        //gridline->setParent(scene);
     }
 
     int ambientLightNum;
@@ -67,7 +67,7 @@ QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     for (int i = 0; i < ambientLightNum; i++) {
         auto light = loadAmbientLight(in);
         scene->m_ambientLights.push_back(light);
-        light->setParent(scene);
+        //light->setParent(scene);
     }
 
     int directionalLightNum;
@@ -75,7 +75,7 @@ QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     for (int i = 0; i < directionalLightNum; i++) {
         auto light = loadDirectionalLight(in);
         scene->m_directionalLights.push_back(light);
-        light->setParent(scene);
+        //light->setParent(scene);
     }
 
     int pointLightNum;
@@ -83,7 +83,7 @@ QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     for (int i = 0; i < pointLightNum; i++) {
         auto light = loadPointLight(in);
         scene->m_pointLights.push_back(light);
-        light->setParent(scene);
+        //light->setParent(scene);
     }
 
     int spotLightNum;
@@ -91,7 +91,7 @@ QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     for (int i = 0; i < spotLightNum; i++) {
         auto light = loadSpotLight(in);
         scene->m_spotLights.push_back(light);
-        light->setParent(scene);
+        //light->setParent(scene);
     }
 
     int modelNum;
@@ -99,7 +99,7 @@ QSharedPointer<Scene> SceneLoader::loadFromFile(QString filePath) {
     for (int i = 0; i < modelNum; i++) {
         auto model = loadModel(in);
         scene->m_models.push_back(model);
-        model->setParent(scene);
+        //model->setParent(scene);
     }
 
     in >> scene->m_gridlineNameCounter;

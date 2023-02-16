@@ -19,12 +19,12 @@ TranslateGizmo::TranslateGizmo(QObject* parent): AbstractGizmo(0) {
 
     for (int i = 0; i < m_markers.size(); i++) {
         m_markers[i]->setObjectName("Gizmo Marker");
-        m_markers[i]->setParent(this);
+        //m_markers[i]->setParent(this);
     }
 
     logLV = tmp_log_level;
 
-    setParent(parent);
+    //setParent(parent);
 }
 
 TranslateGizmo::~TranslateGizmo() {}

@@ -9,7 +9,7 @@ Camera::Camera(QObject* parent): QObject(0) {
 
     logLV = tmp_log_level;
 
-    setParent(parent);
+    //setParent(parent);
 }
 
 Camera::Camera(QVector3D position, QVector3D direction, QObject* parent): QObject(0) {
@@ -20,7 +20,7 @@ Camera::Camera(QVector3D position, QVector3D direction, QObject* parent): QObjec
     setFarPlane(100000.0f);
     setPosition(position);
     setDirection(direction);
-    setParent(parent);
+    //setParent(parent);
 }
 
 Camera::Camera(const Camera & camera): QObject(0) {

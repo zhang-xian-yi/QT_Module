@@ -4,7 +4,7 @@ AbstractGizmo::AbstractGizmo(QObject* parent): AbstractEntity(nullptr) {
     m_visible = false;
     m_axis = None;
     m_host = nullptr;
-    setParent(parent);
+    //setParent(parent);
     setObjectName("Untitled Gizmo");
 }
 

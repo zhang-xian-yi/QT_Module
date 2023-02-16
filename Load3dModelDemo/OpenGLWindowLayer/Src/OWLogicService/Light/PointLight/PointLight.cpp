@@ -9,7 +9,7 @@ PointLight::PointLight(QObject * parent): AbstractLight() {
 
     initMarker();
     setObjectName("Untitled Point Light");
-    setParent(parent);
+    //setParent(parent);
 }
 
 PointLight::PointLight(QVector3D color, QVector3D position, QObject * parent): AbstractLight(color) {
@@ -21,7 +21,7 @@ PointLight::PointLight(QVector3D color, QVector3D position, QObject * parent): A
 
     initMarker();
     setObjectName("Untitled Point Light");
-    setParent(parent);
+    //setParent(parent);
 }
 
 PointLight::PointLight(const PointLight & light): AbstractLight(light) {
@@ -171,7 +171,7 @@ void PointLight::initMarker() {
     m_marker->setPosition(this->position());
     m_marker->material()->setColor(this->color());
     m_marker->setObjectName("Point Light Marker");
-    m_marker->setParent(this);
+    //m_marker->setParent(this);
 
     connect(m_marker.get(), SIGNAL(visibleChanged(bool)), this, SIGNAL(visibleChanged(bool)));
     connect(m_marker.get(), SIGNAL(positionChanged(QVector3D)), this, SLOT(setPosition(QVector3D)));

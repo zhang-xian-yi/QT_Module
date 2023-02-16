@@ -14,7 +14,7 @@ AbstractEntity::AbstractEntity(QObject * parent): QObject(0) {
     m_rotation = QVector3D(0, 0, 0);
     m_scaling = QVector3D(1, 1, 1);
     setObjectName("Untitled Entity");
-    setParent(parent);
+    //setParent(parent);
 }
 
 AbstractEntity::AbstractEntity(const AbstractEntity & another): QObject(0) {

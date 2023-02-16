@@ -15,7 +15,7 @@ Gridline::Gridline(QObject* parent): QObject(0) {
 
     logLV = tmp_log_level;
 
-    setParent(parent);
+    //setParent(parent);
 }
 
 // Dump info

@@ -6,14 +6,14 @@ Mesh::Mesh(QObject * parent): AbstractEntity(0) {
     m_meshType = Triangle;
     m_material = nullptr;
     setObjectName("Untitled Mesh");
-    setParent(parent);
+    //setParent(parent);
 }
 
 Mesh::Mesh(MeshType _meshType, QObject * parent): AbstractEntity(0) {
     m_meshType = _meshType;
     m_material = nullptr;
     setObjectName("Untitled Mesh");
-    setParent(parent);
+    //setParent(parent);
 }
 
 Mesh::Mesh(const Mesh & mesh): AbstractEntity(mesh) {
@@ -217,18 +217,16 @@ void Mesh::setGeometry(const QVector<Vertex>& vertices, const QVector<uint32_t>&
 bool Mesh::setMaterial(QSharedPointer<Material> material) {
     if (m_material == material) return false;
 
-    /*
-    if (m_material) {
-        Material* tmp = m_material;
-        m_material = nullptr;
-        delete tmp;
+    
+    if (!m_material.isNull()) {
+        m_material.clear();
     }
-    */
+    
 
     if (!material.isNull())
     {
         m_material = material;
-        m_material->setParent(this);
+        //m_material->setParent(this);
         if (logLV >= LOG_LEVEL_INFO)
             dout << "Material" << material->objectName() << "is assigned to mesh" << objectName();
     }

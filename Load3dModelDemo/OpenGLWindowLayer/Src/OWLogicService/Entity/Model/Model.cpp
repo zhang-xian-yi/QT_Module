@@ -4,7 +4,7 @@
 
 Model::Model(QObject * parent): AbstractEntity(0) {
     setObjectName("Untitled model");
-    setParent(parent);
+    //setParent(parent);
 }
 
 Model::Model(const Model & model): AbstractEntity(model)
@@ -30,7 +30,7 @@ bool Model::addChildMesh(QSharedPointer<Mesh> mesh) {
         return false;
 
     m_childMeshes.push_back(mesh);
-    mesh->setParent(this);
+    //mesh->setParent(this);
     childMeshAdded(mesh);
 
     if (logLV >= LOG_LEVEL_INFO)
@@ -44,7 +44,7 @@ bool Model::addChildModel(QSharedPointer<Model> model) {
         return false;
 
     m_childModels.push_back(model);
-    model->setParent(this);
+    //model->setParent(this);
     childModelAdded(model);
 
     if (logLV >= LOG_LEVEL_INFO)

@@ -21,7 +21,7 @@ TransformGizmo::TransformGizmo(QObject* parent): AbstractGizmo(0) {
     for (int i = 0; i < m_scaleGizmo->markers().size(); i++)
         m_markers.push_back(m_scaleGizmo->markers()[i]);
 
-    setParent(parent);
+    //setParent(parent);
 }
 
 TransformGizmo::~TransformGizmo()

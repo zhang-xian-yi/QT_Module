@@ -29,7 +29,7 @@ OpenGLMesh::OpenGLMesh(QSharedPointer<Mesh> mesh, QObject* parent): QObject(0) {
     connect(m_host.get(), SIGNAL(geometryChanged(QVector<Vertex>, QVector<uint32_t>)), this, SLOT(geometryChanged(QVector<Vertex>, QVector<uint32_t>)));
     connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 
-    setParent(parent);
+    //setParent(parent);
 }
 
 OpenGLMesh::~OpenGLMesh() {

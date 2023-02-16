@@ -13,7 +13,7 @@ SpotLight::SpotLight(QObject * parent): AbstractLight() {
 
     initMarker();
     setObjectName("Untitled Spotlight");
-    setParent(parent);
+    //setParent(parent);
 }
 
 SpotLight::SpotLight(QVector3D color, QVector3D position, QVector3D direction, QObject * parent)
@@ -29,7 +29,7 @@ SpotLight::SpotLight(QVector3D color, QVector3D position, QVector3D direction, Q
 
     initMarker();
     setObjectName("Untitled Spotlight");
-    setParent(parent);
+    //setParent(parent);
 }
 
 SpotLight::SpotLight(const SpotLight & light): AbstractLight(light) {
@@ -241,7 +241,7 @@ void SpotLight::initMarker() {
     m_marker->material()->setColor(this->color());
     m_marker->setRotation(QQuaternion::rotationTo(QVector3D(0, -1, 0), this->direction()));
     m_marker->setObjectName("Spotlight Marker");
-    m_marker->setParent(this);
+    //m_marker->setParent(this);
 
     logLV = tmp_log_level;
 

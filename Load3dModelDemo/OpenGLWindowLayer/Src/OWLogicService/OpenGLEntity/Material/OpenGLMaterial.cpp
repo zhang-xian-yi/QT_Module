@@ -28,7 +28,7 @@ OpenGLMaterial::OpenGLMaterial(QSharedPointer<Material> material, QObject* paren
     connect(m_host.get(), SIGNAL(bumpTextureChanged(QSharedPointer<Texture>)), this, SLOT(bumpTextureChanged(QSharedPointer<Texture>)));
     connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 
-    setParent(parent);
+    //setParent(parent);
 }
 
 OpenGLMaterial::~OpenGLMaterial()
