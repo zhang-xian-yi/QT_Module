@@ -23,8 +23,8 @@ ScaleGizmo::ScaleGizmo(QObject* parent): AbstractGizmo(0) {
     }
 
     logLV = tmp_log_level;
-
-    //setParent(parent);
+    //保证信号的传递
+    setParent(parent);
 }
 
 ScaleGizmo::~ScaleGizmo() {}
