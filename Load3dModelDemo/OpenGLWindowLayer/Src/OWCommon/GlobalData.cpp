@@ -1,7 +1,7 @@
 #include "GlobalData.h"
 
 GlobalData::GlobalData()
-    :log_level(DEBUG_DESTORY_INFO),
+    :log_level(NO_LOG),
      m_pGLFuncs(nullptr),
      isInitF(false)
 {

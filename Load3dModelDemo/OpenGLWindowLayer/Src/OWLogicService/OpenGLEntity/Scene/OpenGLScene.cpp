@@ -67,39 +67,19 @@ OpenGLScene::OpenGLScene(QSharedPointer<Scene> scene) {
     for (int i = 0; i < m_host->models().size(); i++)
         this->modelAdded(m_host->models()[i]);
 
-    connect(m_host.get(), SIGNAL(gridlineAdded(Gridline*)), this, SLOT(gridlineAdded(Gridline*)));
-    connect(m_host.get(), SIGNAL(lightAdded(AbstractLight*)), this, SLOT(lightAdded(AbstractLight*)));
-    connect(m_host.get(), SIGNAL(modelAdded(Model*)), this, SLOT(modelAdded(Model*)));
+    connect(m_host.get(), SIGNAL(gridlineAdded(QSharedPointer<Gridline>)), this, SLOT(gridlineAdded(QSharedPointer<Gridline>)));
+    connect(m_host.get(), SIGNAL(lightAdded(QSharedPointer<AbstractLight>)), this, SLOT(lightAdded(QSharedPointer<AbstractLight>)));
+    connect(m_host.get(), SIGNAL(modelAdded(QSharedPointer<Model>)), this, SLOT(modelAdded(QSharedPointer<Model>)));
     connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));//指针销毁时出现的两次释放
 }
 
 //
 OpenGLScene::~OpenGLScene()
 {
-    /*
-    for (int i = 0; i < m_gizmoMeshes.size(); i++)
-        delete m_gizmoMeshes[i];
-    for (int i = 0; i < m_gridlineMeshes.size(); i++)
-        delete m_gridlineMeshes[i];
-    for (int i = 0; i < m_normalMeshes.size(); i++)
-        delete m_normalMeshes[i];
-    for (int i = 0; i < m_lightMeshes.size(); i++)
-        delete m_lightMeshes[i];
-
-
     m_gizmoMeshes.clear();
     m_gridlineMeshes.clear();
     m_normalMeshes.clear();
     m_lightMeshes.clear();
-    */
-    /*
-    if(m_host)  //不删除主要m_host 由传递方负责
-    {
-        delete m_host;
-        m_host = nullptr;
-    }
-    */
-
 }
 
 QSharedPointer<Scene>  OpenGLScene::host() const {

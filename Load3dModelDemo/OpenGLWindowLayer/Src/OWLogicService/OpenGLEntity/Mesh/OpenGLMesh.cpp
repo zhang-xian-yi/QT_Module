@@ -25,7 +25,7 @@ OpenGLMesh::OpenGLMesh(QSharedPointer<Mesh> mesh, QObject* parent): QObject(0) {
     else
         m_openGLMaterial = nullptr;
 
-    connect(m_host.get(), SIGNAL(materialChanged(Material*)), this, SLOT(materialChanged(Material*)));
+    connect(m_host.get(), SIGNAL(materialChanged(QSharedPointer<Material>)), this, SLOT(materialChanged(QSharedPointer<Material>)));
     connect(m_host.get(), SIGNAL(geometryChanged(QVector<Vertex>, QVector<uint32_t>)), this, SLOT(geometryChanged(QVector<Vertex>, QVector<uint32_t>)));
     connect(m_host.get(), SIGNAL(destroyed(QObject*)), this, SLOT(hostDestroyed(QObject*)));
 

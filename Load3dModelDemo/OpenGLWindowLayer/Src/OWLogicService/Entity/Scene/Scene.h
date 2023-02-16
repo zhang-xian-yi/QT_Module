@@ -49,7 +49,7 @@ signals:
     void cameraChanged(QSharedPointer<Camera> camera);
     void gridlineAdded(QSharedPointer<Gridline> gridline);
     void gridlineRemoved(QObject* object);
-    void lightAdded(AbstractLight* light);
+    void lightAdded(QSharedPointer<AbstractLight> light);
     void lightRemoved(QObject* object);
     void modelAdded(QSharedPointer<Model> model);
     void modelRemoved(QObject* object);

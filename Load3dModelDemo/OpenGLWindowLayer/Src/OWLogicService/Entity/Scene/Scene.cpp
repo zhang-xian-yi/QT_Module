@@ -103,7 +103,7 @@ bool Scene::addAmbientLight(QSharedPointer<AmbientLight> light) {
     m_ambientLights.push_back(light);
     //light->setParent(this);
     light->setObjectName("AmbientLight" + QString::number(m_ambientLightNameCounter++));
-    lightAdded(light.get());
+    emit lightAdded(light);
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Ambient light" << light->objectName() << "is added to scene" << this->objectName();
@@ -123,7 +123,7 @@ bool Scene::addDirectionalLight(QSharedPointer<DirectionalLight> light) {
     m_directionalLights.push_back(light);
     //light->setParent(this);
     light->setObjectName("DirectionalLight" + QString::number(m_directionalLightNameCounter++));
-    lightAdded(light.get());
+    emit lightAdded(light);
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Directional light" << light->objectName() << "is added to scene" << this->objectName();
@@ -143,7 +143,7 @@ bool Scene::addPointLight(QSharedPointer<PointLight> light) {
     m_pointLights.push_back(light);
     //light->setParent(this);
     light->setObjectName("PointLight" + QString::number(m_pointLightNameCounter++));
-    lightAdded(light.get());
+    emit lightAdded(light);
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Point light" << light->objectName() << "is added to scene" << this->objectName();
@@ -163,7 +163,7 @@ bool Scene::addSpotLight(QSharedPointer<SpotLight> light) {
     m_spotLights.push_back(light);
     //light->setParent(this);
     light->setObjectName("SpotLight" + QString::number(m_spotLightNameCounter++));
-    lightAdded(light.get());
+    emit lightAdded(light);
 
     if (logLV >= LOG_LEVEL_INFO)
         dout << "Spot light" << light->objectName() << "is added to scene" << this->objectName();

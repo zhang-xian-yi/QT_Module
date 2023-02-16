@@ -26,12 +26,7 @@ TransformGizmo::TransformGizmo(QObject* parent): AbstractGizmo(0) {
 
 TransformGizmo::~TransformGizmo()
 {
-    if(m_translateGizmo)
-        delete m_translateGizmo;
-    if(m_rotateGizmo)
-        delete m_rotateGizmo;
-    if(m_scaleGizmo)
-        delete m_scaleGizmo;
+
 }
 
 void TransformGizmo::translate(QVector3D delta) {
