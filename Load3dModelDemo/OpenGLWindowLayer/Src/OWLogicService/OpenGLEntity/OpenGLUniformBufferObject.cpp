@@ -6,7 +6,8 @@ OpenGLUniformBufferObject::OpenGLUniformBufferObject() {
 }
 
 OpenGLUniformBufferObject::~OpenGLUniformBufferObject() {
-    if (m_id) destroy();
+    m_id =0;
+    //if (m_id) destroy();
 }
 
 GLuint OpenGLUniformBufferObject::bufferId() const {

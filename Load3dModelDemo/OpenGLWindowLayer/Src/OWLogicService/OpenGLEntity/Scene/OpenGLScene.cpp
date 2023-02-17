@@ -52,8 +52,8 @@ struct ShaderlightInfo { // struct size: 1424
 };
 
 static ShaderlightInfo shaderlightInfo;
-OpenGLUniformBufferObject *OpenGLScene::m_cameraInfo = 0;
-OpenGLUniformBufferObject *OpenGLScene::m_lightInfo = 0;
+QSharedPointer<OpenGLUniformBufferObject> OpenGLScene::m_cameraInfo = 0;
+QSharedPointer<OpenGLUniformBufferObject> OpenGLScene::m_lightInfo = 0;
 OpenGLScene::OpenGLScene(QSharedPointer<Scene> scene) {
     m_host = scene;
 
@@ -129,7 +129,7 @@ void OpenGLScene::commitCameraInfo() {
     shaderCameraInfo.cameraPos = m_host->camera()->position();
 
     if (m_cameraInfo == 0) {
-        m_cameraInfo = new OpenGLUniformBufferObject;
+        m_cameraInfo = QSharedPointer<OpenGLUniformBufferObject>(new OpenGLUniformBufferObject);
         m_cameraInfo->create();
         m_cameraInfo->bind();
         m_cameraInfo->allocate(CAMERA_INFO_BINDING_POINT, NULL, sizeof(ShaderCameraInfo));
@@ -184,7 +184,7 @@ void OpenGLScene::commitLightInfo() {
     shaderlightInfo.spotLightNum = spotLightNum;
 
     if (m_lightInfo == 0) {
-        m_lightInfo = new OpenGLUniformBufferObject;
+        m_lightInfo = QSharedPointer<OpenGLUniformBufferObject>(new OpenGLUniformBufferObject);
         m_lightInfo->create();
         m_lightInfo->bind();
         m_lightInfo->allocate(LIGHT_INFO_BINDING_POINT, NULL, sizeof(ShaderlightInfo));

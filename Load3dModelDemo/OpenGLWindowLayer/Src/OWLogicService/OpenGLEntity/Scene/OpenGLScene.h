@@ -30,7 +30,7 @@ private:
     QSharedPointer<Scene> m_host;
     //这里的容器是负责Scene中的指针，不用手动释放
     QVector<QSharedPointer<OpenGLMesh>> m_gizmoMeshes, m_gridlineMeshes, m_lightMeshes, m_normalMeshes;
-    static OpenGLUniformBufferObject *m_cameraInfo, *m_lightInfo;
+    static QSharedPointer<OpenGLUniformBufferObject> m_cameraInfo, m_lightInfo;
 private slots:
     void gizmoAdded(QSharedPointer<AbstractGizmo> gizmo);
     void gridlineAdded(QSharedPointer<Gridline> gridline);

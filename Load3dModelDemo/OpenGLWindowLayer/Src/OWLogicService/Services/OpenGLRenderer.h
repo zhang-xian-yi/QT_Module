@@ -21,7 +21,7 @@ public:
 private:
     QString m_log;
     QOpenGLShaderProgram *m_basicShader, *m_pickingShader, *m_phongShader;
-    QOpenGLFramebufferObject *m_pickingPassFBO;
+    QSharedPointer<QOpenGLFramebufferObject> m_pickingPassFBO;
 
     QOpenGLShaderProgram * loadShaderFromFile(
         QString vertexShaderFilePath,

@@ -53,11 +53,10 @@ bool OpenGLRenderer::reloadShaders() {
 }
 
 void OpenGLRenderer::reloadFrameBuffers() {
-    if (m_pickingPassFBO)
-        delete m_pickingPassFBO;
+    m_pickingPassFBO.clear();
     int data[4];
     glGetIntegerv(GL_VIEWPORT, data);
-    m_pickingPassFBO = new QOpenGLFramebufferObject(data[2], data[3], QOpenGLFramebufferObject::CombinedDepthStencil);
+    m_pickingPassFBO = QSharedPointer<QOpenGLFramebufferObject>(new QOpenGLFramebufferObject(data[2], data[3], QOpenGLFramebufferObject::CombinedDepthStencil));
 }
 
 uint32_t OpenGLRenderer::pickingPass(QSharedPointer<OpenGLScene> openGLScene, QPoint cursorPos) {

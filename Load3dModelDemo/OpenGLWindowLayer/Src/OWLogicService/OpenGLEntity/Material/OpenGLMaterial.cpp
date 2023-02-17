@@ -14,7 +14,7 @@ struct ShaderMaterialInfo {
 
 static ShaderMaterialInfo shaderMaterialInfo;
 
-OpenGLUniformBufferObject *OpenGLMaterial::m_materialInfo = 0;
+QSharedPointer<OpenGLUniformBufferObject> OpenGLMaterial::m_materialInfo = 0;
 
 OpenGLMaterial::OpenGLMaterial(QSharedPointer<Material> material, QObject* parent): QObject(0) {
     m_host = material;
@@ -59,7 +59,7 @@ void OpenGLMaterial::bind() {
     shaderMaterialInfo.shininess = m_host->shininess();
 
     if (m_materialInfo == 0) {
-        m_materialInfo = new OpenGLUniformBufferObject;
+        m_materialInfo = QSharedPointer<OpenGLUniformBufferObject>(new OpenGLUniformBufferObject);
         m_materialInfo->create();
         m_materialInfo->bind();
         m_materialInfo->allocate(MATERIAL_INFO_BINDING_POINT, NULL, sizeof(ShaderMaterialInfo));
@@ -81,7 +81,7 @@ void OpenGLMaterial::release() {
     shaderMaterialInfo.useBumpMap = 0;
 
     if (m_materialInfo == 0) {
-        m_materialInfo = new OpenGLUniformBufferObject;
+        m_materialInfo = QSharedPointer<OpenGLUniformBufferObject>(new OpenGLUniformBufferObject);
         m_materialInfo->create();
         m_materialInfo->bind();
         m_materialInfo->allocate(3, NULL, sizeof(ShaderMaterialInfo));

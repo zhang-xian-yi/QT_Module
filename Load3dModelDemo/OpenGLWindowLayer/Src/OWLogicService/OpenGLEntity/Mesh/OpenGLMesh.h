@@ -32,7 +32,7 @@ private:
     QSharedPointer<QOpenGLBuffer> m_vbo, m_ebo;
     QSharedPointer<OpenGLMaterial> m_openGLMaterial;//弱引用，
 
-    static OpenGLUniformBufferObject *m_modelInfo;
+    static QSharedPointer<OpenGLUniformBufferObject> m_modelInfo;
 
 private slots:
     void materialChanged(QSharedPointer<Material> material);

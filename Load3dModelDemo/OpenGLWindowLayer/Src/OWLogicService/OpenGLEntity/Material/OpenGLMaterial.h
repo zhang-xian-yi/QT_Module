@@ -18,7 +18,7 @@ public:
 private:
     QSharedPointer<Material> m_host;
     QSharedPointer<OpenGLTexture> m_openGLDiffuseTexture, m_openGLSpecularTexture, m_openGLBumpTexture;
-    static OpenGLUniformBufferObject *m_materialInfo;
+    static QSharedPointer<OpenGLUniformBufferObject> m_materialInfo;
 
 private slots:
     void diffuseTextureChanged(QSharedPointer<Texture> diffuseTexture);

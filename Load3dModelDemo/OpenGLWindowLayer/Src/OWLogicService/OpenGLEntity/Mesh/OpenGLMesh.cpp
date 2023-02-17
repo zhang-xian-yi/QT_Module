@@ -11,7 +11,7 @@ struct ShaderModelInfo {
 
 static ShaderModelInfo shaderModelInfo;
 
-OpenGLUniformBufferObject *OpenGLMesh::m_modelInfo = 0;
+QSharedPointer<OpenGLUniformBufferObject> OpenGLMesh::m_modelInfo = 0;
 
 OpenGLMesh::OpenGLMesh(QSharedPointer<Mesh> mesh, QObject* parent): QObject(0) {
     m_host = mesh;
@@ -87,7 +87,7 @@ void OpenGLMesh::commit() {
     shaderModelInfo.pickingID = this->m_pickingID;
 
     if (m_modelInfo == 0) {
-        m_modelInfo = new OpenGLUniformBufferObject;
+        m_modelInfo = QSharedPointer<OpenGLUniformBufferObject>(new OpenGLUniformBufferObject);
         m_modelInfo->create();
         m_modelInfo->bind();
         m_modelInfo->allocate(MODEL_INFO_BINDING_POINT, NULL, sizeof(ShaderModelInfo));
@@ -127,7 +127,9 @@ void OpenGLMesh::render(bool pickingPass) {
 }
 
 void OpenGLMesh::destroy() {
-
+    m_vao.clear();
+    m_vbo.clear();
+    m_ebo.clear();
 }
 
 void OpenGLMesh::setSizeFixed(bool sizeFixed) {
