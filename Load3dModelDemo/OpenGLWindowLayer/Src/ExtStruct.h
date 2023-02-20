@@ -5,15 +5,15 @@ namespace OWlayerNS
 {
     struct OPENGLWINDOWLAYER_EXPORT Vec3F
     {
-        float x;
-        float y;
-        float z;
+        float one;
+        float two;
+        float three;
     };
 
     struct OPENGLWINDOWLAYER_EXPORT Vec2F
     {
-        float x;
-        float y;
+        float one;
+        float two;
     };
 
 
@@ -22,7 +22,7 @@ namespace OWlayerNS
     {
         Vec3F PostionXYZ;//模型场景坐标（相对于场景模型中心不同的坐标点） 3个浮点数
         Vec3F NormalUVW;//模型视图坐标（相对于观察者中心不同的坐标点）  3个浮点数
-        Vec3F TangentSpace;
+        Vec2F TexCoord;//纹理坐标
     };
 
     //输入网格面数据

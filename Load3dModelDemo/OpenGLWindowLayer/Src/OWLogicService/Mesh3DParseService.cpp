@@ -53,13 +53,13 @@ QSharedPointer<Mesh> Mesh3DParseService::loadMesh(QVector<OWlayerNS::InVertex> &
         Vertex vertex;
         auto inV = InVertexArray.at(face.IndexsArray.at(i));
         //加载XYZ
-        vertex.position.setX(inV.PostionXYZ.x);
-        vertex.position.setY(inV.PostionXYZ.y);
-        vertex.position.setZ(inV.PostionXYZ.z);
+        vertex.position.setX(inV.PostionXYZ.one);
+        vertex.position.setY(inV.PostionXYZ.two);
+        vertex.position.setZ(inV.PostionXYZ.three);
         //加载UVW
-        vertex.normal.setX(inV.NormalUVW.x);
-        vertex.normal.setY(inV.NormalUVW.y);
-        vertex.normal.setZ(inV.NormalUVW.z);
+        vertex.normal.setX(inV.NormalUVW.one);
+        vertex.normal.setY(inV.NormalUVW.two);
+        vertex.normal.setZ(inV.NormalUVW.three);
         //加载切线空间数据
 
         //加载纹理坐标
