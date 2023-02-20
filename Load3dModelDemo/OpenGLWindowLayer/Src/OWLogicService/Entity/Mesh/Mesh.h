@@ -5,6 +5,7 @@
 #include "Material/Material.h"
 
 class ModelLoader;
+class Mesh3DParseService;
 
 class Mesh: public AbstractEntity {
     Q_OBJECT
@@ -62,6 +63,7 @@ protected:
     QSharedPointer<Material> m_material;
 
     friend ModelLoader;//友元类 此类可以访问本类对象的私有成员
+    friend Mesh3DParseService;
 };
 
 QDataStream &operator>>(QDataStream &in, Mesh::MeshType& meshType);

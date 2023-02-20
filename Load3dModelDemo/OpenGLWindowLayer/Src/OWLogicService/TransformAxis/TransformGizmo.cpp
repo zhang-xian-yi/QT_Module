@@ -3,7 +3,7 @@
 TransformGizmo::TransformGizmo(QObject* parent): AbstractGizmo(0) {
     setObjectName("Transform Gizmo");
 
-    m_translateGizmo = new TranslateGizmo(this);
+    m_translateGizmo =new TranslateGizmo(this) ;
     m_rotateGizmo = new RotateGizmo(this);
     m_scaleGizmo = new ScaleGizmo(this);
 
@@ -21,11 +21,16 @@ TransformGizmo::TransformGizmo(QObject* parent): AbstractGizmo(0) {
     for (int i = 0; i < m_scaleGizmo->markers().size(); i++)
         m_markers.push_back(m_scaleGizmo->markers()[i]);
 
-    //setParent(parent);
+    setParent(parent);
 }
 
 TransformGizmo::~TransformGizmo()
 {
+    //这里为什么不释放，只是释放了会让程序崩溃
+
+    m_translateGizmo = nullptr;
+    m_rotateGizmo = nullptr;
+    m_scaleGizmo = nullptr;
 
 }
 

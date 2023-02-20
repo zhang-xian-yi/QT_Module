@@ -10,7 +10,7 @@ AbstractGizmo::AbstractGizmo(QObject* parent): AbstractEntity(nullptr) {
 
 AbstractGizmo::~AbstractGizmo()
 {
-    m_markers.clear();
+    //m_markers.clear();
 }
 
 bool AbstractGizmo::isGizmo() const {

@@ -25,7 +25,7 @@ OpenGLWindowsLayerService::~OpenGLWindowsLayerService()
 }
 
 
-void OpenGLWindowsLayerService::CreateScene() {
+QSharedPointer<Scene> OpenGLWindowsLayerService::CreateScene() {
 
     m_pScene = QSharedPointer<Scene>(new Scene);
     m_pScene->addDirectionalLight(QSharedPointer<DirectionalLight>(new DirectionalLight(QVector3D(1, 1, 1), QVector3D(-2, -4, -3))));//增加方向光
@@ -33,6 +33,7 @@ void OpenGLWindowsLayerService::CreateScene() {
 
     auto GLScene = QSharedPointer<OpenGLScene>(new OpenGLScene(m_pScene));
     m_openGLWindow->setScene(GLScene);
+    return m_pScene;//创建创建的场景
 }
 
 void OpenGLWindowsLayerService::ImportModelFile(QString& filepath)
@@ -47,6 +48,10 @@ void OpenGLWindowsLayerService::ImportModelFile(QString& filepath)
             dout << log;
     }
 
-    if (m_pScene && model) m_pScene->addModel(model);
+    //添加场景中的模型
+    if (m_pScene && model)
+    {
+        m_pScene->addModel(model);
+    }
 }
 

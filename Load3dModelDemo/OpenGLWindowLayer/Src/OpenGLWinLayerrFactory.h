@@ -27,12 +27,12 @@ namespace OWlayerNS
 
     public:
         //获取opengGL窗口初始化的结果
-        IOpenGLWin* GetWindowPtr();
+        QSharedPointer<IOpenGLWin> GetWindowPtr();
         //获取加载3d模型的操作接口
-        ILoad3D* GetLoad3DPtr();
+        QSharedPointer<ILoad3D> GetLoad3DPtr();
     private:
         //控制器指针
-        OpenGLWinLayerControl* m_pOWLCtl;
+        QSharedPointer<OpenGLWinLayerControl> m_pOWLCtl;
     };
 }
 

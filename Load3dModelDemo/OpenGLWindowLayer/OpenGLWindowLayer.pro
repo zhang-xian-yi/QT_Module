@@ -53,6 +53,7 @@ CONFIG(release) {
 
 #外部 .h
 HEADERS += \
+    Src/ExtStruct.h \
     Src/ILoad3D.h \
     Src/IOpenGLWin.h \
     Src/OpenGLWindowLayer_global.h \
@@ -72,6 +73,8 @@ SOURCES += \
 
 #内部 .h
 HEADERS += \
+    Src/OWLogicService/OpenGLWindowsLayerService.h \
+    Src/OWLogicService/Mesh3DParseService.h \
     Src/OWLogicService/Entity/AbstractEntity.h \
     Src/OWLogicService/Entity/Camera/Camera.h \
     Src/OWLogicService/Entity/Gridline/Gridline.h \
@@ -103,10 +106,12 @@ HEADERS += \
     Src/OWLogicService/OpenGLEntity/Scene/OpenGLScene.h \
     Src/OWLogicService/OpenGLEntity/Texture/OpenGLTexture.h \
     Src/OWLogicService/OpenGLEntity/OpenGLUniformBufferObject.h \
-    Src/OWLogicService/OpenGLWindowsLayerService.h \
+
 
 #内部 .cpp
 SOURCES += \
+    Src/OWLogicService/OpenGLWindowsLayerService.cpp \
+    Src/OWLogicService/Mesh3DParseService.cpp \
     Src/OWLogicService/Entity/AbstractEntity.cpp \
     Src/OWLogicService/Entity/Camera/Camera.cpp \
     Src/OWLogicService/Entity/Gridline/Gridline.cpp \
@@ -138,5 +143,4 @@ SOURCES += \
     Src/OWLogicService/OpenGLEntity/Scene/OpenGLScene.cpp \
     Src/OWLogicService/OpenGLEntity/Texture/OpenGLTexture.cpp \
     Src/OWLogicService/OpenGLEntity/OpenGLUniformBufferObject.cpp \
-    Src/OWLogicService/OpenGLWindowsLayerService.cpp \
 
