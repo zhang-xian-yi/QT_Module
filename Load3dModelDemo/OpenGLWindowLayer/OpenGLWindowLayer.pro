@@ -58,21 +58,19 @@ HEADERS += \
     Src/IOpenGLWin.h \
     Src/OpenGLWindowLayer_global.h \
     Src/OpenGLWinLayerrFactory.h \
-    Src/OWCommon/PCH.h \
-    Src/OWCommon/GlobalData.h \
-    Src/OWCommon/ExtendMath.h \
-    Src/OWMControl/OpenGLWinLayerControl.h \
+
 
 #外部 .cpp
 SOURCES += \
     Src/OpenGLWinLayerrFactory.cpp \
-    Src/OWCommon/GlobalData.cpp \
-    Src/OWCommon/ExtendMath.cpp \
-    Src/OWMControl/OpenGLWinLayerControl.cpp \
 
 
 #内部 .h
 HEADERS += \
+    Src/OWCommon/PCH.h \
+    Src/OWCommon/GlobalData.h \
+    Src/OWCommon/ExtendMath.h \
+    Src/OWMControl/OpenGLWinLayerControl.h \
     Src/OWLogicService/OpenGLWindowsLayerService.h \
     Src/OWLogicService/Mesh3DParseService.h \
     Src/OWLogicService/Entity/AbstractEntity.h \
@@ -110,6 +108,9 @@ HEADERS += \
 
 #内部 .cpp
 SOURCES += \
+    Src/OWCommon/GlobalData.cpp \
+    Src/OWCommon/ExtendMath.cpp \
+    Src/OWMControl/OpenGLWinLayerControl.cpp \
     Src/OWLogicService/OpenGLWindowsLayerService.cpp \
     Src/OWLogicService/Mesh3DParseService.cpp \
     Src/OWLogicService/Entity/AbstractEntity.cpp \
