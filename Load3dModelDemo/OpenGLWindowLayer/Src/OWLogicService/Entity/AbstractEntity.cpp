@@ -127,12 +127,18 @@ void AbstractEntity::setHighlighted(bool highlighted) {
     if (m_highlighted == highlighted)
         return;
 
-    if (highlighted) {
+    if (highlighted)
+    {
         if (m_highlightedObject && m_highlightedObject != this)
+        {
             m_highlightedObject->setHighlighted(false);
+        }
         m_highlightedObject = this;
-    } else if (m_highlightedObject == this)
+    }
+    else if (m_highlightedObject == this)
+    {
         m_highlightedObject = 0;
+    }
 
     if (logLV >= LOG_LEVEL_INFO && highlighted)
         dout << this->objectName() << "is highlighted";

@@ -17,9 +17,9 @@ OpenGLMesh::OpenGLMesh(QSharedPointer<Mesh> mesh, QObject* parent): QObject(0) {
     m_host = mesh;
     m_sizeFixed = false;
     m_pickingID = 0;
-    m_vao = 0;
-    m_vbo = 0;
-    m_ebo = 0;
+    m_vao = nullptr;
+    m_vbo = nullptr;
+    m_ebo = nullptr;
     if (m_host->material())
         m_openGLMaterial = QSharedPointer<OpenGLMaterial>(new OpenGLMaterial(m_host->material()));
     else
@@ -46,7 +46,7 @@ QSharedPointer<Mesh> OpenGLMesh::host() const {
 void OpenGLMesh::create() {
     this->destroy();
 
-    m_vao = QSharedPointer<QOpenGLVertexArrayObject>(new QOpenGLVertexArrayObject);
+    m_vao = new QOpenGLVertexArrayObject();
     m_vao->create();
     m_vao->bind();
     m_vbo = QSharedPointer<QOpenGLBuffer>(new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer));
@@ -127,7 +127,8 @@ void OpenGLMesh::render(bool pickingPass) {
 }
 
 void OpenGLMesh::destroy() {
-    m_vao.clear();
+    //delete m_vao;
+    m_vao = nullptr;
     m_vbo.clear();
     m_ebo.clear();
 }

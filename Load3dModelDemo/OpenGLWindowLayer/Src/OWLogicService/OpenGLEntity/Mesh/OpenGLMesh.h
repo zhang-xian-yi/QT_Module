@@ -28,7 +28,7 @@ private:
     bool m_sizeFixed;
     uint m_pickingID;
 
-    QSharedPointer<QOpenGLVertexArrayObject>  m_vao;
+    QOpenGLVertexArrayObject*  m_vao;
     QSharedPointer<QOpenGLBuffer> m_vbo, m_ebo;
     QSharedPointer<OpenGLMaterial> m_openGLMaterial;//弱引用，
 
