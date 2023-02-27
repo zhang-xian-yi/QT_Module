@@ -72,7 +72,6 @@ HEADERS += \
     Src/OWCommon/ExtendMath.h \
     Src/OWMControl/OpenGLWinLayerControl.h \
     Src/OWLogicService/OpenGLWindowsLayerService.h \
-    Src/OWLogicService/Mesh3DParseService.h \
     Src/OWLogicService/Entity/AbstractEntity.h \
     Src/OWLogicService/Entity/Camera/Camera.h \
     Src/OWLogicService/Entity/Gridline/Gridline.h \
@@ -112,7 +111,6 @@ SOURCES += \
     Src/OWCommon/ExtendMath.cpp \
     Src/OWMControl/OpenGLWinLayerControl.cpp \
     Src/OWLogicService/OpenGLWindowsLayerService.cpp \
-    Src/OWLogicService/Mesh3DParseService.cpp \
     Src/OWLogicService/Entity/AbstractEntity.cpp \
     Src/OWLogicService/Entity/Camera/Camera.cpp \
     Src/OWLogicService/Entity/Gridline/Gridline.cpp \
