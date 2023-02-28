@@ -1,6 +1,13 @@
-#include "OpenGLWindow.h"
+﻿#include "OpenGlRender.h"
+#include <QOpenGLShaderProgram>
+#include <QDebug>
+#include <QtMath>
+#include <QQuaternion>
+#include "../Common/Src/ExtStruct.h"
+namespace OpenGlRender
+{
 
-OpenGLWindow::OpenGLWindow(QWidget * parent) : QOpenGLWidget(parent)
+OpenGlRenderWin::OpenGlRenderWin(QWidget * parent) : QOpenGLWidget(parent)
       , cubeGeometry(0)
 {
     this->m_MouseFlag = Qt::NoButton;
@@ -15,21 +22,22 @@ OpenGLWindow::OpenGLWindow(QWidget * parent) : QOpenGLWidget(parent)
                       parent->rect().width(),parent->rect().height());
 }
 
-OpenGLWindow::~OpenGLWindow()
+OpenGlRenderWin::~OpenGlRenderWin()
 {
     makeCurrent();
     delete  cubeGeometry;
     doneCurrent();
 }
 
-void OpenGLWindow::Rotate(QMatrix4x4 matrix)
+void OpenGlRenderWin::Rotate(QMatrix4x4 matrix)
 {
     this->m_rotation = matrix;
     update();
 }
 
-void OpenGLWindow::initializeGL()
+void OpenGlRenderWin::initializeGL()
 {
+    initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 1);
 
     initShaders();
@@ -56,7 +64,7 @@ void OpenGLWindow::initializeGL()
 }
 
 //保证界面内物体的显示不受界面纵横比变化而变形
-void OpenGLWindow::resizeGL(int w, int h)
+void OpenGlRenderWin::resizeGL(int w, int h)
 {
     qreal aspect = qreal(w) / qreal(h ? h : 1);
     const qreal zNear = 0.001, zFar = 1000.0;
@@ -66,7 +74,7 @@ void OpenGLWindow::resizeGL(int w, int h)
 }
 
 //缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变Camera.eye的值
-void OpenGLWindow::wheelEvent(QWheelEvent *event)
+void OpenGlRenderWin::wheelEvent(QWheelEvent *event)
 {
     if(this->m_MousePressFlag)
         return;
@@ -88,7 +96,7 @@ void OpenGLWindow::wheelEvent(QWheelEvent *event)
     update();
 }
 //用于记录按下鼠标的类型并记录鼠标按下时的位置
-void OpenGLWindow::mousePressEvent(QMouseEvent *event)
+void OpenGlRenderWin::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() & Qt::LeftButton)
     {
@@ -104,7 +112,7 @@ void OpenGLWindow::mousePressEvent(QMouseEvent *event)
     this->mousePressPosition = event->pos();
 }
 //根据鼠标移动的量和鼠标类型进行对应处理操作
-void OpenGLWindow::mouseMoveEvent(QMouseEvent *event)
+void OpenGlRenderWin::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint diff = event->pos() - mousePressPosition;
     if(this->m_MouseFlag == Qt::LeftButton)
@@ -133,7 +141,7 @@ void OpenGLWindow::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 //鼠标释放后，记录当前的旋转或平移矩阵
-void OpenGLWindow::mouseReleaseEvent(QMouseEvent *event)
+void OpenGlRenderWin::mouseReleaseEvent(QMouseEvent *event)
 {
     if((event->button() & Qt::LeftButton) || (event->button() & Qt::RightButton))
     {
@@ -158,7 +166,7 @@ void OpenGLWindow::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 //编译着色器并连接绑定
-void OpenGLWindow::initShaders()
+void OpenGlRenderWin::initShaders()
 {
     const char *vshader_code =
             "#version 330 core                        \n"
@@ -172,6 +180,7 @@ void OpenGLWindow::initShaders()
             "void main()                              \n"
             "{                                        \n"
             "    gl_Position = mvp_matrix * vPosition;    \n"
+            "    FragPos = vec3(vPosition);                 \n"
             "    vNormal = mat3(transpose(inverse(mvp_matrix))) * aNormal;\n"
             "    vColor = aColor;                     \n"
             "}                                        \n";
@@ -193,26 +202,22 @@ void OpenGLWindow::initShaders()
             "in vec3 FragPos;                         \n"
             "uniform vec3 viewPos;                    \n"
             "uniform Material material;               \n"
-            "uniform Light light;                     \n"
-            "void main()                              \n"
-            "{                                        \n"
-            "float ambient = material.ambient;                                                          \n"
-            "vec3 norm = normalize(vNormal);                                                             \n"
+            "uniform Light light1;                     \n"
+            "vec3 CalcLightResult(Light light){                                                          \n"
+            "vec3 norm = normalize(vNormal);                                                            \n"
             "vec3 lightDir = normalize(light.position - FragPos);                                       \n"
             "float diff = max(dot(norm, lightDir), 0.0);                                                \n"
-            "float diffuse = material.diffuse * diff;                                                   \n"
-            "float spec = 0;                                                                            \n"
-            "if (diff > 0)                                                                              \n"
-            "{                                                                                          \n"
-            "    vec3 viewDir = normalize(viewPos - FragPos);                                           \n"
-            "    vec3 reflectDir = reflect(-lightDir, norm);                                            \n"
-            "    vec3 halfwayDir = normalize(lightDir + viewDir);                                       \n"
-            "    spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);                       \n"
-            "}                                                                                          \n"
-            "float specular = material.specular * spec;                                                 \n"
+            "vec3 diffuse = light.color * diff;                                                         \n"
+            "vec3 viewDir = normalize(viewPos - FragPos);                                               \n"
+            "vec3 reflectDir = reflect(-lightDir, norm);                                                \n"
+            "float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);                  \n"
+            "vec3 specular = material.specular * spec * light.color;                                    \n"
             "// final                                                                                   \n"
-            "vec3 result = (ambient + diffuse) * vColor * light.color + specular * light.color;         \n"
-            "    gl_FragColor = vec4(result,1.0f);                                                      \n"
+            "return (material.ambient + diffuse + specular) * vColor;}                                           \n"
+            "void main()                                                                                \n"
+            "{                                                                                          \n"
+            "vec3 light1Result = CalcLightResult(light1);                                               \n"
+            "    gl_FragColor = vec4(light1Result,1.0f);                                                      \n"
             "}                                                                                          \n";
 
     QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
@@ -235,17 +240,17 @@ void OpenGLWindow::initShaders()
     program->bind();
 }
 
-void OpenGLWindow::initTextures()
+void OpenGlRenderWin::initTextures()
 {
 }
 
-int OpenGLWindow::setRotation(int angle)
+int OpenGlRenderWin::setRotation(int angle)
 {
     normalizeAngle(angle);
     return angle;
 }
 
-void OpenGLWindow::normalizeAngle(int &angle)
+void OpenGlRenderWin::normalizeAngle(int &angle)
 {
     while (angle < 0)
         angle += 360 * 16;
@@ -253,7 +258,7 @@ void OpenGLWindow::normalizeAngle(int &angle)
         angle -= 360 * 16;
 }
 
-void OpenGLWindow::paintGL()
+void OpenGlRenderWin::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -274,18 +279,18 @@ void OpenGLWindow::paintGL()
     m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
     m2 = m2 * this->m_translation;
     program->setUniformValue("mvp_matrix", projection * m2 * m1);
-
     // add by light
     program->setUniformValue("viewPos", Camera.eye);
     // 设定灯光位置与颜色
-    program->setUniformValue("light.position", QVector3D({10,5,0}));
-    program->setUniformValue("light.color", QVector3D({0.0,255.0,0.0}));
-    CommonNS::Material _material = {0, 1, 0.2, 16};
+    program->setUniformValue("light1.position", QVector3D({10,10,0}));
+    program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
+    CommonNS::Material _material = {0.1, 0.9, 0.5, 16};
     // 设定材质
     program->setUniformValue("material.ambient", _material.ambient);
     program->setUniformValue("material.diffuse", _material.diffuse);
     program->setUniformValue("material.specular", _material.specular);
     program->setUniformValue("material.shininess", _material.shininess);
-
     this->cubeGeometry->drawCubeGeometry(program);
 }
+
+} // OpenGlRender

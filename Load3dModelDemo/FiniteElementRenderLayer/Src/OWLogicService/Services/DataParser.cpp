@@ -1,6 +1,8 @@
-﻿#include "DataParser.h"
+﻿#include "datparser.h"
 
 #include "../Common/Src/ExtStruct.h"
+
+namespace DatFileParse {
 
 DatParser::DatParser()
 {
@@ -12,6 +14,24 @@ DatParser::~DatParser()
     delete m_pStuDatFile;
 }
 
+bool DatParser::ChooseDatDialog(QString strLocal)
+{
+    QFileDialog fileDialog;
+    const QStringList filters({"dat files (*.dat)", "Any files (*)"});
+    fileDialog.setNameFilters(filters);
+    fileDialog.setFileMode(QFileDialog::FileMode::ExistingFiles);
+    if (!strLocal.isEmpty())
+    {
+        fileDialog.setDirectory(strLocal);
+    }
+    fileDialog.setAcceptMode(QFileDialog::AcceptMode::AcceptOpen);
+    if (fileDialog.exec())
+    {
+        QStringList files = fileDialog.selectedFiles();
+        return this->SetFile(files);
+    }
+    return true;
+}
 
 bool DatParser::SetFile(QString strFile)
 {
@@ -432,7 +452,7 @@ QString DatParser::GetOneValueForOneZone(QString zone, QString key)
     return fieldValue;
 }
 
-void DatParser::LineDataProcess(QString strline)
+void DatFileParse::DatParser::LineDataProcess(QString strline)
 {
     if (strline.startsWith(Dat_Title->data()) || strline.startsWith(Dat_Itle->data()))
     {
@@ -465,7 +485,7 @@ void DatParser::LineDataProcess(QString strline)
     }
 }
 
-bool DatParser::NoneDataLine(QString strline)
+bool DatFileParse::DatParser::NoneDataLine(QString strline)
 {
     if (strline.isEmpty())
     {
@@ -475,7 +495,7 @@ bool DatParser::NoneDataLine(QString strline)
     return false;
 }
 
-void DatParser::SaveTitle(QString strline)
+void DatFileParse::DatParser::SaveTitle(QString strline)
 {
     QStringList strParts = strline.split('=');
     if (1 < strParts.count())
@@ -495,7 +515,7 @@ void DatParser::SaveTitle(QString strline)
     }
 }
 
-void DatParser::SaveVariable(QString strline)
+void DatFileParse::DatParser::SaveVariable(QString strline)
 {
     auto strParts = strline.split('=');
     if (1 < strParts.count())
@@ -593,3 +613,4 @@ void DatParser::SaveLastZoneForTitleVar()
     }
 }
 
+} // DatFileParse

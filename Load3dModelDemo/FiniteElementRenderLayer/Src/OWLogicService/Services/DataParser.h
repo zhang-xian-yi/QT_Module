@@ -1,8 +1,21 @@
 ﻿#ifndef DATPARSER_H
 #define DATPARSER_H
+#include <QFile>
+#include <QTextStream>
+#include <QVector>
+#include <QVector2D>
+#include <QVector3D>
+#include <QVector4D>
 
+#include <QElapsedTimer>
+#include <QTime>
+#include <QDebug>
+#include <QFileDialog>
 
+#include "DatParser_global.h"
 #include "../Common/Src/ExtStruct.h"
+
+namespace DatFileParse {
 
 Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Title,       ("TITLE"))
 Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Itle,        ("ITLE"))
@@ -16,7 +29,7 @@ enum DataArea
     AREA_ZONE
 };
 
-class DatParser
+class DATPARSER_EXPORT DatParser
 {
     struct DatVariables
     {
@@ -58,6 +71,8 @@ class DatParser
 public:
     DatParser();
     ~DatParser();
+
+    bool ChooseDatDialog(QString strLocal = "");
 
     bool SetFile(QString strFile);
     bool SetFile(QStringList strFiles);
@@ -126,5 +141,6 @@ private:
     CoordVarSymbol m_stuVarSymbol;
 };
 
+} // DatFileParse
 
 #endif // DATPARSER_H
