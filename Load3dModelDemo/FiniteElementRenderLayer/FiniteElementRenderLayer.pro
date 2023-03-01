@@ -26,6 +26,11 @@ INCLUDEPATH += $$PWD/3rdPartySrc/
 LIBS += -lopengl32 -luser32 -lgdi32 -lshell32
 #资源
 RESOURCES += OWRes.qrc
+#中文乱码
+win32-msvc* {
+    QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+}
+
 #debug 配置
 CONFIG(debug) {
     DEFINES += DEBUG_VLD

@@ -4,7 +4,7 @@
 OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent)
 {
     m_pScene = nullptr;//减少引用计数
-    m_openGLWindow = new OpenGLWindow;//由QT父级控件控制释放
+    m_openGLWindow = new OpenGLWindow();//由QT父级控件控制释放
     m_openGLWindow->setRenderer(QSharedPointer<OpenGLRenderer>(new OpenGLRenderer));//由QT父级控件控制释放
 
     //设置为父控件的大小

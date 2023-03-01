@@ -11,8 +11,6 @@ namespace OWlayerNS
     public:
         //加载3D模型
         virtual void Load3DModel(QString path) = 0;
-        //加载3D数据
-        virtual void Load3DStructData(QVector<InVertex>& vectexArr,QVector<InFaceIndex>& indexArray) = 0;
     };
 
 }

@@ -32,7 +32,10 @@ RESOURCES += OWRes.qrc
 #第三方库连接
 LIBS += -lopengl32
 LIBS += -L$$PWD/VendorLib/libs -lassimp-vc142-mt
-
+#中文乱码
+win32-msvc* {
+    QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+}
 #debug 配置
 CONFIG(debug) {
     DEFINES += DEBUG_VLD
