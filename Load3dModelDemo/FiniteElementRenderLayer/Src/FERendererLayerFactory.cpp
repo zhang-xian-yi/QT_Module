@@ -1,9 +1,9 @@
 #include "FERendererLayerFactory.h"
-#include "Src/OWMControl/OpenGLWinLayerControl.h"
+#include "Src/OWMControl/FERendererLayerControl.h"
 namespace OWlayerNS
 {
     FERendererLayerFactory::FERendererLayerFactory()
-        :m_pOWLCtl(QSharedPointer<OpenGLWinLayerControl>(new OpenGLWinLayerControl()))
+        :m_pOWLCtl(QSharedPointer<FERendererLayerControl>(new FERendererLayerControl()))
     {
 
     }
@@ -18,7 +18,7 @@ namespace OWlayerNS
     {
         if(m_pOWLCtl == nullptr)
         {
-            m_pOWLCtl = QSharedPointer<OpenGLWinLayerControl>(new OpenGLWinLayerControl());
+            m_pOWLCtl = QSharedPointer<FERendererLayerControl>(new FERendererLayerControl());
         }
         return m_pOWLCtl;
     }
@@ -27,7 +27,7 @@ namespace OWlayerNS
     {
         if(m_pOWLCtl == nullptr)
         {
-            m_pOWLCtl = QSharedPointer<OpenGLWinLayerControl>(new OpenGLWinLayerControl());
+            m_pOWLCtl = QSharedPointer<FERendererLayerControl>(new FERendererLayerControl());
         }
         return m_pOWLCtl;
     }

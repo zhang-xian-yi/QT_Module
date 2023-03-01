@@ -10,11 +10,7 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include "CubeGeometry.h"
-#include "OpenGlRender_global.h"
-
-namespace OpenGlRender
-{
-
+#include "Src/OWCommon/ExtStruct.h"
 //该结构体用来定义观察者视角的相关信息
 typedef  struct
 {
@@ -26,12 +22,12 @@ typedef  struct
     QVector3D  up;         //观察者的头部朝向
 }CameraView;
 
-class OPENGLRENDER_EXPORT OpenGlRenderWin : public QOpenGLWidget, protected QOpenGLFunctions
+class OpenGLWindow : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
-    OpenGlRenderWin(QWidget *parent = nullptr);
-    ~OpenGlRenderWin();
+    OpenGLWindow(QWidget *parent = nullptr);
+    ~OpenGLWindow();
     void Rotate(QMatrix4x4 matrix);
 
 protected:
@@ -65,7 +61,5 @@ private:
     qreal m_xTrans;  //记录沿x轴移动的位置
     qreal m_yTrans;  //记录沿y轴移动的位置
 };
-
-} // OpenGlRender
 
 #endif // OPENGLRENDER_H

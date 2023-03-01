@@ -5,7 +5,7 @@
 #include "IOpenGLWin.h"
 #include "ILoad3D.h"
 
-class OpenGLWinLayerControl;
+class FERendererLayerControl;
 
 //向外部暴露的的接口加上命名空间进行隔离, dll内部函数这不用添加命名空间
 
@@ -32,7 +32,7 @@ namespace OWlayerNS
         QSharedPointer<ILoad3D> GetLoad3DPtr();
     private:
         //控制器指针
-        QSharedPointer<OpenGLWinLayerControl> m_pOWLCtl;
+        QSharedPointer<FERendererLayerControl> m_pOWLCtl;
     };
 }
 

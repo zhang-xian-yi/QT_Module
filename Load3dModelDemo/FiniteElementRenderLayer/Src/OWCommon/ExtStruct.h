@@ -16,6 +16,14 @@ struct Vec2F
     float two;
 };
 
+// 颜色RGB
+struct ColorRGB
+{
+   float r;
+   float g;
+   float b;
+};
+
 //默认材质
 struct Material
 {
@@ -31,6 +39,7 @@ struct InVertex
     Vec3F PostionXYZ;//模型场景坐标（相对于场景模型中心不同的坐标点） 3个浮点数
     Vec3F Normal;
     Vec3F TexCoord;
+    ColorRGB CorRGB;
 };
 
 //输入网格面数据

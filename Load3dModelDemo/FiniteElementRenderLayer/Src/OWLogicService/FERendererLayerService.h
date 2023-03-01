@@ -11,11 +11,12 @@ vld 需要deghelp.dll 、 Microsoft.DTfW.DHL.manifest、 vld_x64.dll 一起放�
 
 #include "Services/OpenGLWindow.h"
 
-class OpenGLWindowsLayerService:public QObject {
+class FERendererLayerService:public QObject
+{
     Q_OBJECT
 public:
-    OpenGLWindowsLayerService(QWidget *parent = 0);
-    ~OpenGLWindowsLayerService();
+    FERendererLayerService(QWidget *parent = 0);
+    ~FERendererLayerService();
 public:
     void LoadFiniteElementData(const QString& filepath);
 private:

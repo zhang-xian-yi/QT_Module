@@ -1,8 +1,4 @@
-﻿#include "datparser.h"
-
-#include "../Common/Src/ExtStruct.h"
-
-namespace DatFileParse {
+﻿#include "DataParser.h"
 
 DatParser::DatParser()
 {
@@ -105,9 +101,9 @@ QVector<QVector3D> DatParser::GetCoordinates()
     return _data3D;
 }
 
-QVector<CommonNS::InVertex> DatParser::GetCoordinatesVertex(QString zoneName)
+QVector<InVertex> DatParser::GetCoordinatesVertex(QString zoneName)
 {
-    QVector<CommonNS::InVertex> vertexVector;
+    QVector<InVertex> vertexVector;
     foreach (auto pZone, m_pStuDatFile->allZone)
     {
         if (pZone->zoneHeaders.contains("T") && zoneName == pZone->zoneHeaders["T"])
@@ -124,8 +120,8 @@ QVector<CommonNS::InVertex> DatParser::GetCoordinatesVertex(QString zoneName)
                        && varYIndex < nTotalVarCount
                        && varZIndex < nTotalVarCount)
                 {
-                    CommonNS::Vec3F varPoint3D;
-                    CommonNS::InVertex vertexCoord;
+                    Vec3F varPoint3D;
+                    InVertex vertexCoord;
                     varPoint3D.one = varData->variableData.at(varXIndex);
                     varPoint3D.two = varData->variableData.at(varYIndex);
                     varPoint3D.three = varData->variableData.at(varZIndex);
@@ -175,9 +171,9 @@ QVector<QVector<int> > DatParser::GetMeshers(QString zoneName)
     return _Meshers;
 }
 
-QVector<CommonNS::InFaceIndex> DatParser::GetMeshersIndex(QString zoneName)
+QVector<InFaceIndex> DatParser::GetMeshersIndex(QString zoneName)
 {
-    QVector<CommonNS::InFaceIndex> indexArray;
+    QVector<InFaceIndex> indexArray;
     foreach (auto pZone, m_pStuDatFile->allZone)
     {
         if (this->m_strTitle.compare(*pZone->pTitleAddr) == 0)
@@ -193,7 +189,7 @@ QVector<CommonNS::InFaceIndex> DatParser::GetMeshersIndex(QString zoneName)
                     _Points.append(pZone->zoneData.at(idx));
                     if (idx != 0 && 0 == ((idx + 1) % nMeshPointC))
                     {
-                        CommonNS::InFaceIndex meshVector;
+                        InFaceIndex meshVector;
                         foreach (auto data, _Points)
                         {
                             meshVector.IndexsArray.append(data);
@@ -452,7 +448,7 @@ QString DatParser::GetOneValueForOneZone(QString zone, QString key)
     return fieldValue;
 }
 
-void DatFileParse::DatParser::LineDataProcess(QString strline)
+void DatParser::LineDataProcess(QString strline)
 {
     if (strline.startsWith(Dat_Title->data()) || strline.startsWith(Dat_Itle->data()))
     {
@@ -485,7 +481,7 @@ void DatFileParse::DatParser::LineDataProcess(QString strline)
     }
 }
 
-bool DatFileParse::DatParser::NoneDataLine(QString strline)
+bool DatParser::NoneDataLine(QString strline)
 {
     if (strline.isEmpty())
     {
@@ -495,7 +491,7 @@ bool DatFileParse::DatParser::NoneDataLine(QString strline)
     return false;
 }
 
-void DatFileParse::DatParser::SaveTitle(QString strline)
+void DatParser::SaveTitle(QString strline)
 {
     QStringList strParts = strline.split('=');
     if (1 < strParts.count())
@@ -515,7 +511,7 @@ void DatFileParse::DatParser::SaveTitle(QString strline)
     }
 }
 
-void DatFileParse::DatParser::SaveVariable(QString strline)
+void DatParser::SaveVariable(QString strline)
 {
     auto strParts = strline.split('=');
     if (1 < strParts.count())
@@ -613,4 +609,3 @@ void DatParser::SaveLastZoneForTitleVar()
     }
 }
 
-} // DatFileParse

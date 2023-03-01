@@ -1,13 +1,11 @@
-﻿#include "OpenGlRender.h"
+﻿#include "OpenGLWindow.h"
 #include <QOpenGLShaderProgram>
 #include <QDebug>
 #include <QtMath>
 #include <QQuaternion>
-#include "../Common/Src/ExtStruct.h"
-namespace OpenGlRender
-{
 
-OpenGlRenderWin::OpenGlRenderWin(QWidget * parent) : QOpenGLWidget(parent)
+
+OpenGLWindow::OpenGLWindow(QWidget * parent) : QOpenGLWidget(parent)
       , cubeGeometry(0)
 {
     this->m_MouseFlag = Qt::NoButton;
@@ -22,20 +20,20 @@ OpenGlRenderWin::OpenGlRenderWin(QWidget * parent) : QOpenGLWidget(parent)
                       parent->rect().width(),parent->rect().height());
 }
 
-OpenGlRenderWin::~OpenGlRenderWin()
+OpenGLWindow::~OpenGLWindow()
 {
     makeCurrent();
     delete  cubeGeometry;
     doneCurrent();
 }
 
-void OpenGlRenderWin::Rotate(QMatrix4x4 matrix)
+void OpenGLWindow::Rotate(QMatrix4x4 matrix)
 {
     this->m_rotation = matrix;
     update();
 }
 
-void OpenGlRenderWin::initializeGL()
+void OpenGLWindow::initializeGL()
 {
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 1);
@@ -64,7 +62,7 @@ void OpenGlRenderWin::initializeGL()
 }
 
 //保证界面内物体的显示不受界面纵横比变化而变形
-void OpenGlRenderWin::resizeGL(int w, int h)
+void OpenGLWindow::resizeGL(int w, int h)
 {
     qreal aspect = qreal(w) / qreal(h ? h : 1);
     const qreal zNear = 0.001, zFar = 1000.0;
@@ -74,7 +72,7 @@ void OpenGlRenderWin::resizeGL(int w, int h)
 }
 
 //缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变Camera.eye的值
-void OpenGlRenderWin::wheelEvent(QWheelEvent *event)
+void OpenGLWindow::wheelEvent(QWheelEvent *event)
 {
     if(this->m_MousePressFlag)
         return;
@@ -96,7 +94,7 @@ void OpenGlRenderWin::wheelEvent(QWheelEvent *event)
     update();
 }
 //用于记录按下鼠标的类型并记录鼠标按下时的位置
-void OpenGlRenderWin::mousePressEvent(QMouseEvent *event)
+void OpenGLWindow::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() & Qt::LeftButton)
     {
@@ -112,7 +110,7 @@ void OpenGlRenderWin::mousePressEvent(QMouseEvent *event)
     this->mousePressPosition = event->pos();
 }
 //根据鼠标移动的量和鼠标类型进行对应处理操作
-void OpenGlRenderWin::mouseMoveEvent(QMouseEvent *event)
+void OpenGLWindow::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint diff = event->pos() - mousePressPosition;
     if(this->m_MouseFlag == Qt::LeftButton)
@@ -141,7 +139,7 @@ void OpenGlRenderWin::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 //鼠标释放后，记录当前的旋转或平移矩阵
-void OpenGlRenderWin::mouseReleaseEvent(QMouseEvent *event)
+void OpenGLWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if((event->button() & Qt::LeftButton) || (event->button() & Qt::RightButton))
     {
@@ -166,7 +164,7 @@ void OpenGlRenderWin::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 //编译着色器并连接绑定
-void OpenGlRenderWin::initShaders()
+void OpenGLWindow::initShaders()
 {
     const char *vshader_code =
             "#version 330 core                        \n"
@@ -240,17 +238,17 @@ void OpenGlRenderWin::initShaders()
     program->bind();
 }
 
-void OpenGlRenderWin::initTextures()
+void OpenGLWindow::initTextures()
 {
 }
 
-int OpenGlRenderWin::setRotation(int angle)
+int OpenGLWindow::setRotation(int angle)
 {
     normalizeAngle(angle);
     return angle;
 }
 
-void OpenGlRenderWin::normalizeAngle(int &angle)
+void OpenGLWindow::normalizeAngle(int &angle)
 {
     while (angle < 0)
         angle += 360 * 16;
@@ -258,7 +256,7 @@ void OpenGlRenderWin::normalizeAngle(int &angle)
         angle -= 360 * 16;
 }
 
-void OpenGlRenderWin::paintGL()
+void OpenGLWindow::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -284,7 +282,7 @@ void OpenGlRenderWin::paintGL()
     // 设定灯光位置与颜色
     program->setUniformValue("light1.position", QVector3D({10,10,0}));
     program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
-    CommonNS::Material _material = {0.1, 0.9, 0.5, 16};
+    Material _material = {0.1, 0.9, 0.5, 16};
     // 设定材质
     program->setUniformValue("material.ambient", _material.ambient);
     program->setUniformValue("material.diffuse", _material.diffuse);
@@ -293,4 +291,3 @@ void OpenGlRenderWin::paintGL()
     this->cubeGeometry->drawCubeGeometry(program);
 }
 
-} // OpenGlRender

@@ -1,28 +1,28 @@
-#include "OpenGLWinLayerControl.h"
-#include "Src/OWLogicService/OpenGLWindowsLayerService.h"
+#include "FERendererLayerControl.h"
+#include "Src/OWLogicService/FERendererLayerService.h"
 
-OpenGLWinLayerControl::OpenGLWinLayerControl()
+FERendererLayerControl::FERendererLayerControl()
     :m_pOWLService(nullptr)
 {
 
 }
 
-OpenGLWinLayerControl::~OpenGLWinLayerControl()
+FERendererLayerControl::~FERendererLayerControl()
 {
     m_pOWLService.clear();
 }
 
-void OpenGLWinLayerControl::initOpenGLWin(QWidget* parent)
+void FERendererLayerControl::initOpenGLWin(QWidget* parent)
 {
     if(m_pOWLService == nullptr)
     {
         initEnvirnoMent();
-        m_pOWLService = QSharedPointer<OpenGLWindowsLayerService>(new OpenGLWindowsLayerService(parent));
+        m_pOWLService = QSharedPointer<FERendererLayerService>(new FERendererLayerService(parent));
     }
 
 }
 
-void OpenGLWinLayerControl::initEnvirnoMent()
+void FERendererLayerControl::initEnvirnoMent()
 {
     QSurfaceFormat openGLFormat;
     openGLFormat.setVersion(4, 5);
@@ -33,7 +33,7 @@ void OpenGLWinLayerControl::initEnvirnoMent()
 }
 
 //加载3d数据
-void OpenGLWinLayerControl::LoadFiniteElementData(const QString& finiteElePath)
+void FERendererLayerControl::LoadFiniteElementData(const QString& finiteElePath)
 {
     if(m_pOWLService)
     {

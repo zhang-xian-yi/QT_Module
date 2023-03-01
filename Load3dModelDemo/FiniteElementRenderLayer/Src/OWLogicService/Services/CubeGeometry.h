@@ -4,11 +4,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QMutex>
-#include "../Common/Src/ExtStruct.h"
-#include "OpenGlRender_global.h"
-
-namespace OpenGlRender
-{
+#include "Src/OWCommon/ExtStruct.h"
 
 struct VertexData
 {
@@ -27,14 +23,14 @@ enum FaceDirect
     BACK,
 };
 
-class OPENGLRENDER_EXPORT CubeGeometry : public QOpenGLFunctions
+class CubeGeometry : public QOpenGLFunctions
 {
 public:
     CubeGeometry();
     ~CubeGeometry();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
-    void SetRenderData(QVector<CommonNS::InVertex>& vectexArr,QVector<CommonNS::InFaceIndex>& indexArray);
+    void SetRenderData(QVector<InVertex>& vectexArr,QVector<InFaceIndex>& indexArray);
     void InitCompleteCubeGeometry();
     void ReleaseRenderData();
 
@@ -52,6 +48,5 @@ private:
     QOpenGLBuffer indexBuf;   //IBO
     GLuint m_nVertexCount;
 };
-}
 
 #endif // DATMANAGER_H

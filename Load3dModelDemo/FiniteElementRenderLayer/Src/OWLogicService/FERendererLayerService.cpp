@@ -1,6 +1,6 @@
-#include "OpenGLWindowsLayerService.h"
+#include "FERendererLayerService.h"
 #include "Src/OWCommon/GlobalData.h" //LogLv 与pGLFunc 引入
-OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent)
+FERendererLayerService::FERendererLayerService(QWidget * parent)
 {
     m_openGLWindow = new OpenGLWindow();//由QT父级控件控制释放
 
@@ -13,12 +13,12 @@ OpenGLWindowsLayerService::OpenGLWindowsLayerService(QWidget * parent)
     m_openGLWindow->setFocusPolicy(Qt::StrongFocus);
 }
 
-OpenGLWindowsLayerService::~OpenGLWindowsLayerService()
+FERendererLayerService::~FERendererLayerService()
 {
     m_openGLWindow = nullptr; //减少引用技术由QT父控件控制
 }
 
-void OpenGLWindowsLayerService::LoadFiniteElementData(const QString& filepath)
+void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
 {
 
 }

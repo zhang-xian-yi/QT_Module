@@ -1,8 +1,5 @@
 ﻿#include "CubeGeometry.h"
 
-namespace OpenGlRender
-{
-
 CubeGeometry* CubeGeometry::m_pStatInstance = nullptr;
 QMutex CubeGeometry::m_oMutex;
 
@@ -51,14 +48,14 @@ void CubeGeometry::drawCubeGeometry(QOpenGLShaderProgram *program)
     glDrawElements(GL_QUADS, indicesQuad.size(), GL_UNSIGNED_INT, 0);
 }
 
-void CubeGeometry::SetRenderData(QVector<CommonNS::InVertex> &vectexArr, QVector<CommonNS::InFaceIndex> &indexArray)
+void CubeGeometry::SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceIndex> &indexArray)
 {
-    foreach (CommonNS::InVertex quadPoint, vectexArr)
+    foreach (InVertex quadPoint, vectexArr)
     {
         verticesVect.append({QVector3D(quadPoint.PostionXYZ.one, quadPoint.PostionXYZ.two, quadPoint.PostionXYZ.three),
                              QVector3D(quadPoint.CorRGB.r, quadPoint.CorRGB.g, quadPoint.CorRGB.b)});
     }
-    foreach (CommonNS::InFaceIndex meshIdxVec, indexArray)
+    foreach (InFaceIndex meshIdxVec, indexArray)
     {
         VertexData* pV0,*pV1,*pV2,*pV3;
         if (meshIdxVec.IndexsArray.size() == 8) // 0123 4567
@@ -271,5 +268,3 @@ void CubeGeometry::AssignVertexNormal(VertexData &vert,QVector3D normal)
         vert.normal = (vert.normal + normal) ;
     }
 }
-
-} // OpenGlRender

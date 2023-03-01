@@ -11,11 +11,8 @@
 #include <QTime>
 #include <QDebug>
 #include <QFileDialog>
+#include "Src/OWCommon/ExtStruct.h"
 
-#include "DatParser_global.h"
-#include "../Common/Src/ExtStruct.h"
-
-namespace DatFileParse {
 
 Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Title,       ("TITLE"))
 Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Itle,        ("ITLE"))
@@ -29,7 +26,7 @@ enum DataArea
     AREA_ZONE
 };
 
-class DATPARSER_EXPORT DatParser
+class DatParser
 {
     struct DatVariables
     {
@@ -83,11 +80,11 @@ public:
     // 返回模型位置信息
     QVector<QVector3D> GetCoordinates();
     // 返回坐标信息
-    QVector<CommonNS::InVertex> GetCoordinatesVertex(QString zoneName);
+    QVector<InVertex> GetCoordinatesVertex(QString zoneName);
     // 返回网格体信息
     QVector<QVector<int>> GetMeshers(QString zoneName);
     // 返回网格体信息
-    QVector<CommonNS::InFaceIndex> GetMeshersIndex(QString zoneName);
+    QVector<InFaceIndex> GetMeshersIndex(QString zoneName);
 
     // 返回所有数据标题
     QStringList GetTitles();
@@ -140,7 +137,5 @@ private:
     // 当前坐标 变量标识
     CoordVarSymbol m_stuVarSymbol;
 };
-
-} // DatFileParse
 
 #endif // DATPARSER_H

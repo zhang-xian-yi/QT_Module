@@ -24,8 +24,6 @@ INCLUDEPATH += $$PWD/VendorLib/include
 INCLUDEPATH += $$PWD/3rdPartySrc/
 #第三方库连接
 LIBS += -lopengl32 -luser32 -lgdi32 -lshell32
-LIBS += -L$$PWD/VendorLib/libs -lglfw3
-LIBS += -L$$PWD/../OutputDir/ExecuteBin -lCommon
 #资源
 RESOURCES += OWRes.qrc
 #debug 配置
@@ -51,29 +49,28 @@ HEADERS += \
     Src/OWCommon/PCH.h \
     Src/OWCommon/ExtStruct.h \
     Src/OWCommon/GlobalData.h \
-    Src/OWMControl/OpenGLWinLayerControl.h \
-    Src/OWLogicService/OpenGLWindowsLayerService.h \
+    Src/OWLogicService/FERendererLayerService.h \
     Src/OWLogicService/Services/OpenGLWindow.h \
     Src/OWLogicService/Services/CubeGeometry.h \
     Src/OWLogicService/Services/DataParser.h \
+    Src/OWMControl/FERendererLayerControl.h
 
 
 #内部 .cpp
 SOURCES += \
     Src/OWCommon/GlobalData.cpp \
     Src/OWCommon/ExtStruct.cpp \
-    Src/OWMControl/OpenGLWinLayerControl.cpp \
-    Src/OWLogicService/OpenGLWindowsLayerService.cpp \
+    Src/OWLogicService/FERendererLayerService.cpp \
     Src/OWLogicService/Services/OpenGLWindow.cpp \
     Src/OWLogicService/Services/CubeGeometry.cpp \
     Src/OWLogicService/Services/DataParser.cpp \
+    Src/OWMControl/FERendererLayerControl.cpp
 
 #外部 .h
 HEADERS += \
     Src/FERendererLayerFactory.h \
     Src/ILoad3D.h \
     Src/IOpenGLWin.h \
-    Src/OWLogicService/Services/OpenGLRenderService.h \
     Src/FiniteElementRenderlayer_global.h \
 
 
