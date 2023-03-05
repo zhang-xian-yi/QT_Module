@@ -10,7 +10,7 @@ CONFIG += c++17
 #输出路径
 DESTDIR = $$PWD/../OutputDir/ExecuteBin
 #预编译头文件
-PRECOMPILED_HEADER += $$PWD/Src/OWCommon/PCH.h
+PRECOMPILED_HEADER += $$PWD/Src/FECommon/PCH.h
 
 #头文件包含的搜索路径
 #模块外部使用的路径（带模块名的头文件搜索）
@@ -36,40 +36,40 @@ CONFIG(debug) {
     DEFINES += DEBUG_VLD
     #debug 内存vld监测
     LIBS += -L$$PWD/VendorLib/libs -lvld
-    MOC_DIR = $$PWD/../OutputDir/tmp/debug
-    OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug
-    RCC_DIR = $$PWD/../OutputDir/tmp/debug
-    UI_DIR = $$PWD/../OutputDir/tmp/debug
+    MOC_DIR = $$PWD/../OutputDir/tmp/debug/FiniteElementRendererLayer
+    OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug/FiniteElementRendererLayer
+    RCC_DIR = $$PWD/../OutputDir/tmp/debug/FiniteElementRendererLayer
+    UI_DIR = $$PWD/../OutputDir/tmp/debug/FiniteElementRendererLayer
 }
 #release 配置
 CONFIG(release) {
-    MOC_DIR = $$PWD/../OutputDir/tmp/release
-    OBJECTS_DIR = $$PWD/../OutputDir/tmp/release
-    RCC_DIR = $$PWD/../OutputDir/tmp/release
-    UI_DIR = $$PWD/../OutputDir/tmp/release
+    MOC_DIR = $$PWD/../OutputDir/tmp/release/FiniteElementRendererLayer
+    OBJECTS_DIR = $$PWD/../OutputDir/tmp/release/FiniteElementRendererLayer
+    RCC_DIR = $$PWD/../OutputDir/tmp/release/FiniteElementRendererLayer
+    UI_DIR = $$PWD/../OutputDir/tmp/release/FiniteElementRendererLayer
 }
 
 #内部 .h
 HEADERS += \
-    Src/OWCommon/PCH.h \
-    Src/OWCommon/ExtStruct.h \
-    Src/OWCommon/GlobalData.h \
-    Src/OWLogicService/FERendererLayerService.h \
-    Src/OWLogicService/Services/OpenGLWindow.h \
-    Src/OWLogicService/Services/CubeGeometry.h \
-    Src/OWLogicService/Services/DataParser.h \
-    Src/OWMControl/FERendererLayerControl.h
+    Src/FECommon/PCH.h \
+    Src/FECommon/ExtStruct.h \
+    Src/FECommon/GlobalData.h \
+    Src/FELogicService/FERendererLayerService.h \
+    Src/FELogicService/Services/OpenGLWindow.h \
+    Src/FELogicService/Services/CubeGeometry.h \
+    Src/FELogicService/Services/DataParser.h \
+    Src/FEMControl/FERendererLayerControl.h
 
 
 #内部 .cpp
 SOURCES += \
-    Src/OWCommon/GlobalData.cpp \
-    Src/OWCommon/ExtStruct.cpp \
-    Src/OWLogicService/FERendererLayerService.cpp \
-    Src/OWLogicService/Services/OpenGLWindow.cpp \
-    Src/OWLogicService/Services/CubeGeometry.cpp \
-    Src/OWLogicService/Services/DataParser.cpp \
-    Src/OWMControl/FERendererLayerControl.cpp
+    Src/FECommon/GlobalData.cpp \
+    Src/FECommon/ExtStruct.cpp \
+    Src/FELogicService/FERendererLayerService.cpp \
+    Src/FELogicService/Services/OpenGLWindow.cpp \
+    Src/FELogicService/Services/CubeGeometry.cpp \
+    Src/FELogicService/Services/DataParser.cpp \
+    Src/FEMControl/FERendererLayerControl.cpp
 
 #外部 .h
 HEADERS += \

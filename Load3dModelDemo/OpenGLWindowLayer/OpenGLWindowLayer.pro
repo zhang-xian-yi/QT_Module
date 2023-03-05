@@ -41,22 +41,21 @@ CONFIG(debug) {
     DEFINES += DEBUG_VLD
     #debug 内存vld监测
     LIBS += -L$$PWD/VendorLib/libs -lvld
-    MOC_DIR = $$PWD/../OutputDir/tmp/debug
-    OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug
-    RCC_DIR = $$PWD/../OutputDir/tmp/debug
-    UI_DIR = $$PWD/../OutputDir/tmp/debug
+    MOC_DIR = $$PWD/../OutputDir/tmp/debug/OpenGLWindowLayer
+    OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug/OpenGLWindowLayer
+    RCC_DIR = $$PWD/../OutputDir/tmp/debug/OpenGLWindowLayer
+    UI_DIR = $$PWD/../OutputDir/tmp/debug/OpenGLWindowLayer
 }
 #release 配置
 CONFIG(release) {
-    MOC_DIR = $$PWD/../OutputDir/tmp/release
-    OBJECTS_DIR = $$PWD/../OutputDir/tmp/release
-    RCC_DIR = $$PWD/../OutputDir/tmp/release
-    UI_DIR = $$PWD/../OutputDir/tmp/release
+    MOC_DIR = $$PWD/../OutputDir/tmp/release/OpenGLWindowLayer
+    OBJECTS_DIR = $$PWD/../OutputDir/tmp/release/OpenGLWindowLayer
+    RCC_DIR = $$PWD/../OutputDir/tmp/release/OpenGLWindowLayer
+    UI_DIR = $$PWD/../OutputDir/tmp/release/OpenGLWindowLayer
 }
 
 #外部 .h
 HEADERS += \
-    Src/ExtStruct.h \
     Src/ILoad3D.h \
     Src/IOpenGLWin.h \
     Src/OpenGLWindowLayer_global.h \

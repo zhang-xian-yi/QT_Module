@@ -3,7 +3,6 @@
 
 #include "Src/IOpenGLWin.h"
 #include "Src/ILoad3D.h"
-#include "Src/ExtStruct.h"
 class OpenGLWindowsLayerService;
 class OpenGLWinLayerControl:public OWlayerNS::IOpenGLWin,public OWlayerNS::ILoad3D
 {

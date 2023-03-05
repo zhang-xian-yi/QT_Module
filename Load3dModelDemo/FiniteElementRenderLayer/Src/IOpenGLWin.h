@@ -1,5 +1,5 @@
-#ifndef IOPENGLWIN_H
-#define IOPENGLWIN_H
+#ifndef IFERENDEREROPENGLWIN_H
+#define IFERENDEREROPENGLWIN_H
 
 #include "FiniteElementRenderlayer_global.h" //向外部暴露的接口必须使用带模块名的路径
 
@@ -13,4 +13,4 @@ namespace FERendererNS
     };
 }
 
-#endif // IOPENGLWIN_H
+#endif // IFERENDEREROPENGLWIN_H

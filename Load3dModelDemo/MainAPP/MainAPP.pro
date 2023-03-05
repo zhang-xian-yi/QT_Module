@@ -21,23 +21,26 @@ SOURCES += \
 FORMS += \
     mainwindow.ui
 
-
+#中文乱码
+win32-msvc* {
+    QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+}
 
 #输出目录
 DESTDIR=$$PWD/../OutputDir/ExecuteBin/
 CONFIG(debug) {
     DEFINES += DEBUG_OUTPUT
-    MOC_DIR = $$PWD/../OutputDir/tmp/debug
-    OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug
-    RCC_DIR = $$PWD/../OutputDir/tmp/debug
-    UI_DIR = $$PWD/../OutputDir/tmp/debug
+    MOC_DIR = $$PWD/../OutputDir/tmp/debug/MainAPP
+    OBJECTS_DIR = $$PWD/../OutputDir/tmp/debug/MainAPP
+    RCC_DIR = $$PWD/../OutputDir/tmp/debug/MainAPP
+    UI_DIR = $$PWD/../OutputDir/tmp/debug/MainAPP
 }
 
 CONFIG(release) {
-    MOC_DIR = $$PWD/../OutputDir/tmp/release
-    OBJECTS_DIR = $$PWD/../OutputDir/tmp/release
-    RCC_DIR = $$PWD/../OutputDir/tmp/release
-    UI_DIR = $$PWD/../OutputDir/tmp/release
+    MOC_DIR = $$PWD/../OutputDir/tmp/release/MainAPP
+    OBJECTS_DIR = $$PWD/../OutputDir/tmp/release/MainAPP
+    RCC_DIR = $$PWD/../OutputDir/tmp/release/MainAPP
+    UI_DIR = $$PWD/../OutputDir/tmp/release/MainAPP
 }
 
 #项目根路径
@@ -45,6 +48,6 @@ INCLUDEPATH += $$PWD/../
 #依赖项目库 为输出路径
 LIBPATH += $$PWD/../OutputDir/ExecuteBin/
 LIBS += -lOpenGLWinLayer
-
+LIBS += -lFiniteElementRenderLayer
 
 

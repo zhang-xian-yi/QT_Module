@@ -1,8 +1,7 @@
-#ifndef ILOAD3D_H
-#define ILOAD3D_H
+#ifndef IFERENDERERLOAD3D_H
+#define IFERENDERERLOAD3D_H
 
 #include "FiniteElementRenderlayer_global.h" //向外部暴露的接口必须使用带模块名的路径
-#include "Src/FECommon/ExtStruct.h"
 //向外部暴露的的接口加上命名空间进行隔离, dll内部函数这不用添加命名空间
 namespace FERendererNS
 {
@@ -15,4 +14,4 @@ namespace FERendererNS
 
 }
 
-#endif // ILOAD3D_H
+#endif // IFERENDERERLOAD3D_H

@@ -19,6 +19,7 @@ void OpenGLWinLayerControl::initOpenGLWin(QWidget* parent)
     {
         initEnvirnoMent();
         m_pOWLService = QSharedPointer<OpenGLWindowsLayerService>(new OpenGLWindowsLayerService(parent));
+        m_pOWLService->CreateScene();
     }
 
 }
