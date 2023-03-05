@@ -35,6 +35,7 @@
 #include <QMessageBox>
 #include <QSizePolicy>
 #include <QSharedPointer>
+#include <QScopedPointer>
 #include <QWeakPointer>
 #include <QElapsedTimer>
 #include <QMutex>

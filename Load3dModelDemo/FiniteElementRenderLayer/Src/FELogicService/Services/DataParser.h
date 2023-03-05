@@ -1,7 +1,7 @@
 ﻿#ifndef DATPARSER_H
 #define DATPARSER_H
 
-#include "Src/OWCommon/ExtStruct.h"
+#include "Src/FECommon/ExtStruct.h"
 
 
 Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Title,       ("TITLE"))
@@ -60,7 +60,6 @@ public:
     ~DatParser();
 
     bool SetFile(QString strFile);
-    bool SetFile(QStringList strFiles);
     // 设置当前标题
     void SetCurrentTitle(QString title);
     // 设置坐标标识

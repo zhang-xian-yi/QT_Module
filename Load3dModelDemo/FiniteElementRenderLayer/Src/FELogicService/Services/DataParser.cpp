@@ -33,18 +33,6 @@ bool DatParser::SetFile(QString strFile)
     return true;
 }
 
-bool DatParser::SetFile(QStringList strFiles)
-{
-    foreach (auto file, strFiles)
-    {
-        if (!this->SetFile(file))
-        {
-            return false;
-        }
-    }
-    qDebug() << "Complete Parse!!!";
-    return true;
-}
 
 void DatParser::SetCoordVarSymbol(CoordVarSymbol varSymbol)
 {

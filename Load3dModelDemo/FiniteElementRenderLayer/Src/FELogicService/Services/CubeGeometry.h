@@ -1,10 +1,7 @@
 ﻿#ifndef DATMANAGER_H
 #define DATMANAGER_H
-#include <QOpenGLBuffer>
-#include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
-#include <QMutex>
-#include "Src/OWCommon/ExtStruct.h"
+
+#include "Src/FECommon/ExtStruct.h"
 
 struct VertexData
 {
@@ -15,6 +12,7 @@ struct VertexData
 
 enum FaceDirect
 {
+    NONE,
     UP,
     DOWN,
     LEFT,
@@ -23,30 +21,29 @@ enum FaceDirect
     BACK,
 };
 
-class CubeGeometry : public QOpenGLFunctions
+class CubeGeometry
 {
 public:
     CubeGeometry();
     ~CubeGeometry();
-
+    // 界面paintGl自动调用
     void drawCubeGeometry(QOpenGLShaderProgram *program);
-    void SetRenderData(QVector<InVertex>& vectexArr,QVector<InFaceIndex>& indexArray);
+    void SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceIndex>& indexArray);
+private:
     void InitCompleteCubeGeometry();
     void ReleaseRenderData();
-
-    static CubeGeometry* GetInstance();
-private:
     void ComputeNormal(VertexData& v0,VertexData& v1,VertexData& v2,VertexData& v3,FaceDirect direect);
     void AssignVertexNormal(VertexData& vert,QVector3D normal);
 private:
-    static CubeGeometry* m_pStatInstance;
+    static QMutex m_oMutex;
     QVector<VertexData> verticesVect;
     QVector<GLuint> indicesQuad;
-    static QMutex m_oMutex;
 
     QOpenGLBuffer arrayBuf;   //VBO
     QOpenGLBuffer indexBuf;   //IBO
     GLuint m_nVertexCount;
+
+    QString m_strRenderElementName;
 };
 
 #endif // DATMANAGER_H

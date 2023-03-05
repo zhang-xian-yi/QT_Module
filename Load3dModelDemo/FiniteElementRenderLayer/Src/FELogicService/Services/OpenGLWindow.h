@@ -1,16 +1,8 @@
 ﻿#ifndef OPENGLRENDER_H
 #define OPENGLRENDER_H
 
-#include <QObject>
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QOpenGLBuffer>
-#include <QOpenGLShaderProgram>
-#include <QVector3D>
-#include <QWheelEvent>
-#include <QMouseEvent>
 #include "CubeGeometry.h"
-#include "Src/OWCommon/ExtStruct.h"
+#include "Src/FECommon/ExtStruct.h"
 //该结构体用来定义观察者视角的相关信息
 typedef  struct
 {

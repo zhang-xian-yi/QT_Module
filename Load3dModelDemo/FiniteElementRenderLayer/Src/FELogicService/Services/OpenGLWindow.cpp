@@ -47,8 +47,6 @@ void OpenGLWindow::initializeGL()
     // Enable back face culling
     glEnable(GL_CULL_FACE);
 
-    this->cubeGeometry = CubeGeometry::GetInstance();
-
     Camera.distance = 5.0;
     Camera.fovy     = 5.0;
     Camera.zoom     = 1.0;
