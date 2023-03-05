@@ -44,3 +44,5 @@
 #include <QTextStream>
 #include <QElapsedTimer>
 #include <QTime>
+#include <QFile>
+#include <QElapsedTimer>

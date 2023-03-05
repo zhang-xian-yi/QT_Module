@@ -1,8 +1,6 @@
 ﻿#ifndef EXTSTRUCT_H
 #define EXTSTRUCT_H
 
-#include <QVector>
-
 struct Vec3F
 {
     float one;

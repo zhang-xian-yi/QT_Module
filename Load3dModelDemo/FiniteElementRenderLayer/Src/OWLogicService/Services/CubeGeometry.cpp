@@ -52,8 +52,10 @@ void CubeGeometry::SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceInd
 {
     foreach (InVertex quadPoint, vectexArr)
     {
-        verticesVect.append({QVector3D(quadPoint.PostionXYZ.one, quadPoint.PostionXYZ.two, quadPoint.PostionXYZ.three),
-                             QVector3D(quadPoint.CorRGB.r, quadPoint.CorRGB.g, quadPoint.CorRGB.b)});
+        VertexData tmp;
+        tmp.position = QVector3D(quadPoint.PostionXYZ.one, quadPoint.PostionXYZ.two, quadPoint.PostionXYZ.three);
+        tmp.color = QVector3D(0.0f, 1.0f, 0.0f);
+        verticesVect.append(tmp);
     }
     foreach (InFaceIndex meshIdxVec, indexArray)
     {

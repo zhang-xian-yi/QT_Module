@@ -10,25 +10,6 @@ DatParser::~DatParser()
     delete m_pStuDatFile;
 }
 
-bool DatParser::ChooseDatDialog(QString strLocal)
-{
-    QFileDialog fileDialog;
-    const QStringList filters({"dat files (*.dat)", "Any files (*)"});
-    fileDialog.setNameFilters(filters);
-    fileDialog.setFileMode(QFileDialog::FileMode::ExistingFiles);
-    if (!strLocal.isEmpty())
-    {
-        fileDialog.setDirectory(strLocal);
-    }
-    fileDialog.setAcceptMode(QFileDialog::AcceptMode::AcceptOpen);
-    if (fileDialog.exec())
-    {
-        QStringList files = fileDialog.selectedFiles();
-        return this->SetFile(files);
-    }
-    return true;
-}
-
 bool DatParser::SetFile(QString strFile)
 {
     m_pTitle = NULL;

@@ -6,7 +6,7 @@
 #include "Src/OWCommon/ExtStruct.h"
 
 class FERendererLayerService;
-class FERendererLayerControl:public OWlayerNS::IOpenGLWin,public OWlayerNS::ILoad3D
+class FERendererLayerControl:public FERendererNS::IOpenGLWin,public FERendererNS::ILoad3D
 {
 public:
     FERendererLayerControl();

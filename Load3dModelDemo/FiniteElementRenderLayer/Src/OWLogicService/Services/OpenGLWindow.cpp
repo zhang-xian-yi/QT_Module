@@ -282,12 +282,11 @@ void OpenGLWindow::paintGL()
     // 设定灯光位置与颜色
     program->setUniformValue("light1.position", QVector3D({10,10,0}));
     program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
-    Material _material = {0.1, 0.9, 0.5, 16};
     // 设定材质
-    program->setUniformValue("material.ambient", _material.ambient);
-    program->setUniformValue("material.diffuse", _material.diffuse);
-    program->setUniformValue("material.specular", _material.specular);
-    program->setUniformValue("material.shininess", _material.shininess);
+    program->setUniformValue("material.ambient", 0.1f);
+    program->setUniformValue("material.diffuse", 0.9f);
+    program->setUniformValue("material.specular", 0.5f);
+    program->setUniformValue("material.shininess", 16);
     this->cubeGeometry->drawCubeGeometry(program);
 }
 

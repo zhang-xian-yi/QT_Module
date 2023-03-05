@@ -1,6 +1,6 @@
 #include "FERendererLayerFactory.h"
 #include "Src/OWMControl/FERendererLayerControl.h"
-namespace OWlayerNS
+namespace FERendererNS
 {
     FERendererLayerFactory::FERendererLayerFactory()
         :m_pOWLCtl(QSharedPointer<FERendererLayerControl>(new FERendererLayerControl()))

@@ -1,16 +1,6 @@
 ﻿#ifndef DATPARSER_H
 #define DATPARSER_H
-#include <QFile>
-#include <QTextStream>
-#include <QVector>
-#include <QVector2D>
-#include <QVector3D>
-#include <QVector4D>
 
-#include <QElapsedTimer>
-#include <QTime>
-#include <QDebug>
-#include <QFileDialog>
 #include "Src/OWCommon/ExtStruct.h"
 
 
@@ -68,8 +58,6 @@ class DatParser
 public:
     DatParser();
     ~DatParser();
-
-    bool ChooseDatDialog(QString strLocal = "");
 
     bool SetFile(QString strFile);
     bool SetFile(QStringList strFiles);
