@@ -26,15 +26,21 @@ class CubeGeometry
 public:
     CubeGeometry();
     ~CubeGeometry();
+
+    static CubeGeometry* GetInstance();
     // 界面paintGl自动调用
     void drawCubeGeometry(QOpenGLShaderProgram *program);
-    void SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceIndex>& indexArray);
-private:
+    // 更新立体数据
+    void UpdateCubeGeometry(QStringList zoneNameList = {}, const QString &strElementName = "");
+public:
+    void SetRenderData(InVertex &vectexArr, QVector<InFaceIndex>& indexArray);
     void InitCompleteCubeGeometry();
     void ReleaseRenderData();
+private:
     void ComputeNormal(VertexData& v0,VertexData& v1,VertexData& v2,VertexData& v3,FaceDirect direect);
     void AssignVertexNormal(VertexData& vert,QVector3D normal);
 private:
+    static CubeGeometry* m_pStatInstance;
     static QMutex m_oMutex;
     QVector<VertexData> verticesVect;
     QVector<GLuint> indicesQuad;

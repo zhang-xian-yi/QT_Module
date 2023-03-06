@@ -33,111 +33,60 @@ bool DatParser::SetFile(QString strFile)
     return true;
 }
 
+bool DatParser::SetFile(QStringList strFiles)
+{
+    foreach (auto file, strFiles)
+    {
+        if (!this->SetFile(file))
+        {
+            return false;
+        }
+    }
+    qDebug() << "Complete Parse!!!";
+    return true;
+}
 
 void DatParser::SetCoordVarSymbol(CoordVarSymbol varSymbol)
 {
     this->m_stuVarSymbol = varSymbol;
 }
 
-QVector<QVector3D> DatParser::GetCoordinates()
+InVertex DatParser::GetCoordinatesVertex(QString zoneName)
 {
-    QVector<QVector3D> _data3D;
+    InVertex vertexVector;
     foreach (auto pZone, m_pStuDatFile->allZone)
     {
-        if (this->m_strTitle.compare(*pZone->pTitleAddr) == 0)
+        if (pZone->zoneHeaders.contains("T") && zoneName == pZone->zoneHeaders["T"])
         {
             auto varData = pZone->pVariableAddr;
             auto varCount = varData->variableNames.size();
             auto varXIndex = varData->variableNames.indexOf(m_stuVarSymbol.symbolX);
             auto varYIndex = varData->variableNames.indexOf(m_stuVarSymbol.symbolY);
             auto varZIndex = varData->variableNames.indexOf(m_stuVarSymbol.symbolZ);
+            // 获取物理量名称
+            vertexVector.PhyQuaNameVec = this->GetPhysicalQuatityName(varData->variableNames);
+            // 获取物理量的索引
+            auto varPhyQuaNameIdx = this->GetPhysicalQuatityIndices(varData->variableNames, vertexVector.PhyQuaNameVec);
             auto nTotalVarCount = varData->variableData.size();
             while (varXIndex < nTotalVarCount
                    && varYIndex < nTotalVarCount
                    && varZIndex < nTotalVarCount)
             {
-                QVector3D varPoint3D;
-                varPoint3D.setX(varData->variableData.at(varXIndex));
-                varPoint3D.setY(varData->variableData.at(varYIndex));
-                varPoint3D.setZ(varData->variableData.at(varZIndex));
-                _data3D.append(varPoint3D);
+                Vec3F varPoint3D;
+                varPoint3D.one = varData->variableData.at(varXIndex);
+                varPoint3D.two = varData->variableData.at(varYIndex);
+                varPoint3D.three = varData->variableData.at(varZIndex);
+                CoordPhysical stCoordPhysi;
+                stCoordPhysi.PostionXYZ = varPoint3D;
+                stCoordPhysi.PhyQuaValueVec.append(this->GetPyhsicalVariableForValue(varData->variableData, varPhyQuaNameIdx, varCount));
+                vertexVector.stCoordPhysicalVec.append(stCoordPhysi);
                 varXIndex += varCount;
                 varYIndex += varCount;
                 varZIndex += varCount;
             }
         }
     }
-    return _data3D;
-}
-
-QVector<InVertex> DatParser::GetCoordinatesVertex(QString zoneName)
-{
-    QVector<InVertex> vertexVector;
-    foreach (auto pZone, m_pStuDatFile->allZone)
-    {
-        if (pZone->zoneHeaders.contains("T") && zoneName == pZone->zoneHeaders["T"])
-        {
-            if (this->m_strTitle.compare(*pZone->pTitleAddr) == 0)
-            {
-                auto varData = pZone->pVariableAddr;
-                auto varCount = varData->variableNames.size();
-                auto varXIndex = varData->variableNames.indexOf(m_stuVarSymbol.symbolX);
-                auto varYIndex = varData->variableNames.indexOf(m_stuVarSymbol.symbolY);
-                auto varZIndex = varData->variableNames.indexOf(m_stuVarSymbol.symbolZ);
-                auto nTotalVarCount = varData->variableData.size();
-                while (varXIndex < nTotalVarCount
-                       && varYIndex < nTotalVarCount
-                       && varZIndex < nTotalVarCount)
-                {
-                    Vec3F varPoint3D;
-                    InVertex vertexCoord;
-                    varPoint3D.one = varData->variableData.at(varXIndex);
-                    varPoint3D.two = varData->variableData.at(varYIndex);
-                    varPoint3D.three = varData->variableData.at(varZIndex);
-                    vertexCoord.PostionXYZ = varPoint3D;
-                    vertexVector.append(vertexCoord);
-                    varXIndex += varCount;
-                    varYIndex += varCount;
-                    varZIndex += varCount;
-                }
-            }
-        }
-    }
     return vertexVector;
-}
-
-void DatParser::SetCurrentTitle(QString title)
-{
-    this->m_strTitle = title;
-}
-
-QVector<QVector<int> > DatParser::GetMeshers(QString zoneName)
-{
-    QVector<QVector<int>> _Meshers;
-    foreach (auto pZone, m_pStuDatFile->allZone)
-    {
-        if (this->m_strTitle.compare(*pZone->pTitleAddr) == 0)
-        {
-            if (pZone->zoneHeaders.contains("T") && zoneName == pZone->zoneHeaders["T"])
-            {
-                int nMeshCount = pZone->zoneHeaders["E"].toInt();
-                int nMeshPointC = pZone->zoneData.size() / nMeshCount;
-                int idx = 0;
-                QVector<int> _Points;
-                while (idx < pZone->zoneData.size())
-                {
-                    _Points.append(pZone->zoneData.at(idx));
-                    if (0 == (idx % nMeshPointC))
-                    {
-                        _Meshers.append(_Points);
-                        _Points.clear();
-                    }
-                    idx++;
-                }
-            }
-        }
-    }
-    return _Meshers;
 }
 
 QVector<InFaceIndex> DatParser::GetMeshersIndex(QString zoneName)
@@ -145,29 +94,26 @@ QVector<InFaceIndex> DatParser::GetMeshersIndex(QString zoneName)
     QVector<InFaceIndex> indexArray;
     foreach (auto pZone, m_pStuDatFile->allZone)
     {
-        if (this->m_strTitle.compare(*pZone->pTitleAddr) == 0)
+        if (pZone->zoneHeaders.contains("T") && zoneName == pZone->zoneHeaders["T"])
         {
-            if (pZone->zoneHeaders.contains("T") && zoneName == pZone->zoneHeaders["T"])
+            int nMeshCount = pZone->zoneHeaders["E"].toInt();
+            int nMeshPointC = pZone->zoneData.size() / nMeshCount;
+            int idx = 0;
+            QVector<uint32_t> _Points;
+            while (idx < pZone->zoneData.size())
             {
-                int nMeshCount = pZone->zoneHeaders["E"].toInt();
-                int nMeshPointC = pZone->zoneData.size() / nMeshCount;
-                int idx = 0;
-                QVector<uint32_t> _Points;
-                while (idx < pZone->zoneData.size())
+                _Points.append(pZone->zoneData.at(idx));
+                if (idx != 0 && 0 == ((idx + 1) % nMeshPointC))
                 {
-                    _Points.append(pZone->zoneData.at(idx));
-                    if (idx != 0 && 0 == ((idx + 1) % nMeshPointC))
+                    InFaceIndex meshVector;
+                    foreach (auto data, _Points)
                     {
-                        InFaceIndex meshVector;
-                        foreach (auto data, _Points)
-                        {
-                            meshVector.IndexsArray.append(data);
-                        }
-                        indexArray.append(meshVector);
-                        _Points.clear();
+                        meshVector.IndexsArray.append(data);
                     }
-                    idx++;
+                    indexArray.append(meshVector);
+                    _Points.clear();
                 }
+                idx++;
             }
         }
     }
@@ -194,16 +140,13 @@ QStringList DatParser::GetNameForVariables(QString zoneName)
     {
         foreach (auto zone, m_pStuDatFile->allZone)
         {
-            if (*zone->pTitleAddr == this->m_strTitle)
+            if (zone->zoneHeaders.contains("T") && zoneName == zone->zoneHeaders["T"])
             {
-                if (zone->zoneHeaders.contains("T") && zoneName == zone->zoneHeaders["T"])
+                foreach (auto zoneVar, zone->pVariableAddr->variableNames)
                 {
-                    foreach (auto zoneVar, zone->pVariableAddr->variableNames)
+                    if (!varList.contains(zoneVar))
                     {
-                        if (!varList.contains(zoneVar))
-                        {
-                            varList.append(zoneVar);
-                        }
+                        varList.append(zoneVar);
                     }
                 }
             }
@@ -219,12 +162,9 @@ QMap<QString, QString> DatParser::GetInfoForZone(QString zoneName)
     {
         foreach (auto zone, m_pStuDatFile->allZone)
         {
-            if (*zone->pTitleAddr == this->m_strTitle)
+            if (zone->zoneHeaders.contains("T") && zoneName == zone->zoneHeaders["T"])
             {
-                if (zone->zoneHeaders.contains("T") && zoneName == zone->zoneHeaders["T"])
-                {
-                    zoneInfoMap = zone->zoneHeaders;
-                }
+                zoneInfoMap = zone->zoneHeaders;
             }
         }
     }
@@ -238,15 +178,12 @@ QStringList DatParser::GetNameForZones()
     {
         foreach (auto zone, m_pStuDatFile->allZone)
         {
-            if (*zone->pTitleAddr == this->m_strTitle)
+            if (zone->zoneHeaders.contains("T"))
             {
-                if (zone->zoneHeaders.contains("T"))
+                auto val = zone->zoneHeaders["T"];
+                if (!zoneNameList.contains(val))
                 {
-                    auto val = zone->zoneHeaders["T"];
-                    if (!zoneNameList.contains(val))
-                    {
-                        zoneNameList.append(val);
-                    }
+                    zoneNameList.append(val);
                 }
             }
         }
@@ -259,8 +196,13 @@ QVector<float> DatParser::GetValuesForOneVariable(QString var)
     QVector<float> _data1D;
     if (NULL != m_pStuDatFile)
     {
-        foreach (auto varData, m_pStuDatFile->allVariable)
+        foreach (auto zone, m_pStuDatFile->allZone)
         {
+            auto varData = zone->pVariableAddr;
+            if (!varData->variableNames.contains(var))
+            {
+                continue;
+            }
             auto varCount = varData->variableNames.size();
             auto varIndex = varData->variableNames.indexOf(var);
             while (varIndex < varData->variableData.size())
@@ -273,94 +215,64 @@ QVector<float> DatParser::GetValuesForOneVariable(QString var)
     return _data1D;
 }
 
-QList<QVector2D> DatParser::GetValuesFor2D(QString varX, QString varY)
+QVector<float> DatParser::GetValuesForOneVariable(QString var, QString zoneName)
 {
-    QList<QVector2D> _data2D;
+    QVector<float> _data1D;
     if (NULL != m_pStuDatFile)
     {
-        foreach (auto varData, m_pStuDatFile->allVariable)
+        foreach (auto zone, m_pStuDatFile->allZone)
         {
-            auto varCount = varData->variableNames.size();
-            auto varXIndex = varData->variableNames.indexOf(varX);
-            auto varYIndex = varData->variableNames.indexOf(varY);
-            auto nTotalVarCount = varData->variableData.size();
-            while (varXIndex < nTotalVarCount
-                   && varYIndex < nTotalVarCount)
+            if (zone->zoneHeaders.contains("T") && zoneName == zone->zoneHeaders["T"])
             {
-                QVector2D varPoint2D;
-                varPoint2D.setX(varData->variableData.at(varXIndex));
-                varPoint2D.setY(varData->variableData.at(varYIndex));
-                _data2D.append(varPoint2D);
-                varXIndex += varCount;
-                varYIndex += varCount;
+                auto varData = zone->pVariableAddr;
+                auto varCount = varData->variableNames.size();
+                auto varIndex = varData->variableNames.indexOf(var);
+                while (varIndex < varData->variableData.size())
+                {
+                    _data1D.append(varData->variableData.at(varIndex));
+                    varIndex += varCount;
+                }
             }
         }
     }
-    return _data2D;
+    return _data1D;
 }
 
-QList<QVector3D> DatParser::GetValuesFor3D(QString varX, QString varY, QString varZ)
+QVector<float> DatParser::GetPyhsicalVariableForValue(const QVector<float> &srcData, QVector<int> &varIndices, const int &nVarCount)
 {
-    QList<QVector3D> _data3D;
-    if (NULL != m_pStuDatFile)
+    QVector<float> varValueVec;
+    for (int nIdx = 0; nIdx < varIndices.size(); ++nIdx)
     {
-        foreach (auto varData, m_pStuDatFile->allVariable)
-        {
-            auto varCount = varData->variableNames.size();
-            auto varXIndex = varData->variableNames.indexOf(varX);
-            auto varYIndex = varData->variableNames.indexOf(varY);
-            auto varZIndex = varData->variableNames.indexOf(varZ);
-            auto nTotalVarCount = varData->variableData.size();
-            while (varXIndex < nTotalVarCount
-                   && varYIndex < nTotalVarCount
-                   && varZIndex < nTotalVarCount)
-            {
-                QVector3D varPoint3D;
-                varPoint3D.setX(varData->variableData.at(varXIndex));
-                varPoint3D.setY(varData->variableData.at(varYIndex));
-                varPoint3D.setZ(varData->variableData.at(varZIndex));
-                _data3D.append(varPoint3D);
-                varXIndex += varCount;
-                varYIndex += varCount;
-                varZIndex += varCount;
-            }
-        }
+        varValueVec.append(srcData.at(varIndices.at(nIdx)));
+        varIndices[nIdx] += nVarCount;
     }
-    return _data3D;
+    return varValueVec;
 }
 
-QList<QVector4D> DatParser::GetValuesFor4D(QString varX, QString varY, QString varZ, QString varW)
+QVector<QString> DatParser::GetPhysicalQuatityName(const QList<QString> &src)
 {
-    QList<QVector4D> _data4D;
-    if (NULL != m_pStuDatFile)
+    QVector<QString> physicalQuatityVec;
+    foreach (auto name, src)
     {
-        foreach (auto varData, m_pStuDatFile->allVariable)
+        if (name != m_stuVarSymbol.symbolX && name != m_stuVarSymbol.symbolY && name != m_stuVarSymbol.symbolZ)
         {
-            auto varCount = varData->variableNames.size();
-            auto varXIndex = varData->variableNames.indexOf(varX);
-            auto varYIndex = varData->variableNames.indexOf(varY);
-            auto varZIndex = varData->variableNames.indexOf(varZ);
-            auto varWIndex = varData->variableNames.indexOf(varW);
-            auto nTotalVarCount = varData->variableData.size();
-            while (varXIndex < nTotalVarCount
-                   && varYIndex < nTotalVarCount
-                   && varZIndex < nTotalVarCount
-                   && varWIndex < nTotalVarCount)
-            {
-                QVector4D varPoint4D;
-                varPoint4D.setX(varData->variableData.at(varXIndex));
-                varPoint4D.setY(varData->variableData.at(varYIndex));
-                varPoint4D.setZ(varData->variableData.at(varZIndex));
-                varPoint4D.setW(varData->variableData.at(varWIndex));
-                _data4D.append(varPoint4D);
-                varXIndex += varCount;
-                varYIndex += varCount;
-                varZIndex += varCount;
-                varWIndex += varCount;
-            }
+            physicalQuatityVec.append(name);
         }
     }
-    return _data4D;
+    return physicalQuatityVec;
+}
+
+QVector<int> DatParser::GetPhysicalQuatityIndices(const QList<QString> &src, const QVector<QString> &phyQuaSrc)
+{
+    QVector<int> physiQuaIndices;
+    foreach (auto phyQuaName, phyQuaSrc)
+    {
+        if (src.contains(phyQuaName))
+        {
+            physiQuaIndices.append(src.indexOf(phyQuaName));
+        }
+    }
+    return physiQuaIndices;
 }
 
 QVector<int> DatParser::GetGridDataForZone(QString zone)
@@ -487,7 +399,8 @@ void DatParser::SaveVariable(QString strline)
     {
         m_pVariable = new DatVariables();
         m_pStuDatFile->allVariable.append(m_pVariable);
-        auto strVariables = strParts.value(1);
+        QString strVariables = strParts.value(1);
+        strVariables = strVariables.replace("\t\t\t\t\t\t\t\t", ",");
         auto strVaribleParts = strVariables.split(',');
         for (int idx = 0; idx < strVaribleParts.size(); idx++)
         {
@@ -577,4 +490,6 @@ void DatParser::SaveLastZoneForTitleVar()
         }
     }
 }
+
+
 

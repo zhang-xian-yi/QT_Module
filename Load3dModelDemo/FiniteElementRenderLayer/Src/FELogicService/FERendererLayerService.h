@@ -22,6 +22,6 @@ public:
     void LoadFiniteElementData(const QString& filepath);
 private:
     OpenGLWindow*  m_openGLWindow;  //openGL的窗口 由QT自身控制释放
-    QScopedPointer<DatParser> m_pDatParseS; //有限元文件解析工具
-    QScopedPointer<CubeGeometry> m_pCudeDrawEleS; //有限元文件解析工具
+    QSharedPointer<DatParser> m_pDatParseS; //有限元文件解析工具
+    QSharedPointer<CubeGeometry> m_pCudeDrawEleS; //有限元文件解析工具
 };

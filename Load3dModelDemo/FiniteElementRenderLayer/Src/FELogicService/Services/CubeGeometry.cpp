@@ -1,8 +1,10 @@
 ﻿#include "CubeGeometry.h"
+#include "DataManager.h"
 
+CubeGeometry* CubeGeometry::m_pStatInstance = nullptr;
 QMutex CubeGeometry::m_oMutex;
 
-CubeGeometry::CubeGeometry():arrayBuf(QOpenGLBuffer::VertexBuffer),indexBuf(QOpenGLBuffer::IndexBuffer)
+CubeGeometry::CubeGeometry():indexBuf(QOpenGLBuffer::IndexBuffer)
 {
     this->arrayBuf.create();
     this->indexBuf.create();
@@ -46,15 +48,42 @@ void CubeGeometry::drawCubeGeometry(QOpenGLShaderProgram *program)
     glDrawElements(GL_QUADS, indicesQuad.size(), GL_UNSIGNED_INT, 0);
 }
 
-
-void CubeGeometry::SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceIndex> &indexArray)
+void CubeGeometry::UpdateCubeGeometry(QStringList zoneNameList, const QString &strElementName)
 {
-    foreach (auto quadPoint, vectexArr)
+    // 清除已渲染的数据
+    this->ReleaseRenderData();
+    this->m_strRenderElementName = strElementName;
+    // 获取数据管理句柄
+    auto oDataMng = DataManager::GetInstance();
+    // 遍历渲染的空间区域
+    for(int j = 0;j < zoneNameList.size(); ++j)
+    {
+        qDebug() << "zoneName:" << zoneNameList.at(j);
+        // 网格面、体数据信息获取
+        auto MeshersIndex = oDataMng->GetMeshersIndex(zoneNameList.at(j));
+        // 坐标点信息获取
+        auto CoordinatesVertex = oDataMng->GetCoordinatesVertex(zoneNameList.at(j));
+        // 设置渲染数据
+        this->SetRenderData(CoordinatesVertex, MeshersIndex);
+    }
+    // 完成初始化渲染数据 - 将CPU数据设置到GPU缓存中
+    this->InitCompleteCubeGeometry();
+}
+
+void CubeGeometry::SetRenderData(InVertex &vectexArr, QVector<InFaceIndex> &indexArray)
+{
+    int nElementIdx = -1;
+    if (vectexArr.PhyQuaNameVec.contains(m_strRenderElementName))
+    {
+        // 依据要素名称，获取其所在的索引位置
+        nElementIdx = vectexArr.PhyQuaNameVec.indexOf(m_strRenderElementName);
+    }
+
+    foreach (CoordPhysical quadPoint, vectexArr.stCoordPhysicalVec)
     {
         VertexData tmp;
         tmp.position = QVector3D(quadPoint.PostionXYZ.one, quadPoint.PostionXYZ.two, quadPoint.PostionXYZ.three);
-        tmp.color = QVector3D(0/255.0, 180/255.0, 0/255.0);
-        // 遍历所有顶点
+        tmp.color = QVector3D(245/255.0, 245/255.0, 245/255.0);
         verticesVect.append(tmp); // 默认模型颜色为银灰色
     }
     foreach (InFaceIndex meshIdxVec, indexArray)
@@ -118,7 +147,6 @@ void CubeGeometry::SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceInd
             indicesQuad.append(meshRealIndex);
             pV3 = &verticesVect[meshRealIndex];//add by light director
             ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::LEFT);//计算四个点锁确定平面的法向量
-
             //face5
             meshRealIndex = meshIdxVec.IndexsArray.at(3) - 1 + m_nVertexCount;
             indicesQuad.append(meshRealIndex);
@@ -147,7 +175,6 @@ void CubeGeometry::SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceInd
             indicesQuad.append(meshRealIndex);
             pV3 = &verticesVect[meshRealIndex];//add by light director
             ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::DOWN);//计算四个点锁确定平面的法向量
-
         }
         else if (meshIdxVec.IndexsArray.size() == 4)
         { // 四边形
@@ -166,7 +193,7 @@ void CubeGeometry::SetRenderData(QVector<InVertex> &vectexArr, QVector<InFaceInd
             ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::NONE);//计算四个点锁确定平面的法向量
         }
     }
-    this->m_nVertexCount += vectexArr.size();
+    this->m_nVertexCount += vectexArr.stCoordPhysicalVec.size();
 }
 
 void CubeGeometry::InitCompleteCubeGeometry()
@@ -193,6 +220,16 @@ void CubeGeometry::ReleaseRenderData()
     this->m_strRenderElementName = "";
 }
 
+CubeGeometry *CubeGeometry::GetInstance()
+{
+    m_oMutex.lock();
+    if (nullptr == m_pStatInstance)
+    {
+        m_pStatInstance = new CubeGeometry();
+    }
+    m_oMutex.unlock();
+    return m_pStatInstance;
+}
 
 //计算四个点决定的平面的法向量
 void CubeGeometry::ComputeNormal(VertexData &v0, VertexData &v1, VertexData &v2, VertexData &v3,FaceDirect direect)
@@ -205,7 +242,7 @@ void CubeGeometry::ComputeNormal(VertexData &v0, VertexData &v1, VertexData &v2,
     normal.normalize();
 
     switch (direect)
-    {        
+    {
         case FaceDirect::UP:
         {
             normal.setY(fabsf(normal.y()));//y值一定为正
@@ -265,4 +302,3 @@ void CubeGeometry::AssignVertexNormal(VertexData &vert,QVector3D normal)
         vert.normal = (vert.normal + normal) ;
     }
 }
-

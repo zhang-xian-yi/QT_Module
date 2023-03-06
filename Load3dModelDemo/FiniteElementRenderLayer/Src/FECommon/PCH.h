@@ -47,3 +47,4 @@
 #include <QTime>
 #include <QFile>
 #include <QElapsedTimer>
+#include <QQuaternion>

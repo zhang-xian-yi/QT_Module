@@ -16,6 +16,20 @@ enum DataArea
     AREA_ZONE
 };
 
+struct CoordVarSymbol
+{
+    CoordVarSymbol() {}
+    CoordVarSymbol(QString x, QString y, QString z)
+    {
+        this->symbolX = x;
+        this->symbolY = y;
+        this->symbolZ = z;
+    }
+    QString symbolX = "X";
+    QString symbolY = "Y";
+    QString symbolZ = "Z";
+};
+
 class DatParser
 {
     struct DatVariables
@@ -42,34 +56,16 @@ class DatParser
         QList<DatVariables *> allVariable;
         QList<DatZones *> allZone;
     };
-    struct CoordVarSymbol
-    {
-        CoordVarSymbol() {}
-        CoordVarSymbol(QString x, QString y, QString z)
-        {
-            this->symbolX = x;
-            this->symbolY = y;
-            this->symbolZ = z;
-        }
-        QString symbolX = "X";
-        QString symbolY = "Y";
-        QString symbolZ = "Z";
-    };
 public:
     DatParser();
     ~DatParser();
 
     bool SetFile(QString strFile);
-    // 设置当前标题
-    void SetCurrentTitle(QString title);
+    bool SetFile(QStringList strFiles);
     // 设置坐标标识
     void SetCoordVarSymbol(CoordVarSymbol varSymbol);
-    // 返回模型位置信息
-    QVector<QVector3D> GetCoordinates();
     // 返回坐标信息
-    QVector<InVertex> GetCoordinatesVertex(QString zoneName);
-    // 返回网格体信息
-    QVector<QVector<int>> GetMeshers(QString zoneName);
+    InVertex GetCoordinatesVertex(QString zoneName);
     // 返回网格体信息
     QVector<InFaceIndex> GetMeshersIndex(QString zoneName);
 
@@ -81,13 +77,17 @@ public:
     QStringList GetNameForVariables(QString zoneName);
     // 返回空间区域的信息 如T = XXX, N = 888...等
     QMap<QString, QString> GetInfoForZone(QString zoneName);
-    // 返回某要素变量数据
+    // 返回设置的标题下的某要素变量数据
     QVector<float> GetValuesForOneVariable(QString var);
+    // 返回设置的标题下的某空间区域下某要素变量数据
+    QVector<float> GetValuesForOneVariable(QString var, QString zoneName);
 protected:
-    /* 返回2D x,y 数据列表 */
-    QList<QVector2D> GetValuesFor2D(QString varX, QString varY);
-    QList<QVector3D> GetValuesFor3D(QString varX, QString varY, QString varZ);
-    QList<QVector4D> GetValuesFor4D(QString varX, QString varY, QString varZ, QString varW);
+    // 返回某顶点 某要素变量的值
+    QVector<float> GetPyhsicalVariableForValue(const QVector<float> &srcData, QVector<int> &varIndices, const int &nVarCount);
+    // 返回除 指定的顶点 外的要素变量名称
+    QVector<QString> GetPhysicalQuatityName(const QList<QString> &src);
+    // 返回除 指定的顶点外的要素变量索引
+    QVector<int> GetPhysicalQuatityIndices(const QList<QString> &src, const QVector<QString> &phyQuaSrc);
     // 返回某空间区域数据
     QVector<int> GetGridDataForZone(QString zone);
     // 返回某空间区域的所有字段名称
@@ -119,10 +119,9 @@ private:
     // 解析的数据
     Dat* m_pStuDatFile;
 
-    // 当前的标题
-    QString m_strTitle;
     // 当前坐标 变量标识
     CoordVarSymbol m_stuVarSymbol;
 };
+
 
 #endif // DATPARSER_H
