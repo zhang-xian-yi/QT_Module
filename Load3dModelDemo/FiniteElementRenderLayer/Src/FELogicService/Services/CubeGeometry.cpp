@@ -1,8 +1,4 @@
 ﻿#include "CubeGeometry.h"
-#include "DataManager.h"
-
-CubeGeometry* CubeGeometry::m_pStatInstance = nullptr;
-QMutex CubeGeometry::m_oMutex;
 
 CubeGeometry::CubeGeometry():indexBuf(QOpenGLBuffer::IndexBuffer)
 {
@@ -46,28 +42,6 @@ void CubeGeometry::drawCubeGeometry(QOpenGLShaderProgram *program)
     program->enableAttributeArray(aNormal);
     program->setAttributeBuffer(aNormal, GL_FLOAT, offset, 3, sizeof(VertexData));
     glDrawElements(GL_QUADS, indicesQuad.size(), GL_UNSIGNED_INT, 0);
-}
-
-void CubeGeometry::UpdateCubeGeometry(QStringList zoneNameList, const QString &strElementName)
-{
-    // 清除已渲染的数据
-    this->ReleaseRenderData();
-    this->m_strRenderElementName = strElementName;
-    // 获取数据管理句柄
-    auto oDataMng = DataManager::GetInstance();
-    // 遍历渲染的空间区域
-    for(int j = 0;j < zoneNameList.size(); ++j)
-    {
-        qDebug() << "zoneName:" << zoneNameList.at(j);
-        // 网格面、体数据信息获取
-        auto MeshersIndex = oDataMng->GetMeshersIndex(zoneNameList.at(j));
-        // 坐标点信息获取
-        auto CoordinatesVertex = oDataMng->GetCoordinatesVertex(zoneNameList.at(j));
-        // 设置渲染数据
-        this->SetRenderData(CoordinatesVertex, MeshersIndex);
-    }
-    // 完成初始化渲染数据 - 将CPU数据设置到GPU缓存中
-    this->InitCompleteCubeGeometry();
 }
 
 void CubeGeometry::SetRenderData(InVertex &vectexArr, QVector<InFaceIndex> &indexArray)
@@ -222,13 +196,8 @@ void CubeGeometry::ReleaseRenderData()
 
 CubeGeometry *CubeGeometry::GetInstance()
 {
-    m_oMutex.lock();
-    if (nullptr == m_pStatInstance)
-    {
-        m_pStatInstance = new CubeGeometry();
-    }
-    m_oMutex.unlock();
-    return m_pStatInstance;
+    static CubeGeometry instance;
+    return &instance;
 }
 
 //计算四个点决定的平面的法向量

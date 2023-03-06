@@ -3,12 +3,6 @@
 
 #include "Src/FECommon/ExtStruct.h"
 
-
-Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Title,       ("TITLE"))
-Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Itle,        ("ITLE"))
-Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Variables,   ("VARIABLES"))
-Q_GLOBAL_STATIC_WITH_ARGS(QString, Dat_Zone,        ("ZONE"))
-
 enum DataArea
 {
     AREA_TITLE,
@@ -32,6 +26,7 @@ struct CoordVarSymbol
 
 class DatParser
 {
+public:
     struct DatVariables
     {
         DatVariables() {}
@@ -60,58 +55,27 @@ public:
     DatParser();
     ~DatParser();
 
-    bool SetFile(QString strFile);
-    bool SetFile(QStringList strFiles);
-    // 设置坐标标识
-    void SetCoordVarSymbol(CoordVarSymbol varSymbol);
+    bool ParseFile(const QString& strFile);
     // 返回坐标信息
     InVertex GetCoordinatesVertex(QString zoneName);
     // 返回网格体信息
     QVector<InFaceIndex> GetMeshersIndex(QString zoneName);
 
-    // 返回所有数据标题
-    QStringList GetTitles();
-    // 返回某标题下的所有空间区域名称
-    QStringList GetNameForZones();
-    // 返回所有要素变量名称 X,Y,Z,u...
-    QStringList GetNameForVariables(QString zoneName);
-    // 返回空间区域的信息 如T = XXX, N = 888...等
-    QMap<QString, QString> GetInfoForZone(QString zoneName);
-    // 返回设置的标题下的某要素变量数据
-    QVector<float> GetValuesForOneVariable(QString var);
-    // 返回设置的标题下的某空间区域下某要素变量数据
-    QVector<float> GetValuesForOneVariable(QString var, QString zoneName);
-protected:
-    // 返回某顶点 某要素变量的值
-    QVector<float> GetPyhsicalVariableForValue(const QVector<float> &srcData, QVector<int> &varIndices, const int &nVarCount);
-    // 返回除 指定的顶点 外的要素变量名称
-    QVector<QString> GetPhysicalQuatityName(const QList<QString> &src);
-    // 返回除 指定的顶点外的要素变量索引
-    QVector<int> GetPhysicalQuatityIndices(const QList<QString> &src, const QVector<QString> &phyQuaSrc);
-    // 返回某空间区域数据
-    QVector<int> GetGridDataForZone(QString zone);
-    // 返回某空间区域的所有字段名称
-    QStringList GetFieldKeyNameForZone(QString zone);
-    // 返回某空间区域的某字段值
-    QString GetOneValueForOneZone(QString zone, QString key);
 private:
     void LineDataProcess(QString strline);
-    bool NoneDataLine(QString strline);
+    bool NoneDataLine(QString strline);//判断数据是否全部为空
 
     void SaveTitle(QString strline);
     void SaveVariable(QString strline);
     void SaveZone(QString strline);
-    void SaveAreaData(QString strline);
-
+    void SaveAreaData(QString strline,DataArea currArea);
+    //过滤无用字符
     QString EraseExtraChar(QString strData);
-    void SaveLastZoneForTitleVar();
 private:
-    // 当前数据区域
-    DataArea m_emCurDataArea;
     // 是否经过回车换行符
     bool m_bIsGoneGRLF;
     // 标题
-    QString *m_pTitle;
+    QString m_pTitle;
     // 变量要素
     DatVariables *m_pVariable;
     // 空间区域
