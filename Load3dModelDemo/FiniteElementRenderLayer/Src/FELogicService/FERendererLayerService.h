@@ -10,7 +10,7 @@ vld 需要deghelp.dll 、 Microsoft.DTfW.DHL.manifest、 vld_x64.dll 一起放�
 #endif
 
 #include "Services/OpenGLWindow.h"
-#include "Services/DataParser.h"
+#include "Services/FEFileParser.h"
 #include "Services/CubeGeometry.h"
 class FERendererLayerService:public QObject
 {
@@ -22,6 +22,6 @@ public:
     void LoadFiniteElementData(const QString& filepath);
 private:
     OpenGLWindow*  m_openGLWindow;  //openGL的窗口 由QT自身控制释放
-    QSharedPointer<DatParser> m_pDatParseS; //有限元文件解析工具
+    QSharedPointer<FEFileParser> m_pFEParseS; //有限元文件解析工具
     QSharedPointer<CubeGeometry> m_pCudeDrawEleS; //有限元文件解析工具
 };

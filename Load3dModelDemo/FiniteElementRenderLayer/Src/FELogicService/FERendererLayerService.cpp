@@ -4,7 +4,7 @@ FERendererLayerService::FERendererLayerService(QWidget * parent)
 {
     m_openGLWindow = new OpenGLWindow(parent);//由QT父级控件控制释放
 
-    m_pDatParseS = QSharedPointer<DatParser>(new DatParser());
+    m_pFEParseS = QSharedPointer<FEFileParser>(new FEFileParser());
     m_pCudeDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
     //设置为父控件的大小
     m_openGLWindow->setParent(parent);
@@ -22,7 +22,7 @@ FERendererLayerService::~FERendererLayerService()
 
 void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
 {
-    if(!m_pDatParseS->ParseFile(filepath))
+    if(!m_pFEParseS->ParseFile(filepath))
     {
         return;
     }
