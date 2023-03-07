@@ -1,8 +1,8 @@
 ﻿#include "OpenGLWindow.h"
 #include <QDebug>
 
-OpenGLWindow::OpenGLWindow(QSharedPointer<CubeGeometry> pDrawEle,QWidget * parent) :
-    QOpenGLWidget(parent), cubeGeometry(pDrawEle)
+OpenGLWindow::OpenGLWindow(QWidget * parent) :
+    QOpenGLWidget(parent),m_pModel(nullptr),m_pCudeDrawEleS(nullptr)
 {
     this->m_MouseFlag = Qt::NoButton;
     this->m_MousePressFlag = false;
@@ -12,16 +12,33 @@ OpenGLWindow::OpenGLWindow(QSharedPointer<CubeGeometry> pDrawEle,QWidget * paren
     this->m_xTrans = 0;
     this->m_yTrans = 0;
 
+    //设置父控件的大小
+    this->setParent(parent);
     this->setGeometry(parent->rect().x(),parent->rect().y(),
                       parent->rect().width(),parent->rect().height());
+    //设置为父控件的大小
+    this->setAcceptDrops(true);
+    this->setFocusPolicy(Qt::StrongFocus);
+    resizeGL(this->width(),this->height());
 }
 
 OpenGLWindow::~OpenGLWindow()
 {
     makeCurrent();
-    cubeGeometry.clear();
+    m_pCudeDrawEleS.clear();
     doneCurrent();
 }
+
+void OpenGLWindow::SetRendererData(QSharedPointer<FEModel> pModel)
+{
+    update();//跟新视图
+    m_pModel = pModel;
+    m_pCudeDrawEleS->ReleaseRenderData();
+    m_pCudeDrawEleS->SetRenderData(pModel);
+    m_pCudeDrawEleS->InitCompleteCubeGeometry(pModel);
+    update();//跟新视图
+}
+
 
 void OpenGLWindow::Rotate(QMatrix4x4 matrix)
 {
@@ -42,6 +59,9 @@ void OpenGLWindow::initializeGL()
     // Enable back face culling
     glEnable(GL_CULL_FACE);
 
+    //上下文环境
+    m_pCudeDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
+
     Camera.distance = 5.0;
     Camera.fovy     = 5.0;
     Camera.zoom     = 1.0;
@@ -58,34 +78,37 @@ void OpenGLWindow::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //此处注意，一定是先将物体进行旋转，再进行平移缩放等其他变换
-    //三维空间中的所有变换都是通过矩阵的左乘来实现的（这部分不知道的可单独查资料学习一下哈），因为旋转矩阵是第一个对物体空间坐标进行左乘处理的！
-    QMatrix4x4 rotation;
-    rotation.rotate(qreal(this->m_zRot)/16.0f, 0.0f, 0.0f, 1.0f);
-    rotation.rotate(qreal(this->m_yRot)/16.0f, 0.0f, 1.0f, 0.0f);
-    rotation.rotate(qreal(this->m_xRot)/16.0f, 1.0f, 0.0f, 0.0f);
-    //计算得到当前旋转矩阵
-    rotation = rotation * this->m_rotation;
+    if(this->m_pModel != nullptr)
+    {
+        //此处注意，一定是先将物体进行旋转，再进行平移缩放等其他变换
+        //三维空间中的所有变换都是通过矩阵的左乘来实现的（这部分不知道的可单独查资料学习一下哈），因为旋转矩阵是第一个对物体空间坐标进行左乘处理的！
+        QMatrix4x4 rotation;
+        rotation.rotate(qreal(this->m_zRot)/16.0f, 0.0f, 0.0f, 1.0f);
+        rotation.rotate(qreal(this->m_yRot)/16.0f, 0.0f, 1.0f, 0.0f);
+        rotation.rotate(qreal(this->m_xRot)/16.0f, 1.0f, 0.0f, 0.0f);
+        //计算得到当前旋转矩阵
+        rotation = rotation * this->m_rotation;
 
-    QMatrix4x4 m1,m2;
-    //得到当前观察者矩阵
-    m1.lookAt(Camera.eye, Camera.center, Camera.up);
-    m1 = m1 * rotation;
-    //得到当前平移矩阵
-    m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
-    m2 = m2 * this->m_translation;
-    program->setUniformValue("mvp_matrix", projection * m2 * m1);
-    // add by light
-    program->setUniformValue("viewPos", Camera.eye);
-    // 设定灯光位置与颜色
-    program->setUniformValue("light1.position", QVector3D({10,10,0}));
-    program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
-    // 设定材质
-    program->setUniformValue("material.ambient", 0.1f);
-    program->setUniformValue("material.diffuse", 0.9f);
-    program->setUniformValue("material.specular", 0.5f);
-    program->setUniformValue("material.shininess", 16);
-    this->cubeGeometry->drawCubeGeometry(program);
+        QMatrix4x4 m1,m2;
+        //得到当前观察者矩阵
+        m1.lookAt(Camera.eye, Camera.center, Camera.up);
+        m1 = m1 * rotation;
+        //得到当前平移矩阵
+        m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
+        m2 = m2 * this->m_translation;
+        program->setUniformValue("mvp_matrix", projection * m2 * m1);
+        // add by light
+        program->setUniformValue("viewPos", Camera.eye);
+        // 设定灯光位置与颜色
+        program->setUniformValue("light1.position", QVector3D({10,10,0}));
+        program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
+        // 设定材质
+        program->setUniformValue("material.ambient", 0.1f);
+        program->setUniformValue("material.diffuse", 0.9f);
+        program->setUniformValue("material.specular", 0.5f);
+        program->setUniformValue("material.shininess", 16);
+        this->m_pCudeDrawEleS->drawCubeGeometry(program);
+    }
 }
 
 

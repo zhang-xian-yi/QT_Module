@@ -4,15 +4,8 @@ FERendererLayerService::FERendererLayerService(QWidget * parent)
 {
     m_pFEParseS = QSharedPointer<FEFileParser>(new FEFileParser());
     m_pConvertS = QSharedPointer<ConvertOpenGLData>(new ConvertOpenGLData());
-    m_pCudeDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
-    m_openGLWindow = new OpenGLWindow(m_pCudeDrawEleS,parent);//由QT父级控件控制释放
-    //设置为父控件的大小
-    m_openGLWindow->setParent(parent);
-    m_openGLWindow->setGeometry(parent->rect().x(),parent->rect().y(),
-                      parent->rect().width(),parent->rect().height());
-
-    m_openGLWindow->setAcceptDrops(true);
-    m_openGLWindow->setFocusPolicy(Qt::StrongFocus);
+    //窗口的初始化会调用init 初始化opengl上下文，无OpenGL上下文 CubeGeometry 的缓冲区创建会失败
+    m_openGLWindow = new OpenGLWindow(parent);//由QT父级控件控制释放
 }
 
 FERendererLayerService::~FERendererLayerService()
@@ -30,12 +23,8 @@ void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
     }
     //转化数据
     QSharedPointer<FEModel> pModel = m_pConvertS->Convert(parseData);
-    // 清除已渲染的数据
-    m_pCudeDrawEleS->ReleaseRenderData();
-    // 设置渲染数据
-    m_pCudeDrawEleS->SetRenderData(pModel);
-    // 完成初始化渲染数据 - 将CPU数据设置到GPU缓存中
-    m_pCudeDrawEleS->InitCompleteCubeGeometry(pModel);    // 清除已渲染的数据
+    //设置渲染数据
+    m_openGLWindow->SetRendererData(pModel);
 }
 
 
