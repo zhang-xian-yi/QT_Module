@@ -1,10 +1,8 @@
 ﻿#include "OpenGLWindow.h"
 #include <QDebug>
 
-
-
-OpenGLWindow::OpenGLWindow(QWidget * parent) : QOpenGLWidget(parent)
-      , cubeGeometry(new CubeGeometry())
+OpenGLWindow::OpenGLWindow(QSharedPointer<CubeGeometry> pDrawEle,QWidget * parent) :
+    QOpenGLWidget(parent), cubeGeometry(pDrawEle)
 {
     this->m_MouseFlag = Qt::NoButton;
     this->m_MousePressFlag = false;
@@ -21,7 +19,7 @@ OpenGLWindow::OpenGLWindow(QWidget * parent) : QOpenGLWidget(parent)
 OpenGLWindow::~OpenGLWindow()
 {
     makeCurrent();
-    delete  cubeGeometry;
+    cubeGeometry.clear();
     doneCurrent();
 }
 
@@ -37,7 +35,6 @@ void OpenGLWindow::initializeGL()
     glClearColor(0, 0, 0, 1);
 
     initShaders();
-    initTextures();
 
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
@@ -268,10 +265,6 @@ void OpenGLWindow::initShaders()
 
     program->link();
     program->bind();
-}
-
-void OpenGLWindow::initTextures()
-{
 }
 
 int OpenGLWindow::setRotation(int angle)

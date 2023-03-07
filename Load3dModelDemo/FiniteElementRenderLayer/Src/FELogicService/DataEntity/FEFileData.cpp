@@ -55,3 +55,26 @@ void FEFileData::InitCfgMap()
     m_cfgMap[FEFileData::EFEFileConfig::E_DataPacking] = "";
     m_cfgMap[FEFileData::EFEFileConfig::E_ZoneType] = "";
 }
+
+
+//读取
+/***************************************************************************************************************/
+/*FEFileVertex                                                                                                             */
+/***************************************************************************************************************/
+FEFileVertex::FEFileVertex()
+{
+    foreach (QString key, keyList)
+    {
+        m_dataMap[key] = 0.0f;
+    }
+}
+
+const float &FEFileVertex::operator [](int i) const
+{
+    return m_dataMap[keyList[i]];
+}
+
+float & FEFileVertex::operator [](int i)
+{
+    return m_dataMap[keyList[i]];
+}

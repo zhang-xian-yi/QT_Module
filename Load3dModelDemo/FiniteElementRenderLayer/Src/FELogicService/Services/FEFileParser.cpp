@@ -2,23 +2,25 @@
 
 FEFileParser::FEFileParser()
 {
-    m_pFEFileData = QSharedPointer<FEFileData>(new FEFileData());
+    m_pFEFileData = nullptr;
 }
 
 FEFileParser::~FEFileParser()
 {
-    m_pFEFileData.clear();
+    m_pFEFileData = nullptr;
 }
 
-bool FEFileParser::ParseFile(const QString& strFile)
+QSharedPointer<FEFileData> FEFileParser::ParseFile(const QString& strFile)
 {
-    m_pFEFileData.clear();
+    m_pFEFileData = QSharedPointer<FEFileData>(new FEFileData());
     //显示读取时间
     QTime qtime;
     qtime.start();
     QFile _file(strFile);
     if (!_file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         return false;
+    }
 
     QTextStream outStream(&_file);
     //逐行读取
@@ -29,7 +31,8 @@ bool FEFileParser::ParseFile(const QString& strFile)
         ++lineNum;
     }
     qDebug()<<qtime.elapsed()/1000.0<<"s";
-    return true;
+    //返回结果
+    return m_pFEFileData;
 }
 
 void FEFileParser::LineDataProcess(QString strline,int lineNum)
@@ -142,9 +145,8 @@ void FEFileParser::SaveVertexData(QString strline)
     for (int i = 0; i < dataParts.size(); ++i)
     {
         float fData = dataParts[i].toFloat();
-        //获取固定的坐标索引字符串
-        QString index = FEFileVertex::keyList.at(i);
-        vertex->m_dataMap[index] = fData;
+        //keyList 的序列与dataParts的序列一致
+        (*vertex)[i]= fData;
     }
     m_pFEFileData->AddVertex(vertex);
 }

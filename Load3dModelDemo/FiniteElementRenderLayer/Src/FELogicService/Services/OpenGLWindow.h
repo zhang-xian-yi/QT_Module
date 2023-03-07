@@ -2,7 +2,6 @@
 #define OPENGLRENDER_H
 
 #include "CubeGeometry.h"
-#include "Src/FECommon/ExtStruct.h"
 //该结构体用来定义观察者视角的相关信息
 typedef  struct
 {
@@ -18,7 +17,7 @@ class OpenGLWindow : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
-    OpenGLWindow(QWidget *parent = nullptr);
+    OpenGLWindow(QSharedPointer<CubeGeometry> pDrawEle,QWidget *parent = nullptr);
     ~OpenGLWindow();
     void Rotate(QMatrix4x4 matrix);
 
@@ -33,12 +32,10 @@ protected:
 
 private:
     void initShaders();
-    void initTextures();
     int setRotation(int angle);
     void normalizeAngle(int &angle);
-
 private:
-    CubeGeometry *cubeGeometry;
+    QSharedPointer<CubeGeometry> cubeGeometry;
     QOpenGLShaderProgram *program;
     QMatrix4x4 projection;      //透视矩阵
     QMatrix4x4 m_translation;   //平移矩阵

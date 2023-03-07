@@ -1,7 +1,6 @@
 ﻿#ifndef DATPARSER_H
 #define DATPARSER_H
 
-#include "Src/FECommon/ExtStruct.h"
 #include "Src/FELogicService/DataEntity/FEFileData.h"
 class FEFileParser
 {
@@ -9,7 +8,7 @@ public:
     FEFileParser();
     ~FEFileParser();
 
-    bool ParseFile(const QString& strFile);
+    QSharedPointer<FEFileData> ParseFile(const QString& strFile);
 
 private:
     void LineDataProcess(QString strline,int lineNum);

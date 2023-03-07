@@ -8,13 +8,10 @@ struct FEFileVertex
     static QList<QString> keyList;
 public:
     //默认构造指定键值的顶点数据
-    inline FEFileVertex()
-    {
-        foreach (QString key, keyList)
-        {
-            m_dataMap[key] = 0.0f;
-        }
-    }
+    FEFileVertex();
+public:
+    float & operator[](int i);//write
+    const float & operator[](int i) const;//read
 public:
     //单独对象的变量数据
     QMap<QString,float> m_dataMap;
@@ -22,7 +19,7 @@ public:
 
 struct FEFileMesh
 {
-    QVector<int> indexData;
+    QVector<uint32_t> indexData;
 };
 
 //有限元文件的数据

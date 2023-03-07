@@ -3,7 +3,6 @@
 
 #include "Src/IOpenGLWin.h"
 #include "Src/ILoad3D.h"
-#include "Src/FECommon/ExtStruct.h"
 
 class FERendererLayerService;
 class FERendererLayerControl:public FERendererNS::IOpenGLWin,public FERendererNS::ILoad3D
