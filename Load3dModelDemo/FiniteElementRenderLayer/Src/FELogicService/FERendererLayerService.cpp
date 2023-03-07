@@ -3,7 +3,7 @@
 FERendererLayerService::FERendererLayerService(QWidget * parent)
 {
     m_pFEParseS = QSharedPointer<FEFileParser>(new FEFileParser());
-    m_pConvertS = QSharedPointer<ConvertOpenGLData>(new ConvertOpenGLData);
+    m_pConvertS = QSharedPointer<ConvertOpenGLData>(new ConvertOpenGLData());
     m_pCudeDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
     m_openGLWindow = new OpenGLWindow(m_pCudeDrawEleS,parent);//由QT父级控件控制释放
     //设置为父控件的大小

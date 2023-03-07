@@ -39,15 +39,15 @@ void FEFileParser::LineDataProcess(QString strline,int lineNum)
 {
     static int maxVertexLines;
     static int maxMeshLines;
-    if (lineNum == 1)
+    if (1 == lineNum)
     {
         this->SaveTitle(strline);//ITLE 开始  一个文件仅执行一次
     }
-    else if (lineNum == 2)
+    else if (2 == lineNum)
     {
         this->SaveVariable(strline);//VARIABLES 变量名称列表 一个文件仅执行一次
     }
-    else if (lineNum == 3)
+    else if (3 == lineNum)
     {
         maxVertexLines = 0;//避免多文件同时读取的行数错位
         this->SaveZoneConfig(strline);//ZONE 空间域 一个文件仅执行一次
@@ -62,8 +62,8 @@ void FEFileParser::LineDataProcess(QString strline,int lineNum)
     else if(lineNum == maxVertexLines + 1)//变量与网格体之间的空行 一个文件仅执行一次
     {
         //顶点区域结束行 + 1（空行分割）+ 最大网格数 = 最大网格的行数
-        maxMeshLines = m_pFEFileData->GetCfgInfo(FEFileData::EFEFileConfig::E_VertexNum).toInt() + 1 +
-                       m_pFEFileData->GetCfgInfo(FEFileData::EFEFileConfig::E_MeshNum).toInt();
+        maxMeshLines = maxVertexLines + 1 + m_pFEFileData->GetCfgInfo(FEFileData::EFEFileConfig::E_MeshNum).toInt();
+
     }
     else if(lineNum <= maxMeshLines)//网格体
     {
@@ -89,6 +89,7 @@ void FEFileParser::SaveVariable(QString strline)
     //存在数据
     if (1 <= strParts.count())
     {
+        FEFileVertex::keyList.clear();
         QString strVariables = strParts.value(1).replace("\t\t\t\t\t\t\t\t", ",");
         auto strVaribleParts = strVariables.split(',');
         for (int idx = 0; idx < strVaribleParts.size(); idx++)
@@ -141,8 +142,10 @@ void FEFileParser::SaveVertexData(QString strline)
     auto dataParts = strline.split(' ');
     // 构造一个指定对象
     QSharedPointer<FEFileVertex> vertex(new FEFileVertex());
+    //取变量名称中与实际数据之间较小值 避免下面循环越界
+    int length = dataParts.size() >= FEFileVertex::keyList.length()?FEFileVertex::keyList.length():dataParts.size();
     //填充数据
-    for (int i = 0; i < dataParts.size(); ++i)
+    for (int i = 0; i < length; ++i)
     {
         float fData = dataParts[i].toFloat();
         //keyList 的序列与dataParts的序列一致

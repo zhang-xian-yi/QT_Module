@@ -3,7 +3,7 @@
 
 QSharedPointer<FEModel> ConvertOpenGLData::Convert(QSharedPointer<FEFileData> pFEFileData)
 {
-    m_pFEModel =QSharedPointer<FEModel>(new FEModel());
+    m_pFEModel = QSharedPointer<FEModel>(new FEModel());
 
     QVector<QSharedPointer<FEFileVertex>>& FileVertexArr = pFEFileData->GetVertexVector();
     //遍历顶点数组
