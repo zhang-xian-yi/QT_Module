@@ -185,6 +185,7 @@ void OpenGLWindow::initShaders()
 
     const char *fshader_code =
             "#version 330 core                        \n"
+            "out vec4 glFragColor;                    \n"
             "struct Material {                        \n"
             "float ambient;                           \n"
             "float diffuse;                           \n"
@@ -215,7 +216,7 @@ void OpenGLWindow::initShaders()
             "void main()                                                                                \n"
             "{                                                                                          \n"
             "vec3 light1Result = CalcLightResult(light1);                                               \n"
-            "    gl_FragColor = vec4(vColor,1.0f);                                                      \n"
+            "    glFragColor = vec4(vColor,1.0f);                                                      \n"
             "}                                                                                          \n";
 
     QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
