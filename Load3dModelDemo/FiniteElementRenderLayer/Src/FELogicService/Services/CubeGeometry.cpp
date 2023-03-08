@@ -48,8 +48,6 @@ void CubeGeometry::UpdateCubeGeometry(QSharedPointer<FEModel> m_pModel)
 {
     // 设置渲染数据
     this->SetRenderData(m_pModel->verticesVect,m_pModel->meshVect);
-    // 完成初始化渲染数据 - 将CPU数据设置到GPU缓存中
-    this->InitCompleteCubeGeometry();
 }
 
 void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QVector<QSharedPointer<FEMesh>>& meshArr)
@@ -153,10 +151,9 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         pV3 = &verticesVect[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
     }
-}
 
-void CubeGeometry::InitCompleteCubeGeometry()
-{
+
+    // 完成初始化渲染数据 - 将CPU数据设置到GPU缓存中
     this->arrayBuf.bind();
     this->arrayBuf.allocate(verticesVect.constData(), verticesVect.size() * sizeof(FEVertex));
     this->arrayBuf.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -165,7 +162,6 @@ void CubeGeometry::InitCompleteCubeGeometry()
     this->indexBuf.bind();
     this->indexBuf.allocate(indicesQuad.constData(), indicesQuad.size() * sizeof(GLuint));
     this->indexBuf.setUsagePattern(QOpenGLBuffer::StaticDraw);
-
 }
 
 void CubeGeometry::ReleaseRenderData()

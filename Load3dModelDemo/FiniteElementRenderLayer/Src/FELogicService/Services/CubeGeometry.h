@@ -16,7 +16,6 @@ public:
     void UpdateCubeGeometry(QSharedPointer<FEModel> m_pModel);
 protected:
     void SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QVector<QSharedPointer<FEMesh>>& meshArr);
-    void InitCompleteCubeGeometry();
     void ReleaseRenderData();
 private:
     void ComputeNormal(FEVertex& v0,FEVertex& v1,FEVertex& v2,FEVertex& v3);
