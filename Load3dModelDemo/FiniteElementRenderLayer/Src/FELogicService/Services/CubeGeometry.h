@@ -11,7 +11,7 @@ public:
     // 界面paintGl自动调用
     void drawCubeGeometry(QOpenGLShaderProgram *program);
 public:
-    void InitCompleteCubeGeometry(QSharedPointer<FEModel> pModel);
+    void InitCompleteCubeGeometry();
     void ReleaseRenderData();
     void SetRenderData(QSharedPointer<FEModel> pModel);
 private:
@@ -19,6 +19,7 @@ private:
     void AssignVertexNormal(FEVertex& vert,QVector3D normal);
 private:
     QVector<uint32_t> indexQuad;
+    QVector<FEVertex> vertexQuad;
 
     QOpenGLBuffer arrayBuf;   //VBO
     QOpenGLBuffer indexBuf;   //IBO

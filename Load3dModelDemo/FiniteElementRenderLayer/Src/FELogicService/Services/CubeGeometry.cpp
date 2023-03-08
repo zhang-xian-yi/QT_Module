@@ -3,7 +3,8 @@
 CubeGeometry::CubeGeometry():
     arrayBuf(QOpenGLBuffer::VertexBuffer),indexBuf(QOpenGLBuffer::IndexBuffer)
 {
-
+    this->arrayBuf.create();
+    this->indexBuf.create();
 }
 
 CubeGeometry::~CubeGeometry()
@@ -41,14 +42,13 @@ void CubeGeometry::drawCubeGeometry(QOpenGLShaderProgram *program)
     glDrawElements(GL_QUADS, indexQuad.size(), GL_UNSIGNED_INT, 0);
 }
 
-void CubeGeometry::InitCompleteCubeGeometry(QSharedPointer<FEModel> pModel)
+void CubeGeometry::InitCompleteCubeGeometry()
 {
-    this->arrayBuf.create();
     this->arrayBuf.bind();
-    this->arrayBuf.allocate(pModel->verticesVect.constData(), pModel->verticesVect.size() * sizeof(FEVertex));
+    this->arrayBuf.allocate(vertexQuad.constData(), vertexQuad.size() * sizeof(FEVertex));
     this->arrayBuf.setUsagePattern(QOpenGLBuffer::StaticDraw);
 
-    this->indexBuf.create();
+
     this->indexBuf.bind();
     this->indexBuf.allocate(indexQuad.constData(), indexQuad.size() * sizeof(GLuint));
     this->indexBuf.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -56,100 +56,106 @@ void CubeGeometry::InitCompleteCubeGeometry(QSharedPointer<FEModel> pModel)
 
 void CubeGeometry::ReleaseRenderData()
 {
-    this->indexQuad.clear();
+    vertexQuad.clear();
+    indexQuad.clear();
 }
 
 void CubeGeometry::SetRenderData(QSharedPointer<FEModel> pModel)
 {
     auto vertexArr = pModel->verticesVect;
+    foreach (const QSharedPointer<FEVertex> pVertex, vertexArr)
+    {
+        vertexQuad.append(*pVertex);
+    }
+
     auto indexArray = pModel->meshVect;
     foreach (const QSharedPointer<FEMesh> meshIdxVec, indexArray)
     {
-        QSharedPointer<FEVertex> pV0,pV1,pV2,pV3;
+        FEVertex *pV0,*pV1,*pV2,*pV3;
         GLuint meshRealIndex;
         //face1
         meshRealIndex = meshIdxVec->indexVect.at(0) - 1;
         indexQuad.append(meshRealIndex);
-        pV0 = vertexArr[meshRealIndex];//add by light director
+        pV0 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(1) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV1 = vertexArr[meshRealIndex];//add by light director
+        pV1 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(2) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV2 = vertexArr[meshRealIndex];//add by light director
+        pV2 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(3) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV3 = vertexArr[meshRealIndex];//add by light director
+        pV3 = &vertexQuad[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face2
         meshRealIndex = meshIdxVec->indexVect.at(4) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV0 = vertexArr[meshRealIndex];//add by light director
+        pV0 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(5) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV1 = vertexArr[meshRealIndex];//add by light director
+        pV1 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(6) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV2 = vertexArr[meshRealIndex];//add by light director
+        pV2 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(7) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV3 = vertexArr[meshRealIndex];//add by light director
+        pV3 = &vertexQuad[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face3
         meshRealIndex = meshIdxVec->indexVect.at(2) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV0 = vertexArr[meshRealIndex];//add by light director
+        pV0 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(7) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV1 = vertexArr[meshRealIndex];//add by light director
+        pV1 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(6) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV2 = vertexArr[meshRealIndex];//add by light director
+        pV2 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(1) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV3 = vertexArr[meshRealIndex];//add by light director
+        pV3 = &vertexQuad[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face4
         meshRealIndex = meshIdxVec->indexVect.at(3) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV0 = vertexArr[meshRealIndex];//add by light director
+        pV0 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(4) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV1 = vertexArr[meshRealIndex];//add by light director
+        pV1 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(5) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV2 = vertexArr[meshRealIndex];//add by light director
+        pV2 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(0) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV3 = vertexArr[meshRealIndex];//add by light director
+        pV3 = &vertexQuad[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face5
         meshRealIndex = meshIdxVec->indexVect.at(3) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV0 = vertexArr[meshRealIndex];//add by light director
+        pV0 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(2) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV1 = vertexArr[meshRealIndex];//add by light director
+        pV1 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(7) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV2 = vertexArr[meshRealIndex];//add by light director
+        pV2 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(4) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV3 = vertexArr[meshRealIndex];//add by light director
+        pV3 = &vertexQuad[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face6
         meshRealIndex = meshIdxVec->indexVect.at(0) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV0 = vertexArr[meshRealIndex];//add by light director
+        pV0 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(1) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV1 = vertexArr[meshRealIndex];//add by light director
+        pV1 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(5) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV2 = vertexArr[meshRealIndex];//add by light director
+        pV2 = &vertexQuad[meshRealIndex];//add by light director
         meshRealIndex = meshIdxVec->indexVect.at(6) - 1 ;
         indexQuad.append(meshRealIndex);
-        pV3 = vertexArr[meshRealIndex];//add by light director
+        pV3 = &vertexQuad[meshRealIndex];//add by light director
         ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
     }
 }

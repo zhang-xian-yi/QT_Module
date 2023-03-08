@@ -31,11 +31,12 @@ OpenGLWindow::~OpenGLWindow()
 
 void OpenGLWindow::SetRendererData(QSharedPointer<FEModel> pModel)
 {
-    update();//跟新视图
     m_pModel = pModel;
     m_pCudeDrawEleS->ReleaseRenderData();
     m_pCudeDrawEleS->SetRenderData(pModel);
-    m_pCudeDrawEleS->InitCompleteCubeGeometry(pModel);
+    makeCurrent();
+    m_pCudeDrawEleS->InitCompleteCubeGeometry();
+    doneCurrent();
     update();//跟新视图
 }
 
@@ -76,6 +77,7 @@ void OpenGLWindow::initializeGL()
 
 void OpenGLWindow::paintGL()
 {
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if(this->m_pModel != nullptr)
@@ -96,6 +98,7 @@ void OpenGLWindow::paintGL()
         //得到当前平移矩阵
         m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
         m2 = m2 * this->m_translation;
+        program->bind();
         program->setUniformValue("mvp_matrix", projection * m2 * m1);
         // add by light
         program->setUniformValue("viewPos", Camera.eye);
@@ -107,7 +110,7 @@ void OpenGLWindow::paintGL()
         program->setUniformValue("material.diffuse", 0.9f);
         program->setUniformValue("material.specular", 0.5f);
         program->setUniformValue("material.shininess", 16);
-        this->m_pCudeDrawEleS->drawCubeGeometry(program);
+        m_pCudeDrawEleS->drawCubeGeometry(program);
     }
 }
 
@@ -267,7 +270,7 @@ void OpenGLWindow::initShaders()
             "void main()                                                                                \n"
             "{                                                                                          \n"
             "vec3 light1Result = CalcLightResult(light1);                                               \n"
-            "    glFragColor = vec4(light1Result,1.0f);                                                      \n"
+            "    glFragColor = vec4(vColor,1.0f);                                                      \n"
             "}                                                                                          \n";
 
     QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
