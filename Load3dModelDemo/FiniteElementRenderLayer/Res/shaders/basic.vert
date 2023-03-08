@@ -9,6 +9,7 @@ uniform mat4 mvp_matrix;
 void main()
 {
     gl_Position = mvp_matrix * vPosition;
+    FragPos = vec3(vPosition);
     vNormal = mat3(transpose(inverse(mvp_matrix))) * aNormal;
     vColor = aColor;
 }

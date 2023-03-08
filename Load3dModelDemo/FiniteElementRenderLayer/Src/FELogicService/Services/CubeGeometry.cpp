@@ -20,7 +20,7 @@ CubeGeometry::~CubeGeometry()
     this->indexBuf.destroy();
 }
 
-void CubeGeometry::drawCubeGeometry(QOpenGLShaderProgram *program)
+void CubeGeometry::drawCubeGeometry(QSharedPointer<QOpenGLShaderProgram> program)
 {
     this->arrayBuf.bind();
     this->indexBuf.bind();
@@ -46,7 +46,8 @@ void CubeGeometry::drawCubeGeometry(QOpenGLShaderProgram *program)
     int aNormal = program->attributeLocation("aNormal");
     program->enableAttributeArray(aNormal);
     program->setAttributeBuffer(aNormal, GL_FLOAT, offset, 3, sizeof(VertexData));
-    glDrawElements(GL_QUADS, indicesQuad.size(), GL_UNSIGNED_INT, 0);
+    auto f =QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f->glDrawElements(GL_QUADS, indicesQuad.size(), GL_UNSIGNED_INT, 0);
 }
 
 void CubeGeometry::UpdateCubeGeometry(QSharedPointer<FEModel> m_pModel)
@@ -64,7 +65,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
     {
         VertexData tmp;
         tmp.position = pQuadPoint->position;
-        tmp.color = QVector3D(181/255.0, 181/255.0, 181/255.0);
+        tmp.color = QVector3D(0/255.0, 181/255.0, 0/255.0);
         // 遍历所有顶点
         verticesVect.append(tmp); // 默认模型颜色为银灰色
     }
@@ -86,7 +87,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         meshRealIndex = pMesh->indexVect.at(3) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
         pV3 = &verticesVect[meshRealIndex];//add by light director
-        ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::FRONT);//计算四个点锁确定平面的法向量
+        ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face2
         meshRealIndex = pMesh->indexVect.at(4) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
@@ -100,7 +101,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         meshRealIndex = pMesh->indexVect.at(7) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
         pV3 = &verticesVect[meshRealIndex];//add by light director
-        ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::BACK);//计算四个点锁确定平面的法向量
+        ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face3
         meshRealIndex = pMesh->indexVect.at(2) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
@@ -114,7 +115,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         meshRealIndex = pMesh->indexVect.at(1) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
         pV3 = &verticesVect[meshRealIndex];//add by light director
-        ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::RIGHT);//计算四个点锁确定平面的法向量
+        ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face4
         meshRealIndex = pMesh->indexVect.at(3) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
@@ -128,7 +129,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         meshRealIndex = pMesh->indexVect.at(0) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
         pV3 = &verticesVect[meshRealIndex];//add by light director
-        ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::LEFT);//计算四个点锁确定平面的法向量
+        ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face5
         meshRealIndex = pMesh->indexVect.at(3) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
@@ -142,7 +143,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         meshRealIndex = pMesh->indexVect.at(4) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
         pV3 = &verticesVect[meshRealIndex];//add by light director
-        ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::UP);//计算四个点锁确定平面的法向量
+        ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
         //face6
         meshRealIndex = pMesh->indexVect.at(0) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
@@ -156,7 +157,7 @@ void CubeGeometry::SetRenderData(QVector<QSharedPointer<FEVertex>>& vertexArr,QV
         meshRealIndex = pMesh->indexVect.at(6) - 1 + m_nVertexCount;
         indicesQuad.append(meshRealIndex);
         pV3 = &verticesVect[meshRealIndex];//add by light director
-        ComputeNormal(*pV0,*pV1,*pV2,*pV3,FaceDirect::DOWN);//计算四个点锁确定平面的法向量
+        ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
     }
     this->m_nVertexCount += vertexArr.size();
 }
@@ -197,7 +198,7 @@ CubeGeometry *CubeGeometry::GetInstance()
 }
 
 //计算四个点决定的平面的法向量
-void CubeGeometry::ComputeNormal(VertexData &v0, VertexData &v1, VertexData &v2, VertexData &v3,FaceDirect direect)
+void CubeGeometry::ComputeNormal(VertexData &v0, VertexData &v1, VertexData &v2, VertexData &v3)
 {
     QVector3D firstVec = v1.position- v0.position;
     QVector3D secondVec = v2.position - v0.position;
@@ -205,46 +206,6 @@ void CubeGeometry::ComputeNormal(VertexData &v0, VertexData &v1, VertexData &v2,
     QVector3D normal = QVector3D::crossProduct(firstVec, secondVec);
     //法向量单元化
     normal.normalize();
-
-    switch (direect)
-    {        
-        case FaceDirect::UP:
-        {
-            normal.setY(fabsf(normal.y()));//y值一定为正
-            break;
-        }
-        case FaceDirect::RIGHT:
-        {
-            normal.setX(fabsf(normal.x()));//x值一定为正
-            break;
-        }
-        case FaceDirect::FRONT:
-        {
-            normal.setZ(fabsf(normal.z()));//z值一定为正
-            break;
-        }
-        case FaceDirect::LEFT:
-        {
-            if(normal.x()>0)
-                normal.setX(-normal.x());
-            break;
-        }
-        case FaceDirect::DOWN:
-        {
-            if(normal.y()>0)
-                normal.setY(-normal.y());
-            break;
-        }
-        case FaceDirect::BACK:
-        {
-            if(normal.z()>0)
-                normal.setZ(-normal.z());
-            break;
-        }
-        case FaceDirect::NONE:
-        default:
-            break;
-    }
 
 
     AssignVertexNormal(v0,normal);

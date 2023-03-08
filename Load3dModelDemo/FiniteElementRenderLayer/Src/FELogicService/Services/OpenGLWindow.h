@@ -14,7 +14,7 @@ typedef  struct
     QVector3D  up;         //观察者的头部朝向
 }CameraView;
 
-class OpenGLWindow : public QOpenGLWidget, protected QOpenGLFunctions
+class OpenGLWindow : public QOpenGLWidget
 {
     Q_OBJECT
 public:
@@ -33,13 +33,13 @@ protected:
 
 private:
     void initShaders();
-    void initTextures();
     int setRotation(int angle);
     void normalizeAngle(int &angle);
 
 private:
+    QOpenGLFunctions_3_3_Core* m_pGLf;
     CubeGeometry *cubeGeometry;
-    QOpenGLShaderProgram *program;
+    QSharedPointer<QOpenGLShaderProgram> program;
     QMatrix4x4 projection;      //透视矩阵
     QMatrix4x4 m_translation;   //平移矩阵
     QMatrix4x4 m_rotation;   //旋转矩阵

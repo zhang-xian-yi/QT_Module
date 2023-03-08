@@ -52,24 +52,37 @@ CONFIG(release) {
 #内部 .h
 HEADERS += \
     Src/FECommon/PCH.h \
-    Src/FECommon/ExtStruct.h \
     Src/FECommon/GlobalData.h \
+    Src/FELogicService/OpenGLEntity/FEMesh.h \
+    Src/FELogicService/OpenGLEntity/FEModel.h \
+    Src/FELogicService/OpenGLEntity/FEVertex.h \
+    Src/FELogicService/OpenGLEntity/Material.h \
+    Src/FELogicService/Services/ConvertOpenGLData.h \
+    Src/FELogicService/Services/FEFileParser.h \
+    Src/FEMControl/FERendererLayerControl.h \
     Src/FELogicService/FERendererLayerService.h \
     Src/FELogicService/Services/OpenGLWindow.h \
     Src/FELogicService/Services/CubeGeometry.h \
-    Src/FELogicService/Services/DataParser.h \
-    Src/FEMControl/FERendererLayerControl.h
+    Src/FELogicService/DataEntity/FEFileData.h
+
 
 
 #内部 .cpp
 SOURCES += \
     Src/FECommon/GlobalData.cpp \
-    Src/FECommon/ExtStruct.cpp \
+    Src/FELogicService/OpenGLEntity/FEMesh.cpp \
+    Src/FELogicService/OpenGLEntity/FEModel.cpp \
+    Src/FELogicService/OpenGLEntity/FEVertex.cpp \
+    Src/FELogicService/OpenGLEntity/Material.cpp \
+    Src/FELogicService/Services/ConvertOpenGLData.cpp \
+    Src/FELogicService/Services/FEFileParser.cpp \
+    Src/FEMControl/FERendererLayerControl.cpp \
     Src/FELogicService/FERendererLayerService.cpp \
     Src/FELogicService/Services/OpenGLWindow.cpp \
     Src/FELogicService/Services/CubeGeometry.cpp \
-    Src/FELogicService/Services/DataParser.cpp \
-    Src/FEMControl/FERendererLayerControl.cpp
+    Src/FELogicService/DataEntity/FEFileData.cpp \
+
+
 
 #外部 .h
 HEADERS += \

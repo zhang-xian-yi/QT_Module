@@ -10,16 +10,6 @@ struct VertexData
     QVector3D normal = {0,0,0};      //定点法线 -- 决定光反射方向 add by zxy
 };
 
-enum FaceDirect
-{
-    NONE,
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    FRONT,
-    BACK,
-};
 
 class CubeGeometry : public QOpenGLFunctions
 {
@@ -29,7 +19,7 @@ public:
 
     static CubeGeometry* GetInstance();
     // 界面paintGl自动调用
-    void drawCubeGeometry(QOpenGLShaderProgram *program);
+    void drawCubeGeometry(QSharedPointer<QOpenGLShaderProgram> program);
     // 更新立体数据
     void UpdateCubeGeometry(QSharedPointer<FEModel> m_pModel);
 protected:
@@ -37,7 +27,7 @@ protected:
     void InitCompleteCubeGeometry();
     void ReleaseRenderData();
 private:
-    void ComputeNormal(VertexData& v0,VertexData& v1,VertexData& v2,VertexData& v3,FaceDirect direect);
+    void ComputeNormal(VertexData& v0,VertexData& v1,VertexData& v2,VertexData& v3);
     void AssignVertexNormal(VertexData& vert,QVector3D normal);
 private:
     static CubeGeometry* m_pStatInstance;

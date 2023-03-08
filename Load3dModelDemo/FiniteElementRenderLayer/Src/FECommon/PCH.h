@@ -29,7 +29,7 @@
 #include <QOpenGLTexture>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
-#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_3_3_Core>
 
 #include <QSurfaceFormat>
 #include <QMessageBox>
