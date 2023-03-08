@@ -20,7 +20,7 @@ protected:
     void paintGL() override;
     void resizeGL(int w, int h) override;
     //事件处理函数
-    //virtual bool event(QEvent *e) override;
+    virtual bool eventFilter(QObject* obj,QEvent *e) override;
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;

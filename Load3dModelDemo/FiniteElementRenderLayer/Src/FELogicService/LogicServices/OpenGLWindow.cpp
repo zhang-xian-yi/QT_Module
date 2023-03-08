@@ -21,6 +21,8 @@ OpenGLWindow::OpenGLWindow(QWidget * parent) :
     //设置为父控件的大小
     this->setAcceptDrops(true);
     this->setFocusPolicy(Qt::StrongFocus);
+    //安装事件过滤器
+    this->installEventFilter(this);
 }
 
 OpenGLWindow::~OpenGLWindow()
@@ -87,7 +89,7 @@ void OpenGLWindow::paintGL()
     program->setUniformValue("light1.position", QVector3D({10,10,0}));
     program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
 
-    Material material(0.0f,0.9f,0.5f,16);
+    Material material(0.1f,0.9f,0.5f,16);
     // 设定材质
     program->setUniformValue("material.ambient", material.ambient);
     program->setUniformValue("material.diffuse", material.diffuse);
@@ -110,17 +112,21 @@ void OpenGLWindow::resizeGL(int w, int h)
     projection.perspective(m_pCamera->fovy, aspect, zNear, zFar);
 }
 
-/*
-bool OpenGLWindow::event(QEvent *e)
+
+bool OpenGLWindow::eventFilter(QObject* obj,QEvent *e)
 {
     if(OnEvent != nullptr)
     {
         //使用回调函数处理
         OnEvent(e);
+        return true;
     }
-    return false;
+
+    //非处理信号交给父类处理
+    return QOpenGLWidget::eventFilter(obj,e);
 }
-*/
+
+
 //缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变m_pCamera->eye的值
 void OpenGLWindow::wheelEvent(QWheelEvent *event)
 {
