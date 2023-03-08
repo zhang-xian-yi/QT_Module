@@ -3,7 +3,8 @@
 #include "Src/FELogicService/OpenGLEntity/Material.h"//材质
 
 OpenGLWindow::OpenGLWindow(QWidget * parent) :
-    QOpenGLWidget(parent),m_pDrawEleS(nullptr),m_pCamera(nullptr)
+    QOpenGLWidget(parent),m_pDrawEleS(nullptr),m_pCamera(nullptr),
+    OnEvent(nullptr),OpenGLEnvInit(nullptr)
 {
     this->m_MouseFlag = Qt::NoButton;
     this->m_MousePressFlag = false;
@@ -32,6 +33,16 @@ OpenGLWindow::~OpenGLWindow()
 void OpenGLWindow::SetRendererData(QSharedPointer<FEModel> pModel)
 {
     m_pDrawEleS->UpdateCubeGeometry(pModel);
+}
+
+void OpenGLWindow::SetOpenGLEnvInitCallBack(void (*OpenGLEnvInit)())
+{
+    this->OpenGLEnvInit = OpenGLEnvInit;
+}
+
+void OpenGLWindow::SetOnEventCallBack(void (*OnEvent)(QEvent *))
+{
+    this->OnEvent = OnEvent;
 }
 
 void OpenGLWindow::initializeGL()
@@ -76,7 +87,7 @@ void OpenGLWindow::paintGL()
     program->setUniformValue("light1.position", QVector3D({10,10,0}));
     program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
 
-    Material material(0.1f,0.9f,0.9f,16);
+    Material material(0.0f,0.9f,0.5f,16);
     // 设定材质
     program->setUniformValue("material.ambient", material.ambient);
     program->setUniformValue("material.diffuse", material.diffuse);
@@ -99,6 +110,17 @@ void OpenGLWindow::resizeGL(int w, int h)
     projection.perspective(m_pCamera->fovy, aspect, zNear, zFar);
 }
 
+/*
+bool OpenGLWindow::event(QEvent *e)
+{
+    if(OnEvent != nullptr)
+    {
+        //使用回调函数处理
+        OnEvent(e);
+    }
+    return false;
+}
+*/
 //缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变m_pCamera->eye的值
 void OpenGLWindow::wheelEvent(QWheelEvent *event)
 {

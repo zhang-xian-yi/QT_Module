@@ -2,8 +2,7 @@
 #define OPENGLRENDER_H
 
 #include "CubeGeometry.h"
-#include "Src/FELogicService/OpenGLEntity/FEModel.h"
-#include "Src/FELogicService/OpenGLEntity/CameraView.h"
+#include "Src/FELogicService/OpenGLEntity/FEScence.h"
 
 class OpenGLWindow : public QOpenGLWidget
 {
@@ -13,20 +12,26 @@ public:
     ~OpenGLWindow();
     void Rotate(QMatrix4x4 matrix);
     void SetRendererData(QSharedPointer<FEModel> pModel);
+public:
+    void SetOpenGLEnvInitCallBack(void (*OpenGLEnvInit)());
+    void SetOnEventCallBack(void (*OnEvent)(QEvent *e));
 protected:
     void initializeGL() override;
     void paintGL() override;
     void resizeGL(int w, int h) override;
+    //事件处理函数
+    //virtual bool event(QEvent *e) override;
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-
 private:
     void initShaders();
     int setRotation(int angle);
     void normalizeAngle(int &angle);
-
+private:
+    void (*OpenGLEnvInit)();//定义在initializeGL方法中执行的环境初始化
+    void (*OnEvent)(QEvent* event);//定义在initializeGL方法中执行的环境初始化
 private:
     QSharedPointer<CubeGeometry> m_pDrawEleS;
     QSharedPointer<QOpenGLShaderProgram> program;//着色器

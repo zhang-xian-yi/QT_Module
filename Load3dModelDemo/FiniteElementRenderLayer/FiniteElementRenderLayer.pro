@@ -53,38 +53,40 @@ CONFIG(release) {
 HEADERS += \
     Src/FECommon/PCH.h \
     Src/FECommon/GlobalData.h \
-    Src/FELogicService/OpenGLEntity/CameraView.h \
-    Src/FELogicService/OpenGLEntity/FEMesh.h \
-    Src/FELogicService/OpenGLEntity/FEModel.h \
-    Src/FELogicService/OpenGLEntity/FEVertex.h \
-    Src/FELogicService/OpenGLEntity/Material.h \
-    Src/FELogicService/Services/ConvertOpenGLData.h \
-    Src/FELogicService/Services/FEFileParser.h \
+    Src/FELogicService/OpenGLService/EventHandler.h \
+    Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FEMControl/FERendererLayerControl.h \
     Src/FELogicService/FERendererLayerService.h \
-    Src/FELogicService/Services/OpenGLWindow.h \
-    Src/FELogicService/Services/CubeGeometry.h \
-    Src/FELogicService/DataEntity/FEFileData.h
-
+    Src/FELogicService/DataEntity/FEFileData.h   \
+    Src/FELogicService/OpenGLEntity/FEMesh.h \
+    Src/FELogicService/OpenGLEntity/FEModel.h \
+    Src/FELogicService/OpenGLEntity/FEScence.h \
+    Src/FELogicService/OpenGLEntity/FEVertex.h \
+    Src/FELogicService/OpenGLEntity/Material.h \
+    Src/FELogicService/LogicServices/ConvertOpenGLData.h \
+    Src/FELogicService/LogicServices/OpenGLWindow.h \
+    Src/FELogicService/LogicServices/CubeGeometry.h \
+    Src/FELogicService/LogicServices/FEFileParser.h \
+    Src/FELogicService/OpenGLService/OpenGLRenderer.h \
 
 
 #内部 .cpp
 SOURCES += \
     Src/FECommon/GlobalData.cpp \
-    Src/FELogicService/OpenGLEntity/CameraView.cpp \
-    Src/FELogicService/OpenGLEntity/FEMesh.cpp \
-    Src/FELogicService/OpenGLEntity/FEModel.cpp \
-    Src/FELogicService/OpenGLEntity/FEVertex.cpp \
-    Src/FELogicService/OpenGLEntity/Material.cpp \
-    Src/FELogicService/Services/ConvertOpenGLData.cpp \
-    Src/FELogicService/Services/FEFileParser.cpp \
+    Src/FELogicService/OpenGLService/EventHandler.cpp \
     Src/FEMControl/FERendererLayerControl.cpp \
     Src/FELogicService/FERendererLayerService.cpp \
-    Src/FELogicService/Services/OpenGLWindow.cpp \
-    Src/FELogicService/Services/CubeGeometry.cpp \
     Src/FELogicService/DataEntity/FEFileData.cpp \
-
-
+    Src/FELogicService/OpenGLEntity/FEMesh.cpp \
+    Src/FELogicService/OpenGLEntity/FEModel.cpp \
+    Src/FELogicService/OpenGLEntity/FEScence.cpp \
+    Src/FELogicService/OpenGLEntity/FEVertex.cpp \
+    Src/FELogicService/OpenGLEntity/Material.cpp \
+    Src/FELogicService/LogicServices/ConvertOpenGLData.cpp \
+    Src/FELogicService/LogicServices/FEFileParser.cpp \
+    Src/FELogicService/LogicServices/OpenGLWindow.cpp \
+    Src/FELogicService/LogicServices/CubeGeometry.cpp \
+    Src/FELogicService/OpenGLService/OpenGLRenderer.cpp \
 
 #外部 .h
 HEADERS += \

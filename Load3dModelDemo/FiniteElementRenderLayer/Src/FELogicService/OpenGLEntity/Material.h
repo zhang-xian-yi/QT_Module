@@ -8,6 +8,7 @@ class Material
 public:
     Material();
     Material(float ambient,float diffuse,float spec,float shinnes);
+    QVector4D GetData();
 public:
     float ambient ;//环境光
     float diffuse ;//漫反射

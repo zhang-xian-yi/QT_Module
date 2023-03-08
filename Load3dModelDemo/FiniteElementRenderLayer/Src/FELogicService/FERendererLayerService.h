@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FERENDERERLAYERSERVICE_H
+#define FERENDERERLAYERSERVICE_H
 
 #ifdef DEBUG_VLD
 /*
@@ -9,10 +10,11 @@ vld 需要deghelp.dll 、 Microsoft.DTfW.DHL.manifest、 vld_x64.dll 一起放�
 
 #endif
 
-#include "Services/OpenGLWindow.h"
-#include "Services/FEFileParser.h"
-#include "Services/ConvertOpenGLData.h"
-#include "Services/CubeGeometry.h"
+#include "LogicServices/OpenGLWindow.h"
+#include "LogicServices/FEFileParser.h"
+#include "LogicServices/ConvertOpenGLData.h"
+#include "LogicServices/CubeGeometry.h"
+
 class FERendererLayerService:public QObject
 {
     Q_OBJECT
@@ -24,5 +26,7 @@ public:
 private:
     OpenGLWindow*  m_openGLWindow;  //openGL的窗口 由QT自身控制释放
     QSharedPointer<FEFileParser> m_pFEParseS; //有限元文件解析工具
-    QSharedPointer<ConvertOpenGLData> m_pConvertS; //数据转化内工具
+    QSharedPointer<ConvertOpenGLData> m_pConvertS; //数据转化工具
 };
+
+#endif // FERENDERERLAYERSERVICE_H

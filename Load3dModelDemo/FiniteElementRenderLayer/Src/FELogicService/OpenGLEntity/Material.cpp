@@ -15,3 +15,13 @@ Material::Material(float ambient, float diffuse, float spec, float shinnes)
     specular = spec;//镜面反射，值越大，越闪亮
     shininess = shinnes;//值越大光斑越亮
 }
+
+QVector4D Material::GetData()
+{
+    QVector4D ret;
+    ret.setX(ambient);
+    ret.setY(diffuse);
+    ret.setZ(specular);
+    ret.setW(shininess);
+    return ret;
+}
