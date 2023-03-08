@@ -53,6 +53,7 @@ CONFIG(release) {
 HEADERS += \
     Src/FECommon/PCH.h \
     Src/FECommon/GlobalData.h \
+    Src/FELogicService/OpenGLEntity/CameraView.h \
     Src/FELogicService/OpenGLEntity/FEMesh.h \
     Src/FELogicService/OpenGLEntity/FEModel.h \
     Src/FELogicService/OpenGLEntity/FEVertex.h \
@@ -70,6 +71,7 @@ HEADERS += \
 #内部 .cpp
 SOURCES += \
     Src/FECommon/GlobalData.cpp \
+    Src/FELogicService/OpenGLEntity/CameraView.cpp \
     Src/FELogicService/OpenGLEntity/FEMesh.cpp \
     Src/FELogicService/OpenGLEntity/FEModel.cpp \
     Src/FELogicService/OpenGLEntity/FEVertex.cpp \

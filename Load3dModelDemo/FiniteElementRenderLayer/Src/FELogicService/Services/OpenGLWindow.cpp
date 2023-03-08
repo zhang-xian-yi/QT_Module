@@ -3,7 +3,7 @@
 #include "Src/FELogicService/OpenGLEntity/Material.h"//材质
 
 OpenGLWindow::OpenGLWindow(QWidget * parent) :
-    QOpenGLWidget(parent),cubeGeometry(nullptr)
+    QOpenGLWidget(parent),m_pDrawEleS(nullptr),m_pCamera(nullptr)
 {
     this->m_MouseFlag = Qt::NoButton;
     this->m_MousePressFlag = false;
@@ -20,42 +20,33 @@ OpenGLWindow::OpenGLWindow(QWidget * parent) :
     //设置为父控件的大小
     this->setAcceptDrops(true);
     this->setFocusPolicy(Qt::StrongFocus);
-    resizeGL(this->width(),this->height());
 }
 
 OpenGLWindow::~OpenGLWindow()
 {
     makeCurrent();
-    delete cubeGeometry;
+    m_pDrawEleS.clear();
     doneCurrent();
+}
+
+void OpenGLWindow::SetRendererData(QSharedPointer<FEModel> pModel)
+{
+    m_pDrawEleS->UpdateCubeGeometry(pModel);
 }
 
 void OpenGLWindow::initializeGL()
 {
-
     glClearColor(0, 0, 0, 1);
-
     initShaders();
-
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
-
     // Enable back face culling
     glEnable(GL_CULL_FACE);
 
-    m_pGLf = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
-    this->cubeGeometry = CubeGeometry::GetInstance();
-
-    Camera.distance = 5.0;
-    Camera.fovy     = 5.0;
-    Camera.zoom     = 1.0;
-    //观察者位置在z轴负方向的位置上
-    Camera.eye      = {0,0, Camera.zoom * Camera.distance};
-    //被观察物体的中心坐标
-    Camera.center   = {0.0,0.0,0.0};
-    //观察者头部朝向y轴方向
-    Camera.up       = {0.0,1.0,0.0};
-    //依据上述定义，界面初始化后，从界面中看到的坐标系就是以界面中心为原点、水平向右为x轴正半轴、垂直向上为y轴正半轴、屏幕向内为z轴正半轴
+    m_pDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
+    //视角初始化
+    m_pCamera = QSharedPointer<CameraView>(new CameraView());
+    m_pCamera->DefaultConfig();
 }
 
 void OpenGLWindow::paintGL()
@@ -73,14 +64,14 @@ void OpenGLWindow::paintGL()
 
     QMatrix4x4 m1,m2;
     //得到当前观察者矩阵
-    m1.lookAt(Camera.eye, Camera.center, Camera.up);
+    m1.lookAt(m_pCamera->eye, m_pCamera->center, m_pCamera->up);
     m1 = m1 * rotation;
     //得到当前平移矩阵
     m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
     m2 = m2 * this->m_translation;
     program->setUniformValue("mvp_matrix", projection * m2 * m1);
     // add by light
-    program->setUniformValue("viewPos", Camera.eye);
+    program->setUniformValue("viewPos", m_pCamera->eye);
     // 设定灯光位置与颜色
     program->setUniformValue("light1.position", QVector3D({10,10,0}));
     program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
@@ -92,8 +83,10 @@ void OpenGLWindow::paintGL()
     program->setUniformValue("material.specular",  material.specular);
     program->setUniformValue("material.shininess", material.shininess);
 
-    this->cubeGeometry->drawCubeGeometry(program);
-
+    //调度其他函数时 其他函数要使用OpenGL的方法注意要加makeCurrent 表示此区域内视作opengl上下文中执行
+    makeCurrent();
+    m_pDrawEleS->drawCubeGeometry(program);
+    doneCurrent();
 }
 
 //保证界面内物体的显示不受界面纵横比变化而变形
@@ -103,29 +96,29 @@ void OpenGLWindow::resizeGL(int w, int h)
     const qreal zNear = 0.001, zFar = 1000.0;
     projection.setToIdentity();
     // 得到透视矩阵
-    projection.perspective(Camera.fovy, aspect, zNear, zFar);
+    projection.perspective(m_pCamera->fovy, aspect, zNear, zFar);
 }
 
-//缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变Camera.eye的值
+//缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变m_pCamera->eye的值
 void OpenGLWindow::wheelEvent(QWheelEvent *event)
 {
     if(this->m_MousePressFlag)
         return;
     if(event->angleDelta().y() > 0)
     {
-        Camera.zoom -= 0.1;
+        m_pCamera->zoom -= 0.1;
     }else{
-        Camera.zoom += 0.1;
+        m_pCamera->zoom += 0.1;
     }
-    if(Camera.zoom >= 3)
+    if(m_pCamera->zoom >= 3)
     {
-        Camera.zoom = 3;
-    }else if(Camera.zoom <= 0.1)
+        m_pCamera->zoom = 3;
+    }else if(m_pCamera->zoom <= 0.1)
     {
-        Camera.zoom = 0.1;
+        m_pCamera->zoom = 0.1;
     }
-    //因为我定义的观察者的位置是在z轴上，所以只改变Camera.eye的z值即可实现物体缩放效果
-    Camera.eye.setZ(Camera.zoom * Camera.distance);
+    //因为我定义的观察者的位置是在z轴上，所以只改变m_pCamera->eye的z值即可实现物体缩放效果
+    m_pCamera->eye.setZ(m_pCamera->zoom * m_pCamera->distance);
     update();
 }
 //用于记录按下鼠标的类型并记录鼠标按下时的位置
@@ -165,7 +158,7 @@ void OpenGLWindow::mouseMoveEvent(QMouseEvent *event)
             return;
         //以下计算是将在界面内移动鼠标的距离投影到被观察物体的xoy平面内，得到物体实际应该移动的距离
         qreal w_h_ratio = (qreal)(this->width()) / (qreal)(this->height());
-        qreal cube_view_height = 2 * Camera.zoom * Camera.distance *qTan(qDegreesToRadians(Camera.fovy/2));
+        qreal cube_view_height = 2 * m_pCamera->zoom * m_pCamera->distance *qTan(qDegreesToRadians(m_pCamera->fovy/2));
         qreal cube_view_width = w_h_ratio * cube_view_height;
 
         this->m_xTrans = cube_view_width / qreal(this->width()) * qreal(diff.x());

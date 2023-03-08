@@ -1,12 +1,9 @@
 ﻿#include "CubeGeometry.h"
 
-CubeGeometry* CubeGeometry::m_pStatInstance = nullptr;
-QMutex CubeGeometry::m_oMutex;
 
-CubeGeometry::CubeGeometry():QOpenGLFunctions()
-    , indexBuf(QOpenGLBuffer::IndexBuffer)
+CubeGeometry::CubeGeometry():
+    arrayBuf(QOpenGLBuffer::VertexBuffer), indexBuf(QOpenGLBuffer::IndexBuffer)
 {
-    initializeOpenGLFunctions();
     this->arrayBuf.create();
     this->indexBuf.create();
 
@@ -48,6 +45,7 @@ void CubeGeometry::drawCubeGeometry(QSharedPointer<QOpenGLShaderProgram> program
     program->setAttributeBuffer(aNormal, GL_FLOAT, offset, 3, sizeof(VertexData));
     auto f =QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
     f->glDrawElements(GL_QUADS, indicesQuad.size(), GL_UNSIGNED_INT, 0);
+
 }
 
 void CubeGeometry::UpdateCubeGeometry(QSharedPointer<FEModel> m_pModel)
@@ -184,17 +182,6 @@ void CubeGeometry::ReleaseRenderData()
     this->indexBuf.release();
 
     this->m_strRenderElementName = "";
-}
-
-CubeGeometry *CubeGeometry::GetInstance()
-{
-    m_oMutex.lock();
-    if (nullptr == m_pStatInstance)
-    {
-        m_pStatInstance = new CubeGeometry();
-    }
-    m_oMutex.unlock();
-    return m_pStatInstance;
 }
 
 //计算四个点决定的平面的法向量

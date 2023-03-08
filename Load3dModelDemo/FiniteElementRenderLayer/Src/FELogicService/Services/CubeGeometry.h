@@ -11,13 +11,12 @@ struct VertexData
 };
 
 
-class CubeGeometry : public QOpenGLFunctions
+class CubeGeometry
 {
 public:
     CubeGeometry();
     ~CubeGeometry();
 
-    static CubeGeometry* GetInstance();
     // 界面paintGl自动调用
     void drawCubeGeometry(QSharedPointer<QOpenGLShaderProgram> program);
     // 更新立体数据
@@ -30,8 +29,6 @@ private:
     void ComputeNormal(VertexData& v0,VertexData& v1,VertexData& v2,VertexData& v3);
     void AssignVertexNormal(VertexData& vert,QVector3D normal);
 private:
-    static CubeGeometry* m_pStatInstance;
-    static QMutex m_oMutex;
     QVector<VertexData> verticesVect;
     QVector<GLuint> indicesQuad;
 

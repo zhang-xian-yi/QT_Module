@@ -23,8 +23,8 @@ void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
     }
     //转化数据
     QSharedPointer<FEModel> pModel = m_pConvertS->Convert(parseData);
-
-    CubeGeometry::GetInstance()->UpdateCubeGeometry(pModel);
+    //开始渲染
+    m_openGLWindow->SetRendererData(pModel);
 }
 
 
