@@ -16,7 +16,7 @@ void FERendererLayerControl::initOpenGLWin(QWidget* parent)
 {
     if(m_pOWLService == nullptr)
     {
-        initEnvirnoMent();
+        //initEnvirnoMent(); 注释此行数据才会渲染
         m_pOWLService = QSharedPointer<FERendererLayerService>(new FERendererLayerService(parent));
     }
 
@@ -25,7 +25,7 @@ void FERendererLayerControl::initOpenGLWin(QWidget* parent)
 void FERendererLayerControl::initEnvirnoMent()
 {
     QSurfaceFormat openGLFormat;
-    openGLFormat.setVersion(4, 5);
+    openGLFormat.setVersion(3, 3);
     openGLFormat.setProfile(QSurfaceFormat::CoreProfile);
     openGLFormat.setDepthBufferSize(24);
     openGLFormat.setStencilBufferSize(8);

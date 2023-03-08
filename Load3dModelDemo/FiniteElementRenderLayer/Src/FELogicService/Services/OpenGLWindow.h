@@ -20,7 +20,6 @@ class OpenGLWindow : public QOpenGLWidget, protected QOpenGLFunctions
 public:
     OpenGLWindow(QWidget *parent = nullptr);
     ~OpenGLWindow();
-    void SetRendererData(QSharedPointer<FEModel> pModel);
     void Rotate(QMatrix4x4 matrix);
 
 protected:
@@ -34,11 +33,12 @@ protected:
 
 private:
     void initShaders();
+    void initTextures();
     int setRotation(int angle);
     void normalizeAngle(int &angle);
+
 private:
-    QSharedPointer<FEModel> m_pModel;
-    QSharedPointer<CubeGeometry> m_pCudeDrawEleS; //
+    CubeGeometry *cubeGeometry;
     QOpenGLShaderProgram *program;
     QMatrix4x4 projection;      //透视矩阵
     QMatrix4x4 m_translation;   //平移矩阵
