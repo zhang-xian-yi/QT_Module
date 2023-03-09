@@ -1,15 +1,12 @@
 ﻿#include "OpenGLWindow.h"
 #include <QDebug>
-#include "Src/FELogicService/OpenGLEntity/Material.h"//材质
 
 OpenGLWindow::OpenGLWindow(QWidget * parent) :
-    QOpenGLWidget(parent),m_pDrawEleS(nullptr)
+    QOpenGLWidget(parent)
 {
     OnGLEnvInit = nullptr;
     OnEvent = nullptr;
-    GetMVPMat4 = nullptr;
-    Get3DPos = nullptr;
-
+    OnDraw = nullptr;
     //设置父控件的大小
     this->setParent(parent);
     this->setGeometry(parent->rect().x(),parent->rect().y(),
@@ -23,14 +20,7 @@ OpenGLWindow::OpenGLWindow(QWidget * parent) :
 
 OpenGLWindow::~OpenGLWindow()
 {
-    makeCurrent();
-    m_pDrawEleS.clear();
-    doneCurrent();
-}
 
-void OpenGLWindow::SetRendererData(QSharedPointer<FEModel> pModel)
-{
-    m_pDrawEleS->UpdateCubeGeometry(pModel);
 }
 
 void OpenGLWindow::SetOpenGLEnvInitCallBack(OpenGLEnvInitCallback InitFuncCB)
@@ -43,26 +33,18 @@ void OpenGLWindow::SetOnEventCallBack(OnEventCallBack EventFuncCB)
     this->OnEvent = EventFuncCB;
 }
 
-void OpenGLWindow::SetGetCallBack(GetMat4Callback Mat4FCB)
+void OpenGLWindow::SetOnDrawCallBack(DrawCallback DrawFCB)
 {
-    this->GetMVPMat4 = Mat4FCB;
-}
-
-void OpenGLWindow::SetGetCallBack(GetVec3DCallback vec3DFCB)
-{
-    this->Get3DPos = vec3DFCB;
+    this->OnDraw = DrawFCB;
 }
 
 void OpenGLWindow::initializeGL()
 {
     glClearColor(0, 0, 0, 1);
-    initShaders();
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
     // Enable back face culling
     glEnable(GL_CULL_FACE);
-
-    m_pDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
 
     OnGLEnvInit();//初始化环境 回调函数
 }
@@ -70,24 +52,9 @@ void OpenGLWindow::initializeGL()
 void OpenGLWindow::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    program->setUniformValue("mvp_matrix", this->GetMVPMat4());
-    // add by light
-    program->setUniformValue("viewPos", this->Get3DPos());
-    // 设定灯光位置与颜色
-    program->setUniformValue("light1.position", QVector3D({10,10,0}));
-    program->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
-
-    Material material(0.1f,0.9f,0.5f,16);
-    // 设定材质
-    program->setUniformValue("material.ambient", material.ambient);
-    program->setUniformValue("material.diffuse", material.diffuse);
-    program->setUniformValue("material.specular",  material.specular);
-    program->setUniformValue("material.shininess", material.shininess);
-
     //调度其他函数时 其他函数要使用OpenGL的方法注意要加makeCurrent 表示此区域内视作opengl上下文中执行
     makeCurrent();
-    m_pDrawEleS->drawCubeGeometry(program);
+    this->OnDraw(); //如果为空 可以直接崩溃方便检查
     doneCurrent();
 }
 
@@ -120,22 +87,4 @@ bool OpenGLWindow::isHanldeEvent(QEvent *e)
 
     return typeList.contains(e->type());
 }
-
-//编译着色器并连接绑定
-void OpenGLWindow::initShaders()
-{
-    program = QSharedPointer<QOpenGLShaderProgram>(new QOpenGLShaderProgram());
-    program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Res/shaders/basic.vert");
-    program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Res/shaders/basic.frag");
-    if(!program->link())
-    {
-        qDebug()<<"shader linkes error";
-    }
-
-    if(!program->bind())
-    {
-        qDebug()<<"shader bind error";
-    }
-}
-
 

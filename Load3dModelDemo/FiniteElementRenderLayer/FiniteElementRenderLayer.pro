@@ -54,6 +54,7 @@ HEADERS += \
     Src/FECommon/MdlDefine.h \
     Src/FECommon/PCH.h \
     Src/FECommon/GlobalData.h \
+    Src/FELogicService/DrawElement/AbstractDE.h \
     Src/FELogicService/OpenGLService/EventHandler.h \
     Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FEMControl/FERendererLayerControl.h \
@@ -70,6 +71,8 @@ HEADERS += \
     Src/FELogicService/LogicServices/FEFileParser.h \
     Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FELogicService/OpenGLEntity/CameraView.h \
+    Src/FELogicService/DrawElement/AbstractDE.h \
+    Src/FELogicService/DrawElement/DECube.h \
 
 #内部 .cpp
 SOURCES += \
@@ -89,6 +92,7 @@ SOURCES += \
     Src/FELogicService/LogicServices/CubeGeometry.cpp \
     Src/FELogicService/OpenGLService/OpenGLRenderer.cpp \
     Src/FELogicService/OpenGLEntity/CameraView.cpp \
+    Src/FELogicService/DrawElement/DECube.cpp \
 
 
 #外部 .h
