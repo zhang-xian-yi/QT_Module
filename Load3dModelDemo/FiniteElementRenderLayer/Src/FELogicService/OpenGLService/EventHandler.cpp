@@ -9,6 +9,10 @@ EventHandler::EventHandler()
     this->m_zRot = 0;
     this->m_xTrans = 0;
     this->m_yTrans = 0;
+
+    //视角初始化
+    m_pCamera = QSharedPointer<CameraView>(new CameraView());
+    m_pCamera->DefaultConfig();
 }
 
 //主要入口处理函数
@@ -67,10 +71,6 @@ void EventHandler::InitEnv(int width, int height)
 {
     this->width = width;
     this->height = height;
-
-    //视角初始化
-    m_pCamera = QSharedPointer<CameraView>(new CameraView());
-    m_pCamera->DefaultConfig();
 }
 
 //缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变m_pCamera->eye的值
@@ -104,10 +104,12 @@ void EventHandler::mousePressEvent(QMouseEvent *event)
     if(event->button() & Qt::LeftButton)
     {
         this->m_MouseFlag = Qt::LeftButton;
-    }else if(event->button() & Qt::RightButton)
+    }
+    else if(event->button() & Qt::RightButton)
     {
         this->m_MouseFlag = Qt::RightButton;
-    }else if(event->button() & Qt::MidButton)
+    }
+    else if(event->button() & Qt::MidButton)
     {
         this->m_MouseFlag = Qt::MidButton;
     }

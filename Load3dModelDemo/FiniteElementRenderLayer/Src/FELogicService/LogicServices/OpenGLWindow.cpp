@@ -132,11 +132,8 @@ bool OpenGLWindow::eventFilter(QObject* obj,QEvent *e)
     if(OnEvent != nullptr && obj == this && isHanldeEvent(e))
     {
         //使用回调函数处理
-        bool ret = this->OnEvent(e);
-        update();//立即刷新视图
-        return ret;
+        OnEvent(e);
     }
-
     //非处理信号交给父类处理
     return QOpenGLWidget::eventFilter(obj,e);
 }

@@ -10,7 +10,7 @@ FERendererLayerService::FERendererLayerService(QWidget * parent)
     m_openGLWindow = new OpenGLWindow(parent);//由QT父级控件控制释放
 
     //设置回调函数
-    /*
+
     auto OnInit = std::bind(&FERendererLayerService::EnvirInitCallBack, this);
     auto OnEvent = std::bind(&EventHandler::OnEvent, m_pEventHandlerS.get(), std::placeholders::_1);
     auto GetVec3Data = std::bind(&EventHandler::Get3DPos, m_pEventHandlerS.get());
@@ -19,7 +19,7 @@ FERendererLayerService::FERendererLayerService(QWidget * parent)
     m_openGLWindow->SetOnEventCallBack(OnEvent);
     m_openGLWindow->SetGetCallBack(GetVec3Data);
     m_openGLWindow->SetGetCallBack(GetMVPMat4);
-    */
+
 }
 
 FERendererLayerService::~FERendererLayerService()
