@@ -2,6 +2,7 @@
 #define OPENGLRENDER_H
 
 #include "CubeGeometry.h"
+#include "Src/FECommon/MdlDefine.h"
 #include "Src/FELogicService/OpenGLEntity/FEScence.h"
 
 class OpenGLWindow : public QOpenGLWidget
@@ -13,8 +14,10 @@ public:
     void Rotate(QMatrix4x4 matrix);
     void SetRendererData(QSharedPointer<FEModel> pModel);
 public:
-    void SetOpenGLEnvInitCallBack(void (*OpenGLEnvInit)());
-    void SetOnEventCallBack(void (*OnEvent)(QEvent *e));
+    void SetOpenGLEnvInitCallBack(OpenGLEnvInitCallback InitFuncCB);
+    void SetOnEventCallBack(OnEventCallBack EventFuncCB);
+    void SetGetCallBack(GetMat4Callback Mat4FCB);
+    void SetGetCallBack(GetVec3DCallback vec3DFCB);
 protected:
     void initializeGL() override;
     void paintGL() override;
@@ -30,8 +33,13 @@ private:
     int setRotation(int angle);
     void normalizeAngle(int &angle);
 private:
-    void (*OpenGLEnvInit)();//定义在initializeGL方法中执行的环境初始化
-    void (*OnEvent)(QEvent* event);//定义在initializeGL方法中执行的环境初始化
+    bool isHanldeEvent(QEvent *e);
+private:
+    OpenGLEnvInitCallback OnGLEnvInit;//定义在initializeGL方法中执行的环境初始化
+    OnEventCallBack       OnEvent;//定义在eventFilter方法中执行的事件处理
+    DrawCallback          OnDraw;//绘制时调用的回调函数
+    GetMat4Callback       GetMVPMat4;//获取mvp矩阵
+    GetVec3DCallback      Get3DPos;//获取值
 private:
     QSharedPointer<CubeGeometry> m_pDrawEleS;
     QSharedPointer<QOpenGLShaderProgram> program;//着色器

@@ -3,9 +3,13 @@
 #include "Src/FELogicService/OpenGLEntity/Material.h"//材质
 
 OpenGLWindow::OpenGLWindow(QWidget * parent) :
-    QOpenGLWidget(parent),m_pDrawEleS(nullptr),m_pCamera(nullptr),
-    OnEvent(nullptr),OpenGLEnvInit(nullptr)
+    QOpenGLWidget(parent),m_pDrawEleS(nullptr),m_pCamera(nullptr)
 {
+    OnGLEnvInit = nullptr;
+    OnEvent = nullptr;
+    GetMVPMat4 = nullptr;
+    Get3DPos = nullptr;
+
     this->m_MouseFlag = Qt::NoButton;
     this->m_MousePressFlag = false;
     this->m_xRot = 0;
@@ -37,14 +41,24 @@ void OpenGLWindow::SetRendererData(QSharedPointer<FEModel> pModel)
     m_pDrawEleS->UpdateCubeGeometry(pModel);
 }
 
-void OpenGLWindow::SetOpenGLEnvInitCallBack(void (*OpenGLEnvInit)())
+void OpenGLWindow::SetOpenGLEnvInitCallBack(OpenGLEnvInitCallback InitFuncCB)
 {
-    this->OpenGLEnvInit = OpenGLEnvInit;
+    this->OnGLEnvInit = InitFuncCB;
 }
 
-void OpenGLWindow::SetOnEventCallBack(void (*OnEvent)(QEvent *))
+void OpenGLWindow::SetOnEventCallBack(OnEventCallBack EventFuncCB)
 {
-    this->OnEvent = OnEvent;
+    this->OnEvent = EventFuncCB;
+}
+
+void OpenGLWindow::SetGetCallBack(GetMat4Callback Mat4FCB)
+{
+    this->GetMVPMat4 = Mat4FCB;
+}
+
+void OpenGLWindow::SetGetCallBack(GetVec3DCallback vec3DFCB)
+{
+    this->Get3DPos = vec3DFCB;
 }
 
 void OpenGLWindow::initializeGL()
@@ -115,11 +129,12 @@ void OpenGLWindow::resizeGL(int w, int h)
 
 bool OpenGLWindow::eventFilter(QObject* obj,QEvent *e)
 {
-    if(OnEvent != nullptr)
+    if(OnEvent != nullptr && obj == this && isHanldeEvent(e))
     {
         //使用回调函数处理
-        OnEvent(e);
-        return true;
+        bool ret = this->OnEvent(e);
+        update();//立即刷新视图
+        return ret;
     }
 
     //非处理信号交给父类处理
@@ -219,6 +234,33 @@ void OpenGLWindow::mouseReleaseEvent(QMouseEvent *event)
         this->m_yTrans = 0;
     }
 }
+
+int OpenGLWindow::setRotation(int angle)
+{
+    normalizeAngle(angle);
+    return angle;
+}
+
+void OpenGLWindow::normalizeAngle(int &angle)
+{
+    while (angle < 0)
+        angle += 360 * 16;
+    while (angle > 360 * 16)
+        angle -= 360 * 16;
+}
+
+bool OpenGLWindow::isHanldeEvent(QEvent *e)
+{
+    //特殊处理的事件
+    static QList<QEvent::Type> typeList = {QEvent::Type::MouseButtonPress,
+                                           QEvent::Type::MouseButtonRelease,
+                                           QEvent::Type::MouseMove,
+                                           QEvent::Type::Wheel};
+
+    return typeList.contains(e->type());
+}
+
+
 //编译着色器并连接绑定
 void OpenGLWindow::initShaders()
 {
@@ -234,21 +276,6 @@ void OpenGLWindow::initShaders()
     {
         qDebug()<<"shader bind error";
     }
-}
-
-
-int OpenGLWindow::setRotation(int angle)
-{
-    normalizeAngle(angle);
-    return angle;
-}
-
-void OpenGLWindow::normalizeAngle(int &angle)
-{
-    while (angle < 0)
-        angle += 360 * 16;
-    while (angle > 360 * 16)
-        angle -= 360 * 16;
 }
 
 
