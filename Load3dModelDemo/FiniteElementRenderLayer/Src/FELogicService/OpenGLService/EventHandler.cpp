@@ -152,11 +152,11 @@ void EventHandler::mouseMoveEvent(QMouseEvent *event)
         qreal w_h_ratio = (qreal)(width) / (qreal)(height);
         qreal cube_view_height = 2 * m_pCamera->zoom * m_pCamera->distance * qTan(qDegreesToRadians(m_pCamera->fovy/2));
         qreal cube_view_width = w_h_ratio * cube_view_height;
-
         this->m_xTrans = cube_view_width / qreal(width) * qreal(diff.x());
         this->m_yTrans = cube_view_height / qreal(height) * qreal(diff.y());
     }
 }
+
 //鼠标释放后，记录当前的旋转或平移矩阵
 void EventHandler::mouseReleaseEvent(QMouseEvent *event)
 {

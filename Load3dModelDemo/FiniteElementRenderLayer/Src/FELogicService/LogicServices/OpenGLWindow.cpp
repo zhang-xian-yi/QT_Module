@@ -63,6 +63,8 @@ void OpenGLWindow::initializeGL()
     glEnable(GL_CULL_FACE);
 
     m_pDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
+
+    OnGLEnvInit();//初始化环境 回调函数
 }
 
 void OpenGLWindow::paintGL()
