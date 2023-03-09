@@ -74,8 +74,11 @@ void EventHandler::InitEnv(int width, int height)
 }
 
 //处理投影矩阵
-void EventHandler::SlotSetProjectMat4(int w, int h)
+void EventHandler::SlotResigzeGLMat4(int w, int h)
 {
+    this->width = w;
+    this->height = h;
+
     //关联数据
     qreal aspect = qreal(w) / qreal(h ? h : 1);
     const qreal zNear = 0.001, zFar = 1000.0;

@@ -26,6 +26,7 @@ public:
 public:
     void LoadFiniteElementData(const QString& filepath);
 private:
+    //此方法作为回调函数在 OpenGLWidget中的 initialGL方法中执行
     void EnvirInitCallBack();
 private:
     OpenGLWindow*  m_openGLWindow;  //openGL的窗口 由QT自身控制释放

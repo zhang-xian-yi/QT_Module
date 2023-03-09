@@ -17,7 +17,7 @@ public:
 signals:
     void SigWheelAngle(int angle);
 public:
-    void SlotSetProjectMat4(int w,int h);
+    void SlotResigzeGLMat4(int w,int h);
 private:
     void wheelEvent(QWheelEvent *event) ;
     void mousePressEvent(QMouseEvent *event) ;
@@ -27,9 +27,9 @@ private:
     int  setRotation(int angle);
     void normalizeAngle(int &angle);
 private:
-    QMatrix4x4 m_projection;      //透视矩阵
+    QMatrix4x4 m_projection;    //透视矩阵
     QMatrix4x4 m_translation;   //平移矩阵
-    QMatrix4x4 m_rotation;   //旋转矩阵
+    QMatrix4x4 m_rotation;      //旋转矩阵
 
     int m_MouseFlag;         //记录按下的鼠标按键
     bool m_MousePressFlag;   //记录鼠标按键是否已按下
@@ -45,8 +45,8 @@ private:
     //视角
     QSharedPointer<CameraView> m_pCamera;
 
-    uint32_t width;
-    uint32_t height;
+    uint32_t width;     //窗口宽度
+    uint32_t height;    //窗口高度
 };
 
 #endif // EVENTHANDLER_H
