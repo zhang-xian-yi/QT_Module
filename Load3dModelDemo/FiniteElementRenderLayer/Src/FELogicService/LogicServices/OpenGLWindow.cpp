@@ -7,6 +7,8 @@ OpenGLWindow::OpenGLWindow(QWidget * parent) :
     OnGLEnvInit = nullptr;
     OnEvent = nullptr;
     OnDraw = nullptr;
+    //关键代码，实时刷新
+    connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
     //设置父控件的大小
     this->setParent(parent);
     this->setGeometry(parent->rect().x(),parent->rect().y(),
