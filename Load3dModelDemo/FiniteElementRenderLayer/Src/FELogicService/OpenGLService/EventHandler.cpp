@@ -49,16 +49,17 @@ QMatrix4x4 EventHandler::GetMVPMatrix4()
     //计算得到当前旋转矩阵
     rotation = rotation * this->m_rotation;
 
-    QMatrix4x4 m1,m2;
+    QMatrix4x4 viewMat4;
     //得到当前观察者矩阵
-    m1.lookAt(m_pCamera->eye, m_pCamera->center, m_pCamera->up);
-    m1 = m1 * rotation;
+    viewMat4.lookAt(m_pCamera->eye, m_pCamera->center, m_pCamera->up);
+    viewMat4 = viewMat4 * rotation;
     //得到当前平移矩阵
-    m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
-    m2 = m2 * this->m_translation;
+    QMatrix4x4 tranMat4;
+    tranMat4.translate(this->m_xTrans, -1.0 * this->m_yTrans, 0);
+    tranMat4 = tranMat4 * this->m_translation;
 
-    //注意旋转,缩放，平移变换，有固定顺序
-    return m_projection * m2 * m1;
+    //注意缩放，旋转,平移变换，有固定顺序
+    return m_projection * viewMat4 * tranMat4;
 }
 
 QVector3D EventHandler::Get3DPos()
