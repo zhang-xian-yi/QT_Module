@@ -1,6 +1,6 @@
 #pragma once
 //c and c++
-
+#include <functional>
 #include <memory>
 //add QT Lib
 #include <QByteArray>

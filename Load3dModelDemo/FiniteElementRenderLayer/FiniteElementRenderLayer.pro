@@ -51,6 +51,7 @@ CONFIG(release) {
 
 #内部 .h
 HEADERS += \
+    Src/FECommon/MdlDefine.h \
     Src/FECommon/PCH.h \
     Src/FECommon/GlobalData.h \
     Src/FELogicService/OpenGLService/EventHandler.h \
@@ -68,7 +69,7 @@ HEADERS += \
     Src/FELogicService/LogicServices/CubeGeometry.h \
     Src/FELogicService/LogicServices/FEFileParser.h \
     Src/FELogicService/OpenGLService/OpenGLRenderer.h \
-
+    Src/FELogicService/OpenGLEntity/CameraView.h \
 
 #内部 .cpp
 SOURCES += \
@@ -87,6 +88,8 @@ SOURCES += \
     Src/FELogicService/LogicServices/OpenGLWindow.cpp \
     Src/FELogicService/LogicServices/CubeGeometry.cpp \
     Src/FELogicService/OpenGLService/OpenGLRenderer.cpp \
+    Src/FELogicService/OpenGLEntity/CameraView.cpp \
+
 
 #外部 .h
 HEADERS += \
