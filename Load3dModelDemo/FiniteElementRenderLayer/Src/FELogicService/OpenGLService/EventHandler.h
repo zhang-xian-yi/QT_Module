@@ -16,6 +16,8 @@ public:
     void InitEnv(int width,int height);
 signals:
     void SigWheelAngle(int angle);
+public:
+    void SlotSetProjectMat4(int w,int h);
 private:
     void wheelEvent(QWheelEvent *event) ;
     void mousePressEvent(QMouseEvent *event) ;

@@ -49,17 +49,16 @@ QMatrix4x4 EventHandler::GetMVPMatrix4()
     //计算得到当前旋转矩阵
     rotation = rotation * this->m_rotation;
 
-    QMatrix4x4 viewMat;
+    QMatrix4x4 m1,m2;
     //得到当前观察者矩阵
-    viewMat.lookAt(m_pCamera->eye, m_pCamera->center, m_pCamera->up);
-    viewMat = viewMat * rotation;
+    m1.lookAt(m_pCamera->eye, m_pCamera->center, m_pCamera->up);
+    m1 = m1 * rotation;
     //得到当前平移矩阵
-    QMatrix4x4 tranMat;
-    tranMat.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
-    tranMat = tranMat * this->m_translation;
+    m2.translate(this->m_xTrans, -1.0*this->m_yTrans, 0);
+    m2 = m2 * this->m_translation;
 
     //注意旋转,缩放，平移变换，有固定顺序
-    return m_projection * tranMat * viewMat;
+    return m_projection * m2 * m1;
 }
 
 QVector3D EventHandler::Get3DPos()
@@ -71,6 +70,17 @@ void EventHandler::InitEnv(int width, int height)
 {
     this->width = width;
     this->height = height;
+}
+
+//处理投影矩阵
+void EventHandler::SlotSetProjectMat4(int w, int h)
+{
+    //关联数据
+    qreal aspect = qreal(w) / qreal(h ? h : 1);
+    const qreal zNear = 0.001, zFar = 1000.0;
+    m_projection.setToIdentity();
+    // 得到透视矩阵
+    m_projection.perspective(m_pCamera->fovy, aspect, zNear, zFar);
 }
 
 //缩放控制就是控制观察者的位置到被观察物体中心位置的距离，即改变m_pCamera->eye的值
