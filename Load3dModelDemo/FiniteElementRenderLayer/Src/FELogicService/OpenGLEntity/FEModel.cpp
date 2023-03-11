@@ -44,26 +44,13 @@ void FEModel::DrawModel(QSharedPointer<QOpenGLShaderProgram> program)
     m_pVertexBuf->bind();
     m_pIndexBuf->bind();
 
-    quintptr offset = 0;
-    // Tell OpenGL programmable pipeline how to locate vertex position data
-    int vPos = program->attributeLocation("vPosition");
-    program->enableAttributeArray(vPos);
-    program->setAttributeBuffer(vPos, GL_FLOAT, offset, 3, sizeof(FEVertex));
-
-    // Offset for texture coordinate
-    offset += sizeof(QVector3D);
-
-    // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
-    int aColor = program->attributeLocation("aColor");
-    program->enableAttributeArray(aColor);
-    program->setAttributeBuffer(aColor, GL_FLOAT, offset, 3, sizeof(FEVertex));
-
-    // Offset for normal
-    offset += sizeof(QVector3D);
-    // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
-    int aNormal = program->attributeLocation("aNormal");
-    program->enableAttributeArray(aNormal);
-    program->setAttributeBuffer(aNormal, GL_FLOAT, offset, 3, sizeof(FEVertex));
+    auto f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
+    f->glEnableVertexAttribArray(0);
+    f->glEnableVertexAttribArray(1);
+    f->glEnableVertexAttribArray(2);
+    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(FEVertex), (void*) offsetof(FEVertex, position));
+    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(FEVertex), (void*) offsetof(FEVertex, color));
+    f->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(FEVertex), (void*) offsetof(FEVertex, normal));
 
     //绘制
     glDrawElements(GL_QUADS, m_indexVect.size(), GL_UNSIGNED_INT, 0);
