@@ -54,29 +54,26 @@ HEADERS += \
     Src/FECommon/MdlDefine.h \
     Src/FECommon/PCH.h \
     Src/FECommon/GlobalData.h \
-    Src/FELogicService/DrawElement/AbstractDE.h \
-    Src/FELogicService/OpenGLService/EventHandler.h \
-    Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FEMControl/FERendererLayerControl.h \
     Src/FELogicService/FERendererLayerService.h \
+    Src/FELogicService/OpenGLService/EventHandler.h \
+    Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FELogicService/DataEntity/FEFileData.h   \
     Src/FELogicService/OpenGLEntity/FEMesh.h \
     Src/FELogicService/OpenGLEntity/FEModel.h \
     Src/FELogicService/OpenGLEntity/FEScence.h \
     Src/FELogicService/OpenGLEntity/FEVertex.h \
     Src/FELogicService/OpenGLEntity/Material.h \
-    Src/FELogicService/LogicServices/ConvertOpenGLData.h \
+    Src/FELogicService/OpenGLEntity/CameraView.h \
     Src/FELogicService/LogicServices/OpenGLWindow.h \
     Src/FELogicService/LogicServices/FEFileParser.h \
-    Src/FELogicService/OpenGLService/OpenGLRenderer.h \
-    Src/FELogicService/OpenGLEntity/CameraView.h \
     Src/FELogicService/DrawElement/AbstractDE.h \
     Src/FELogicService/DrawElement/DECube.h \
+    Src/FELogicService/DrawElement/AbstractDE.h \
 
 #内部 .cpp
 SOURCES += \
     Src/FECommon/GlobalData.cpp \
-    Src/FELogicService/OpenGLService/EventHandler.cpp \
     Src/FEMControl/FERendererLayerControl.cpp \
     Src/FELogicService/FERendererLayerService.cpp \
     Src/FELogicService/DataEntity/FEFileData.cpp \
@@ -85,11 +82,11 @@ SOURCES += \
     Src/FELogicService/OpenGLEntity/FEScence.cpp \
     Src/FELogicService/OpenGLEntity/FEVertex.cpp \
     Src/FELogicService/OpenGLEntity/Material.cpp \
-    Src/FELogicService/LogicServices/ConvertOpenGLData.cpp \
+    Src/FELogicService/OpenGLEntity/CameraView.cpp \
     Src/FELogicService/LogicServices/FEFileParser.cpp \
     Src/FELogicService/LogicServices/OpenGLWindow.cpp \
     Src/FELogicService/OpenGLService/OpenGLRenderer.cpp \
-    Src/FELogicService/OpenGLEntity/CameraView.cpp \
+    Src/FELogicService/OpenGLService/EventHandler.cpp \
     Src/FELogicService/DrawElement/DECube.cpp \
 
 

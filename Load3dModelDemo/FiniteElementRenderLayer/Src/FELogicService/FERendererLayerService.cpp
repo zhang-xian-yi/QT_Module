@@ -3,7 +3,6 @@
 FERendererLayerService::FERendererLayerService(QWidget * parent)
 {
     m_pFEParseS = QSharedPointer<FEFileParser>(new FEFileParser());
-    m_pConvertS = QSharedPointer<ConvertOpenGLData>(new ConvertOpenGLData());
     m_pEventHandlerS = QSharedPointer<EventHandler>(new EventHandler());
     m_pScene = QSharedPointer<FEScence>(new FEScence());
     m_pRendererS = QSharedPointer<OpenGLRenderer>(new OpenGLRenderer());
@@ -34,13 +33,11 @@ FERendererLayerService::~FERendererLayerService()
 void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
 {
     //解析文件
-    QSharedPointer<FEFileData> parseData = m_pFEParseS->ParseFile(filepath);
-    if(parseData.isNull())
+    QSharedPointer<FEModel> pModel = m_pFEParseS->ParseFile(filepath);
+    if(pModel.isNull())
     {
         return;
     }
-    //转化数据
-    QSharedPointer<FEModel> pModel = m_pConvertS->Convert(parseData);
     //开始渲染
     m_pRendererS->SetRendererData(pModel);
 }

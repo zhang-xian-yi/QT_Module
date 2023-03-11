@@ -10,7 +10,7 @@ FEFileParser::~FEFileParser()
     m_pFEFileData = nullptr;
 }
 
-QSharedPointer<FEFileData> FEFileParser::ParseFile(const QString& strFile)
+QSharedPointer<FEModel> FEFileParser::ParseFile(const QString& strFile)
 {
     m_pFEFileData = QSharedPointer<FEFileData>(new FEFileData());
     //显示读取时间
@@ -32,7 +32,34 @@ QSharedPointer<FEFileData> FEFileParser::ParseFile(const QString& strFile)
     }
     qDebug()<<qtime.elapsed()/1000.0<<"s";
     //返回结果
-    return m_pFEFileData;
+    return Convert(m_pFEFileData);
+}
+
+
+QSharedPointer<FEModel> FEFileParser::Convert(QSharedPointer<FEFileData> pFEFileData)
+{
+    m_pFEModel = QSharedPointer<FEModel>(new FEModel());
+
+    QVector<QSharedPointer<FEFileVertex>>& FileVertexArr = pFEFileData->GetVertexVector();
+    //遍历顶点数组
+    foreach (auto pVertex, FileVertexArr)
+    {
+        FEVertex v;
+        v.position = {(*pVertex)[0],(*pVertex)[1],(*pVertex)[2]};//012 是有限元文件中固定的xyz，3D坐标
+        //添加顶点
+        m_pFEModel->verticesVect.append(v);
+    }
+
+    QVector<QSharedPointer<FEFileMesh>> & FileMeshArr = pFEFileData->GetMeshVector();
+    //遍历网格数组
+    foreach (auto pMesh, FileMeshArr)
+    {
+        FEMesh m;
+        m.indexVect = pMesh->indexData;
+        //添加网格
+        m_pFEModel->meshVect.append(m);
+    }
+    return m_pFEModel;
 }
 
 void FEFileParser::LineDataProcess(QString strline,int lineNum)

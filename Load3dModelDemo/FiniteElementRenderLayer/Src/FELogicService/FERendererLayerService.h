@@ -12,7 +12,6 @@ vld 需要deghelp.dll 、 Microsoft.DTfW.DHL.manifest、 vld_x64.dll 一起放�
 
 #include "LogicServices/OpenGLWindow.h"
 #include "LogicServices/FEFileParser.h"
-#include "LogicServices/ConvertOpenGLData.h"
 #include "OpenGLService/EventHandler.h"
 #include "OpenGLService/OpenGLRenderer.h"
 #include "OpenGLEntity/FEScence.h"
@@ -32,7 +31,6 @@ private:
 private:
     OpenGLWindow*  m_openGLWindow;  //openGL的窗口 由QT自身控制释放
     QSharedPointer<FEFileParser> m_pFEParseS; //有限元文件解析工具
-    QSharedPointer<ConvertOpenGLData> m_pConvertS; //数据转化工具
     QSharedPointer<EventHandler> m_pEventHandlerS; //事件处理
     QSharedPointer<FEScence> m_pScene; //场景
     QSharedPointer<OpenGLRenderer> m_pRendererS; //渲染

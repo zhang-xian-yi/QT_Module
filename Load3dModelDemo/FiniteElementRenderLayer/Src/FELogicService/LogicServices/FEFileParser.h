@@ -2,15 +2,17 @@
 #define DATPARSER_H
 
 #include "Src/FELogicService/DataEntity/FEFileData.h"
+#include "Src/FELogicService/OpenGLEntity/FEModel.h"
 class FEFileParser
 {
 public:
     FEFileParser();
     ~FEFileParser();
-
-    QSharedPointer<FEFileData> ParseFile(const QString& strFile);
-
+public:
+    QSharedPointer<FEModel> ParseFile(const QString& strFile);
 private:
+    //将文件数据转化内opengl所需要的内部数据
+    QSharedPointer<FEModel> Convert(QSharedPointer<FEFileData> pFEFileData);
     void LineDataProcess(QString strline,int lineNum);
     void SaveTitle(QString strline);//有限元文件第一行
     void SaveVariable(QString strline);//有限元文件第二行
@@ -21,6 +23,7 @@ private:
     QString EraseExtraChar(QString strData);
 private:
     QSharedPointer<FEFileData> m_pFEFileData;//有限元数据
+    QSharedPointer<FEModel> m_pFEModel;
 };
 
 
