@@ -9,7 +9,7 @@ public:
     FEMesh();
 public:
     //创建模型顶点缓冲区（所有mesh）--必须在OpenGL上下文之中
-    void CreateBuffer(QVector<FEVertex>& AllVertexArr);
+    QVector<GLuint>& Compute(QVector<FEVertex>& AllVertexArr);
     //绘制
     void Draw(QSharedPointer<QOpenGLShaderProgram> program);
 public:

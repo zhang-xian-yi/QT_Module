@@ -7,7 +7,7 @@ class AbstractDE
 {
 public:
     //设置渲染数据 注意必须为实际结构体，而不是指针
-    virtual void SetRendererData(QVector<FEVertex>& vertexArr,QVector<GLuint>& meshArr) = 0;
+    virtual QVector<GLuint>& ComputeRendererData(QVector<FEVertex>& vertexArr,QVector<GLuint>& meshArr) = 0;
     // 界面paintGl自动调用
     virtual void Draw(QSharedPointer<QOpenGLShaderProgram> program) = 0;
 };

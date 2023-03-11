@@ -5,7 +5,7 @@ FEMesh::FEMesh()
 
 }
 
-void FEMesh::CreateBuffer(QVector<FEVertex> &AllVertexArr)
+QVector<GLuint>& FEMesh::Compute(QVector<FEVertex> &AllVertexArr)
 {
     //8个顶点--画正正六面体
     if(this->indexVect.size() == 8)
@@ -14,7 +14,7 @@ void FEMesh::CreateBuffer(QVector<FEVertex> &AllVertexArr)
     }
 
     //根据不同的渲染元素--绘制不同的索引设置，并改变对应顶点的数据
-    m_pDrawEleS->SetRendererData(AllVertexArr,this->indexVect);
+    return m_pDrawEleS->ComputeRendererData(AllVertexArr,this->indexVect);
 }
 
 void FEMesh::Draw(QSharedPointer<QOpenGLShaderProgram> program)

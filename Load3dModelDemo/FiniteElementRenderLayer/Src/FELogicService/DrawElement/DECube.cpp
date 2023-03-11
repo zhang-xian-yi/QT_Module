@@ -2,7 +2,7 @@
 
 DECube::DECube()
 {
-    m_pIndexBuf = QSharedPointer<QOpenGLBuffer>(new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer));
+
 }
 
 DECube::~DECube()
@@ -12,26 +12,16 @@ DECube::~DECube()
 
 void DECube::Draw(QSharedPointer<QOpenGLShaderProgram> program)
 {
-    //提交gpu数据
-    this->m_pIndexBuf->bind();
-    this->m_pIndexBuf->allocate(m_indexVect.constData(), m_indexVect.size() * sizeof(GLuint));
-    this->m_pIndexBuf->setUsagePattern(QOpenGLBuffer::StaticDraw);
 
-    //绘制
-    glDrawElements(GL_QUADS, m_indexVect.size(), GL_UNSIGNED_INT, 0);
-
-    this->m_pIndexBuf->release();
 }
 
 //此方法会在initialGL方法中执行create
-void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& indexArr)
+QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& indexArr)
 {
-    m_indexVect.clear();//每次清空
-    //顶点缓冲区创建
-    this->m_pIndexBuf->create();
+    m_indexVect.clear();
 
-    FEVertex* pV0,*pV1,*pV2,*pV3;
-    //face1
+    static FEVertex* pV0,*pV1,*pV2,*pV3;
+    //face1  0123
     GLuint meshRealIndex = 0;
     //顶点索引从1 开始，内存地址从0开始，所以真实index 需要减去1
     meshRealIndex = indexArr.at(0) - 1 ;
@@ -47,7 +37,7 @@ void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& i
     m_indexVect.append(meshRealIndex);
     pV3 = &allVertexArr[meshRealIndex];//add by light director
     ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face2
+    //face2 4567
     meshRealIndex = indexArr.at(4) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -61,7 +51,7 @@ void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& i
     m_indexVect.append(meshRealIndex);
     pV3 = &allVertexArr[meshRealIndex];//add by light director
     ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face3
+    //face3 2761
     meshRealIndex = indexArr.at(2) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -75,7 +65,7 @@ void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& i
     m_indexVect.append(meshRealIndex);
     pV3 = &allVertexArr[meshRealIndex];//add by light director
     ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face4
+    //face4 2456
     meshRealIndex = indexArr.at(3) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -89,7 +79,7 @@ void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& i
     m_indexVect.append(meshRealIndex);
     pV3 = &allVertexArr[meshRealIndex];//add by light director
     ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face5
+    //face5 3274
     meshRealIndex = indexArr.at(3) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -103,7 +93,7 @@ void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& i
     m_indexVect.append(meshRealIndex);
     pV3 = &allVertexArr[meshRealIndex];//add by light director
     ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face6
+    //face6 0156
     meshRealIndex = indexArr.at(0) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -117,7 +107,10 @@ void DECube::SetRendererData(QVector<FEVertex> &allVertexArr, QVector<GLuint>& i
     m_indexVect.append(meshRealIndex);
     pV3 = &allVertexArr[meshRealIndex];//add by light director
     ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
+
+    return m_indexVect;
 }
+
 
 void DECube::ComputeNormal(FEVertex &v0, FEVertex &v1, FEVertex &v2, FEVertex &v3)
 {
@@ -128,7 +121,7 @@ void DECube::ComputeNormal(FEVertex &v0, FEVertex &v1, FEVertex &v2, FEVertex &v
     //法向量单元化
     normal.normalize();
 
-
+    //赋值法线
     AssignVertexNormal(v0,normal);
     AssignVertexNormal(v1,normal);
     AssignVertexNormal(v2,normal);
@@ -145,6 +138,6 @@ void DECube::AssignVertexNormal(FEVertex &vert, QVector3D normal)
     }
     else
     {
-        vert.normal = (vert.normal + normal) ;
+        vert.normal = (vert.normal + normal) /2 ;
     }
 }
