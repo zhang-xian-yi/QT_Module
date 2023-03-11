@@ -67,7 +67,6 @@ HEADERS += \
     Src/FELogicService/OpenGLEntity/Material.h \
     Src/FELogicService/LogicServices/ConvertOpenGLData.h \
     Src/FELogicService/LogicServices/OpenGLWindow.h \
-    Src/FELogicService/LogicServices/CubeGeometry.h \
     Src/FELogicService/LogicServices/FEFileParser.h \
     Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FELogicService/OpenGLEntity/CameraView.h \
@@ -89,7 +88,6 @@ SOURCES += \
     Src/FELogicService/LogicServices/ConvertOpenGLData.cpp \
     Src/FELogicService/LogicServices/FEFileParser.cpp \
     Src/FELogicService/LogicServices/OpenGLWindow.cpp \
-    Src/FELogicService/LogicServices/CubeGeometry.cpp \
     Src/FELogicService/OpenGLService/OpenGLRenderer.cpp \
     Src/FELogicService/OpenGLEntity/CameraView.cpp \
     Src/FELogicService/DrawElement/DECube.cpp \

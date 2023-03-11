@@ -13,7 +13,6 @@ vld 需要deghelp.dll 、 Microsoft.DTfW.DHL.manifest、 vld_x64.dll 一起放�
 #include "LogicServices/OpenGLWindow.h"
 #include "LogicServices/FEFileParser.h"
 #include "LogicServices/ConvertOpenGLData.h"
-#include "LogicServices/CubeGeometry.h"
 #include "OpenGLService/EventHandler.h"
 #include "OpenGLService/OpenGLRenderer.h"
 #include "OpenGLEntity/FEScence.h"

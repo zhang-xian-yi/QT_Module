@@ -9,8 +9,8 @@ public:
     FEModel();
 
 public:
-    //创建模型顶点缓冲区（所有mesh）--必须在OpenGL上下文之中
-    void CreateBuffer();
+    //提交指定数据
+    void Commit();
     //绘制
     void DrawModel(QSharedPointer<QOpenGLShaderProgram> program);
 public:
@@ -19,7 +19,12 @@ public:
     //保存索引的网格数据
     QVector<FEMesh> meshVect;
 private:
+    void ComputeNormal(FEVertex& v0,FEVertex& v1,FEVertex& v2,FEVertex& v3);
+    void AssignVertexNormal(FEVertex& vert,QVector3D normal);
+private:
     QSharedPointer<QOpenGLBuffer> m_pVertexBuf;   //VBO
+    QSharedPointer<QOpenGLBuffer> m_pIndexBuf;   //VBO
+    QVector<GLuint> m_indexVect;//索引缓冲区
 };
 
 #endif // FEMODEL_H

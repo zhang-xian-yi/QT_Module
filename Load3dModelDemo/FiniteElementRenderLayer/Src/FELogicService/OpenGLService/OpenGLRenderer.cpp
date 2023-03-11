@@ -2,7 +2,8 @@
 
 #include "Src/FELogicService/OpenGLEntity/Material.h"//材质
 
-OpenGLRenderer::OpenGLRenderer()
+OpenGLRenderer::OpenGLRenderer():
+    m_pModel(nullptr)
 {
     GetMVPMat4 = nullptr;
     Get3DPos = nullptr;
@@ -11,12 +12,17 @@ OpenGLRenderer::OpenGLRenderer()
 void OpenGLRenderer::InitEnv()
 {
     initShaders();//初始化着色器
-
-    m_pDrawEleS = QSharedPointer<CubeGeometry>(new CubeGeometry());
 }
 
 void OpenGLRenderer::Draw()
 {
+    if(m_pModel == nullptr)
+    {
+        //第一次渲染窗口 由于文件未加载--需要判空
+        //渲染对象不存在则返回 直接返回
+        return;
+    }
+
     m_pShaderProgram->setUniformValue("mvp_matrix", this->GetMVPMat4());
     // add by light
     m_pShaderProgram->setUniformValue("viewPos", this->Get3DPos());
@@ -31,13 +37,14 @@ void OpenGLRenderer::Draw()
     m_pShaderProgram->setUniformValue("material.specular",  material.specular);
     m_pShaderProgram->setUniformValue("material.shininess", material.shininess);
 
-    m_pDrawEleS->drawCubeGeometry(m_pShaderProgram);
+    m_pModel->DrawModel(m_pShaderProgram);
 }
 
 
 void OpenGLRenderer::SetRendererData(QSharedPointer<FEModel> pModel)
 {
-    m_pDrawEleS->SetRenderData(pModel->verticesVect,pModel->meshVect);
+    m_pModel = pModel;
+    m_pModel->Commit();
 }
 
 //编译着色器并连接绑定
