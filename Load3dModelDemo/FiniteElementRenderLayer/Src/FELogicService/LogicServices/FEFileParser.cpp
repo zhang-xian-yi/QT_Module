@@ -3,11 +3,13 @@
 FEFileParser::FEFileParser()
 {
     m_pFEFileData = nullptr;
+    m_pFEModel = nullptr;
 }
 
 FEFileParser::~FEFileParser()
 {
     m_pFEFileData = nullptr;
+    m_pFEModel = nullptr;
 }
 
 QSharedPointer<FEModel> FEFileParser::ParseFile(const QString& strFile)
