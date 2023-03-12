@@ -20,8 +20,8 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
 {
     m_indexVect.clear();
 
-    static FEVertex* pV0,*pV1,*pV2,*pV3;
-    //face1  0123
+    static FEVertex* pV0,*pV1,*pV2;
+    //face1  012,123
     GLuint meshRealIndex = 0;
     //顶点索引从1 开始，内存地址从0开始，所以真实index 需要减去1
     meshRealIndex = indexArr.at(0) - 1 ;
@@ -33,11 +33,18 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
     meshRealIndex = indexArr.at(2) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    meshRealIndex = indexArr.at(1) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV0 = &allVertexArr[meshRealIndex];//add by light director
+    meshRealIndex = indexArr.at(2) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV1 = &allVertexArr[meshRealIndex];//add by light director
     meshRealIndex = indexArr.at(3) - 1 ;
     m_indexVect.append(meshRealIndex);
-    pV3 = &allVertexArr[meshRealIndex];//add by light director
-    ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face2 4567
+    pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    //face2 456,567
     meshRealIndex = indexArr.at(4) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -47,10 +54,17 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
     meshRealIndex = indexArr.at(6) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    meshRealIndex = indexArr.at(5) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV0 = &allVertexArr[meshRealIndex];//add by light director
+    meshRealIndex = indexArr.at(6) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV1 = &allVertexArr[meshRealIndex];//add by light director
     meshRealIndex = indexArr.at(7) - 1 ;
     m_indexVect.append(meshRealIndex);
-    pV3 = &allVertexArr[meshRealIndex];//add by light director
-    ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
+    pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
     //face3 2761
     meshRealIndex = indexArr.at(2) - 1 ;
     m_indexVect.append(meshRealIndex);
@@ -61,11 +75,18 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
     meshRealIndex = indexArr.at(6) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    meshRealIndex = indexArr.at(7) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV0 = &allVertexArr[meshRealIndex];//add by light director
+    meshRealIndex = indexArr.at(6) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV1 = &allVertexArr[meshRealIndex];//add by light director
     meshRealIndex = indexArr.at(1) - 1 ;
     m_indexVect.append(meshRealIndex);
-    pV3 = &allVertexArr[meshRealIndex];//add by light director
-    ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
-    //face4 2456
+    pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    //face4 3450
     meshRealIndex = indexArr.at(3) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV0 = &allVertexArr[meshRealIndex];//add by light director
@@ -75,10 +96,17 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
     meshRealIndex = indexArr.at(5) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    meshRealIndex = indexArr.at(4) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV0 = &allVertexArr[meshRealIndex];//add by light director
+    meshRealIndex = indexArr.at(5) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV1 = &allVertexArr[meshRealIndex];//add by light director
     meshRealIndex = indexArr.at(0) - 1 ;
     m_indexVect.append(meshRealIndex);
-    pV3 = &allVertexArr[meshRealIndex];//add by light director
-    ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
+    pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
     //face5 3274
     meshRealIndex = indexArr.at(3) - 1 ;
     m_indexVect.append(meshRealIndex);
@@ -89,10 +117,17 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
     meshRealIndex = indexArr.at(7) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    meshRealIndex = indexArr.at(2) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV0 = &allVertexArr[meshRealIndex];//add by light director
+    meshRealIndex = indexArr.at(7) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV1 = &allVertexArr[meshRealIndex];//add by light director
     meshRealIndex = indexArr.at(4) - 1 ;
     m_indexVect.append(meshRealIndex);
-    pV3 = &allVertexArr[meshRealIndex];//add by light director
-    ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
+    pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
     //face6 0156
     meshRealIndex = indexArr.at(0) - 1 ;
     m_indexVect.append(meshRealIndex);
@@ -103,16 +138,23 @@ QVector<GLuint>&  DECube::ComputeRendererData(QVector<FEVertex> &allVertexArr, Q
     meshRealIndex = indexArr.at(5) - 1 ;
     m_indexVect.append(meshRealIndex);
     pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
+    meshRealIndex = indexArr.at(1) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV0 = &allVertexArr[meshRealIndex];//add by light director
+    meshRealIndex = indexArr.at(5) - 1 ;
+    m_indexVect.append(meshRealIndex);
+    pV1 = &allVertexArr[meshRealIndex];//add by light director
     meshRealIndex = indexArr.at(6) - 1 ;
     m_indexVect.append(meshRealIndex);
-    pV3 = &allVertexArr[meshRealIndex];//add by light director
-    ComputeNormal(*pV0,*pV1,*pV2,*pV3);//计算四个点锁确定平面的法向量
+    pV2 = &allVertexArr[meshRealIndex];//add by light director
+    ComputeNormal(*pV0,*pV1,*pV2);//计算四个点锁确定平面的法向量
 
     return m_indexVect;
 }
 
 
-void DECube::ComputeNormal(FEVertex &v0, FEVertex &v1, FEVertex &v2, FEVertex &v3)
+void DECube::ComputeNormal(FEVertex &v0, FEVertex &v1, FEVertex &v2)
 {
     QVector3D firstVec = v1.position- v0.position;
     QVector3D secondVec = v2.position - v0.position;
@@ -125,7 +167,6 @@ void DECube::ComputeNormal(FEVertex &v0, FEVertex &v1, FEVertex &v2, FEVertex &v
     AssignVertexNormal(v0,normal);
     AssignVertexNormal(v1,normal);
     AssignVertexNormal(v2,normal);
-    AssignVertexNormal(v3,normal);
 }
 
 void DECube::AssignVertexNormal(FEVertex &vert, QVector3D normal)

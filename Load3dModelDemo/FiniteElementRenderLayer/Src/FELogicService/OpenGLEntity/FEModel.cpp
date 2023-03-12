@@ -17,6 +17,7 @@ void FEModel::Commit()
     }
 
     //顶点数组绑定对象
+
     m_vao = QSharedPointer<QOpenGLVertexArrayObject>(new QOpenGLVertexArrayObject());
     m_vao->create();
     m_vao->bind();
@@ -51,7 +52,7 @@ void FEModel::DrawModel(QSharedPointer<QOpenGLShaderProgram> program)
     f->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(FEVertex), (void*) offsetof(FEVertex, normal));
 
     //绘制
-    glDrawElements(GL_QUADS, m_indexVect.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, m_indexVect.size(), GL_UNSIGNED_INT, 0);
 
     m_pIndexBuf->release();
     m_pVertexBuf->release();
