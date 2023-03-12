@@ -3,8 +3,9 @@
 
 #include "Src/FELogicService/DataEntity/FEFileData.h"
 #include "Src/FELogicService/OpenGLEntity/FEModel.h"
-class FEFileParser
+class FEFileParser:public QObject
 {
+    Q_OBJECT
 public:
     FEFileParser();
     ~FEFileParser();

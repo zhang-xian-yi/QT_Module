@@ -1,6 +1,7 @@
 #pragma once
 //c and c++
 #include <functional>
+#include <thread>
 #include <memory>
 //add QT Lib
 #include <QByteArray>
@@ -28,6 +29,7 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLTexture>
 #include <QOpenGLWidget>
+#include <QMetaType>
 #include <QOpenGLFunctions>
 #include <QOpenGLFunctions_3_3_Core>
 

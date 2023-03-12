@@ -19,8 +19,13 @@ FERendererLayerService::FERendererLayerService(QWidget * parent)
     m_openGLWindow->SetOnDrawCallBack(OnDraw);
     m_pRendererS->SetGetCallBack(GetVec3Data);
     m_pRendererS->SetGetCallBack(GetMVPMat4);
+    //注册
+    qRegisterMetaType<QSharedPointer<FEModel>>("QSharedPointer<FEModel>");
+
     //设置信号槽
     connect(m_openGLWindow,&OpenGLWindow::ResizeGLSig, m_pEventHandlerS.get(),&EventHandler::SlotResigzeGLMat4);
+    //解析完成后多线程直接进行处理
+    connect(this, SIGNAL(ParseSuccSig(QSharedPointer<FEModel>)), m_pRendererS.get(), SLOT(SetRendererDataSlot(QSharedPointer<FEModel>)));
 }
 
 FERendererLayerService::~FERendererLayerService()
@@ -31,14 +36,22 @@ FERendererLayerService::~FERendererLayerService()
 //加载有限元文件（可以考虑使用多线程技术解析并渲染）
 void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
 {
-    //解析文件
-    QSharedPointer<FEModel> pModel = m_pFEParseS->ParseFile(filepath);
-    if(pModel.isNull())
+    QEventLoop loop;
+    connect(this, &FERendererLayerService::ParseFinishSig, &loop, &QEventLoop::quit);
+    std::thread DataDealThread([&]
     {
-        return;
-    }
-    //开始渲染
-    m_pRendererS->SetRendererData(pModel);
+        //解析文件
+        QSharedPointer<FEModel> pModel = m_pFEParseS->ParseFile(filepath);
+        if(pModel.isNull())
+        {
+            return;
+        }
+        emit ParseSuccSig(pModel);
+        emit ParseFinishSig();
+     });
+    //临时线程销毁
+    DataDealThread.detach();
+    loop.exec();//事件循环不卡ui界面
 }
 
 //此方法作为回调函数在 OpenGLWidget中的 initialGL方法中执行

@@ -15,8 +15,9 @@ public:
     //设置回调函数
     void SetGetCallBack(GetMat4Callback Mat4FCB);
     void SetGetCallBack(GetVec3DCallback vec3DFCB);
+public slots:
     //设置渲染数据
-    void SetRendererData(QSharedPointer<FEModel> pModel);
+    void SetRendererDataSlot(QSharedPointer<FEModel> pModel);
 public:
     void Draw();//进行数据绘制
 private:

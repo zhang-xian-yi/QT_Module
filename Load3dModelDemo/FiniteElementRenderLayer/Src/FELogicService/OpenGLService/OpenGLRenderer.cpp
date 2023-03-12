@@ -40,7 +40,7 @@ void OpenGLRenderer::Draw()
 }
 
 
-void OpenGLRenderer::SetRendererData(QSharedPointer<FEModel> pModel)
+void OpenGLRenderer::SetRendererDataSlot(QSharedPointer<FEModel> pModel)
 {
     m_pScene->m_modelVect.append(pModel);
 }

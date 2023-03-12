@@ -22,6 +22,9 @@ public:
     ~FERendererLayerService();
 public:
     void LoadFiniteElementData(const QString& filepath);
+signals:
+    void ParseSuccSig(QSharedPointer<FEModel> pModel);
+    void ParseFinishSig();
 private:
     //此方法作为回调函数在 OpenGLWidget中的 initialGL方法中执行
     void EnvirInitCallBack();
