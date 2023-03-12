@@ -1,9 +1,7 @@
 #include "OpenGLRenderer.h"
 
-#include "Src/FELogicService/OpenGLEntity/Material.h"//材质
-
 OpenGLRenderer::OpenGLRenderer():
-    m_pModel(nullptr)
+    m_pScene(nullptr)
 {
     GetMVPMat4 = nullptr;
     Get3DPos = nullptr;
@@ -11,12 +9,14 @@ OpenGLRenderer::OpenGLRenderer():
 
 void OpenGLRenderer::InitEnv()
 {
+    m_pScene = QSharedPointer<FEScence>(new FEScence());
+    m_pScene->CreateDefaultScence();
     initShaders();//初始化着色器
 }
 
 void OpenGLRenderer::Draw()
 {
-    if(m_pModel == nullptr)
+    if(m_pScene == nullptr)
     {
         //第一次渲染窗口 由于文件未加载--需要判空
         //渲染对象不存在则返回 直接返回
@@ -27,24 +27,22 @@ void OpenGLRenderer::Draw()
     // add by light
     m_pShaderProgram->setUniformValue("viewPos", this->Get3DPos());
     // 设定灯光位置与颜色
-    m_pShaderProgram->setUniformValue("light1.position", QVector3D({10,10,0}));
-    m_pShaderProgram->setUniformValue("light1.color", QVector3D({255.0,255.0,255.0}));
+    m_pShaderProgram->setUniformValue("light1.position",m_pScene->m_pLightSrc->LPostion);
+    m_pShaderProgram->setUniformValue("light1.color", m_pScene->m_pLightSrc->LColor);
 
-    Material material(0.1f,0.9f,0.5f,16);
     // 设定材质
-    m_pShaderProgram->setUniformValue("material.ambient", material.ambient);
-    m_pShaderProgram->setUniformValue("material.diffuse", material.diffuse);
-    m_pShaderProgram->setUniformValue("material.specular",  material.specular);
-    m_pShaderProgram->setUniformValue("material.shininess", material.shininess);
+    m_pShaderProgram->setUniformValue("material.ambient", m_pScene->m_pMaterial->ambient);
+    m_pShaderProgram->setUniformValue("material.diffuse", m_pScene->m_pMaterial->diffuse);
+    m_pShaderProgram->setUniformValue("material.specular",  m_pScene->m_pMaterial->specular);
+    m_pShaderProgram->setUniformValue("material.shininess", m_pScene->m_pMaterial->shininess);
 
-    m_pModel->DrawModel(m_pShaderProgram);
+    m_pScene->Draw(m_pShaderProgram);
 }
 
 
 void OpenGLRenderer::SetRendererData(QSharedPointer<FEModel> pModel)
 {
-    m_pModel = pModel;
-    m_pModel->Commit();
+    m_pScene->m_modelVect.append(pModel);
 }
 
 //编译着色器并连接绑定

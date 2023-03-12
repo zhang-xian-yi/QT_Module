@@ -59,12 +59,12 @@ HEADERS += \
     Src/FELogicService/OpenGLService/EventHandler.h \
     Src/FELogicService/OpenGLService/OpenGLRenderer.h \
     Src/FELogicService/DataEntity/FEFileData.h   \
+    Src/FELogicService/DataEntity/Material.h \
+    Src/FELogicService/DataEntity/CameraView.h \
     Src/FELogicService/OpenGLEntity/FEMesh.h \
     Src/FELogicService/OpenGLEntity/FEModel.h \
     Src/FELogicService/OpenGLEntity/FEScence.h \
     Src/FELogicService/OpenGLEntity/FEVertex.h \
-    Src/FELogicService/OpenGLEntity/Material.h \
-    Src/FELogicService/OpenGLEntity/CameraView.h \
     Src/FELogicService/LogicServices/OpenGLWindow.h \
     Src/FELogicService/LogicServices/FEFileParser.h \
     Src/FELogicService/DrawElement/AbstractDE.h \
@@ -77,12 +77,12 @@ SOURCES += \
     Src/FEMControl/FERendererLayerControl.cpp \
     Src/FELogicService/FERendererLayerService.cpp \
     Src/FELogicService/DataEntity/FEFileData.cpp \
+    Src/FELogicService/DataEntity/Material.cpp \
+    Src/FELogicService/DataEntity/CameraView.cpp \
     Src/FELogicService/OpenGLEntity/FEMesh.cpp \
     Src/FELogicService/OpenGLEntity/FEModel.cpp \
     Src/FELogicService/OpenGLEntity/FEScence.cpp \
     Src/FELogicService/OpenGLEntity/FEVertex.cpp \
-    Src/FELogicService/OpenGLEntity/Material.cpp \
-    Src/FELogicService/OpenGLEntity/CameraView.cpp \
     Src/FELogicService/LogicServices/FEFileParser.cpp \
     Src/FELogicService/LogicServices/OpenGLWindow.cpp \
     Src/FELogicService/OpenGLService/OpenGLRenderer.cpp \

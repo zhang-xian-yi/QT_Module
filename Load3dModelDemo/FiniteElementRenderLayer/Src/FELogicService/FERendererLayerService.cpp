@@ -4,7 +4,6 @@ FERendererLayerService::FERendererLayerService(QWidget * parent)
 {
     m_pFEParseS = QSharedPointer<FEFileParser>(new FEFileParser());
     m_pEventHandlerS = QSharedPointer<EventHandler>(new EventHandler());
-    m_pScene = QSharedPointer<FEScence>(new FEScence());
     m_pRendererS = QSharedPointer<OpenGLRenderer>(new OpenGLRenderer());
     //窗口的初始化会调用init 初始化opengl上下文，无OpenGL上下文 CubeGeometry 的缓冲区创建会失败
     m_openGLWindow = new OpenGLWindow(parent);//由QT父级控件控制释放
@@ -45,7 +44,6 @@ void FERendererLayerService::LoadFiniteElementData(const QString& filepath)
 //此方法作为回调函数在 OpenGLWidget中的 initialGL方法中执行
 void FERendererLayerService::EnvirInitCallBack()
 {
-    m_pScene->CreateDefaultScence();//创建场景
     m_pRendererS->InitEnv();//渲染工具
     m_pEventHandlerS->InitEnv(m_openGLWindow->width(),m_openGLWindow->height());//初始化事件处理系统以及视角
 }

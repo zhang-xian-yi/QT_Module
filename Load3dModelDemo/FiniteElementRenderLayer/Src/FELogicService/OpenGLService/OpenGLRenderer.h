@@ -2,7 +2,7 @@
 #define OPENGLRENDERER_H
 
 #include "Src/FECommon/MdlDefine.h"
-#include "Src/FELogicService/OpenGLEntity/FEModel.h"
+#include "Src/FELogicService/OpenGLEntity/FEScence.h"
 //OpenGL渲染业务
 class OpenGLRenderer: public QObject
 {
@@ -25,7 +25,7 @@ private:
     GetMat4Callback       GetMVPMat4;//获取mvp矩阵
     GetVec3DCallback      Get3DPos;//获取视角
 private:
-    QSharedPointer<FEModel>         m_pModel;
+    QSharedPointer<FEScence>         m_pScene;
     QSharedPointer<QOpenGLShaderProgram> m_pShaderProgram;//着色器
 };
 

@@ -1,5 +1,5 @@
 #include "EventHandler.h"
-#include "Src/FELogicService/OpenGLEntity/CameraView.h"
+#include "Src/FELogicService/DataEntity/CameraView.h"
 EventHandler::EventHandler()
 {
     this->m_MouseFlag = Qt::NoButton;
