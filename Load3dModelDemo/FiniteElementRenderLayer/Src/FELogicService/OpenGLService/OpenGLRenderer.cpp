@@ -43,6 +43,7 @@ void OpenGLRenderer::Draw()
 void OpenGLRenderer::SetRendererDataSlot(QSharedPointer<FEModel> pModel)
 {
     m_pScene->m_modelVect.append(pModel);
+    pModel->Commit();
 }
 
 //编译着色器并连接绑定

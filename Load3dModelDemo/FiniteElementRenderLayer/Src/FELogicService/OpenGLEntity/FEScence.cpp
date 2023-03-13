@@ -24,7 +24,6 @@ void FEScence::Draw(QSharedPointer<QOpenGLShaderProgram> program)
 {
     foreach (QSharedPointer<FEModel> pModel, m_modelVect)
     {
-        pModel->Commit();
         pModel->DrawModel(program);
     }
 }
