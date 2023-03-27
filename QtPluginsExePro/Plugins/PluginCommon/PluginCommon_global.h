@@ -1,0 +1,12 @@
+#ifndef PLUGINCOMMON_GLOBAL_H
+#define PLUGINCOMMON_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(PLUGINCOMMON_LIBRARY)
+#  define PLUGINCOMMON_EXPORT Q_DECL_EXPORT
+#else
+#  define PLUGINCOMMON_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // PLUGINCOMMON_GLOBAL_H
